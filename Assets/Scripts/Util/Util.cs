@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.IO.Compression;
 
-public class Util
+public partial class Util
 {
     public class Math
     {

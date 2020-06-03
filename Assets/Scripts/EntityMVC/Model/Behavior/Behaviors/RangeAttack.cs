@@ -1,0 +1,47 @@
+﻿using UnityEngine;
+using Entity;
+using EntityCommand;
+
+namespace Behavior
+{
+    public class RangeAttack : BehaviorBase
+    {
+        #region ClassParams
+        private float m_fLifespan;
+        private float m_fAttackTime;
+        private int m_nTargetProjectileID;
+        private float m_fTargetProjectileHeight;
+        private float m_fTargetProjectileLifespan;
+        #endregion
+
+        #region BehaviorBase
+        protected override void OnBehaviorStart()
+        {
+            base.OnBehaviorStart();
+
+			Entity.SendCommandToViews(new AnimatorSetTrigger("Attack"));
+		}
+
+        protected override bool OnBehaviorUpdate()
+        {
+            if (LastUpdateTime < m_fAttackTime && m_fAttackTime <= CurrentUpdateTime)
+            {
+                //	Do nothing
+			}
+
+            return CurrentUpdateTime < m_fLifespan;
+        }
+
+        public override void SetData(int nBehaviorMasterID, params object[] param)
+        {
+            base.SetData(nBehaviorMasterID);
+
+            m_fLifespan = m_MasterData.Lifespan;
+            m_fAttackTime = float.Parse(m_MasterData.ClassParams.Find(x => x.Contains("AttackTime")).Split(':')[1]);
+            m_nTargetProjectileID = int.Parse(m_MasterData.ClassParams.Find(x => x.Contains("ProjectileID")).Split(':')[1]);
+            m_fTargetProjectileHeight = float.Parse(m_MasterData.ClassParams.Find(x => x.Contains("ProjectileHeight")).Split(':')[1]);
+            m_fTargetProjectileLifespan = float.Parse(m_MasterData.ClassParams.Find(x => x.Contains("ProjectileLifespan")).Split(':')[1]);
+        }
+        #endregion
+    }
+}

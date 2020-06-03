@@ -17,23 +17,22 @@ namespace LOP
 
         private static void Initialize()
         {
+            //  Target FrameRate
+#if UNITY_EDITOR
+            UnityEngine.Application.targetFrameRate = 30;
+#endif
+
+            //  PhotonType Register
+            PhotonTypeRegister.Register();
+
+
+            //            CatalogData.Instance.UpdateData();
+            //            UserProfileData.Instance.UpdateData();
+
+            //            yield return new WaitUntil(() => CatalogData.Instance.IsCached());
+            //            yield return new WaitUntil(() => UserProfileData.Instance.IsCached());
+
             isInitialized = true;
         }
-
-//        private static IEnumerator _Initialize()
-//        {
-//        //  Target FrameRate
-//#if UNITY_EDITOR
-//        UnityEngine.Application.targetFrameRate = 30;
-//#endif
-
-//            CatalogData.Instance.UpdateData();
-//            UserProfileData.Instance.UpdateData();
-
-//            yield return new WaitUntil(() => CatalogData.Instance.IsCached());
-//            yield return new WaitUntil(() => UserProfileData.Instance.IsCached());
-
-//            isInitialized = true;
-//        }
     }
 }
