@@ -12,26 +12,24 @@ namespace Entity
 		}
 		#endregion
 
-		//	Model
-		private ProjectileModel m_ProjectileModel = null;
+		private ProjectileBasicData projectileBasicData = null;
 
-		//	View
-		private BasicView m_BasicView = null;
+		private EntityBasicView entityBasicView = null;
 
-		//	Controller
-		private BasicController m_BasicController = null;
+        private BehaviorController behaviorController = null;
+        private StateController stateController = null;
 
-		private MasterData.Projectile m_MasterData__ = null;
-		public MasterData.Projectile m_MasterData
+        private MasterData.Projectile masterData = null;
+		public MasterData.Projectile MasterData
 		{
 			get
 			{
-				if (m_MasterData__ == null)
+				if (masterData == null)
 				{
-					m_MasterData__ = MasterDataManager.Instance.GetMasterData<MasterData.Projectile>(m_ProjectileModel.MasterDataID);
+                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.Projectile>(projectileBasicData.MasterDataID);
 				}
 
-				return m_MasterData__;
+				return masterData;
 			}
 		}
 
@@ -40,15 +38,13 @@ namespace Entity
 		{
 			base.InitComponents();
 
-			//	Model
-			m_ProjectileModel = AttachComponent(gameObject.AddComponent<ProjectileModel>());
+            projectileBasicData = AttachComponent(gameObject.AddComponent<ProjectileBasicData>());
 
-			//	View
-			m_BasicView = AttachComponent(gameObject.AddComponent<BasicView>());
+            entityBasicView = AttachComponent(gameObject.AddComponent<EntityBasicView>());
 
-			//	Controller
-			m_BasicController = AttachComponent(gameObject.AddComponent<BasicController>());
-		}
+            behaviorController = AttachComponent(gameObject.AddComponent<BehaviorController>());
+            stateController = AttachComponent(gameObject.AddComponent<StateController>());
+        }
 
 		public override void Initialize(params object[] param)
 		{
@@ -56,12 +52,12 @@ namespace Entity
 
 			EntityType = EntityType.Projectile;
 
-			m_ProjectileModel.Initialize(param[1], param[2], param[3]);
+            projectileBasicData.Initialize(param[1], param[2], param[3]);
 		}
 		#endregion
 
 		#region Interface For Convenience
-		public override float MovementSpeed { get { return m_ProjectileModel.MovementSpeed; } }
+		public override float MovementSpeed { get { return projectileBasicData.MovementSpeed; } }
 		#endregion
 	}
 }

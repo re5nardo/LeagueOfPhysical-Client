@@ -63,9 +63,9 @@ public class PlayerHealthBar : HealthBarBase
 
     private IEnumerator WaitForMasterData(Character character)
     {
-        yield return new WaitUntil(() => character.m_MasterData != null);
+        yield return new WaitUntil(() => character.MasterData != null);
 
-        nickname.text = string.Format("{0}_{1}", character.m_MasterData.Name, character.EntityID);
+        nickname.text = string.Format("{0}_{1}", character.MasterData.Name, character.EntityID);
     }
 
 	public void Clear()

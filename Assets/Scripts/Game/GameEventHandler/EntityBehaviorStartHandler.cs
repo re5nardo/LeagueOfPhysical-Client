@@ -24,6 +24,6 @@ public class EntityBehaviorStartHandler : IHandler<IGameEvent>
             return;
         }
 
-        entity.GetComponent<BasicController>()?.StartBehavior(entityBehaviorStart.behaviorMasterID);
+        entity.GetComponent<BehaviorController>()?.StartBehavior(entityBehaviorStart.behaviorMasterID);
     }
 }

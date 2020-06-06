@@ -29,16 +29,16 @@ public class FirstStatusSelectionItemUI : MonoBehaviour
 	private int GetStatusValue(FirstStatusElement target)
 	{
 		Character character = EntityManager.Instance.GetMyCharacter();
-		CharacterStatusModel statusModel = character.GetComponent<CharacterStatusModel>();
+        CharacterStatusData characterStatusData = character.GetComponent<CharacterStatusData>();
 
 		switch (target)
 		{
-			case FirstStatusElement.STR: return statusModel.STR;
-			case FirstStatusElement.DEX: return statusModel.DEX;
-			case FirstStatusElement.CON: return statusModel.CON;
-			case FirstStatusElement.INT: return statusModel.INT;
-			case FirstStatusElement.WIS: return statusModel.WIS;
-			case FirstStatusElement.CHA: return statusModel.CHA;
+			case FirstStatusElement.STR: return characterStatusData.STR;
+			case FirstStatusElement.DEX: return characterStatusData.DEX;
+			case FirstStatusElement.CON: return characterStatusData.CON;
+			case FirstStatusElement.INT: return characterStatusData.INT;
+			case FirstStatusElement.WIS: return characterStatusData.WIS;
+			case FirstStatusElement.CHA: return characterStatusData.CHA;
 		}
 
 		Debug.LogError("target is invalid! target : " + target.ToString());

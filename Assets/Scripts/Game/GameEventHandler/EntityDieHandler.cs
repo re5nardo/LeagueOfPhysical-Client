@@ -13,7 +13,7 @@ public class EntityDieHandler : IHandler<IGameEvent>
 
         Character dead = EntityManager.Instance.GetEntity(entityDie.deadID) as Character;
 
-        BasicController controller = dead.GetComponent<BasicController>();
-        //controller.Die();
+        BehaviorController behaviorController = dead.GetComponent<BehaviorController>();
+        //behaviorController.Die();
     }
 }

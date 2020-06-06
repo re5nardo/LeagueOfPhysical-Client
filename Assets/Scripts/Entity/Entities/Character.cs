@@ -13,30 +13,28 @@ namespace Entity
 		}
 		#endregion
 
-		//	Model
-		private CharacterModel m_CharacterModel = null;
-		private CharacterStatusModel m_CharacterStatusModel = null;
-        private CharacterSkillModel m_CharacterSkillModel = null;
+		private CharacterBasicData characterBasicData = null;
+		private CharacterStatusData characterStatusData = null;
+        private CharacterSkillData characterSkillData = null;
 
-		//	View
-		private CharacterView m_CharacterView = null;
+		private CharacterView characterView = null;
 
-		//	Controller
-		private BasicController m_BasicController = null;
-		private CharacterStatusController m_CharacterStatusController = null;
+        private BehaviorController behaviorController = null;
+        private StateController stateController = null;
+        private CharacterStatusController characterStatusController = null;
 		//private SkillController m_SkillController = null;
 
-		private MasterData.Character m_MasterData__ = null;
-		public MasterData.Character m_MasterData
+		private MasterData.Character masterData = null;
+		public MasterData.Character MasterData
 		{
 			get
 			{
-				if (m_MasterData__ == null)
+				if (masterData == null)
 				{
-					m_MasterData__ = MasterDataManager.Instance.GetMasterData<MasterData.Character>(m_CharacterModel.MasterDataID);
+                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.Character>(characterBasicData.MasterDataID);
 				}
 
-				return m_MasterData__;
+				return masterData;
 			}
 		}
 
@@ -45,17 +43,15 @@ namespace Entity
 		{
 			base.InitComponents();
 
-			//	Model
-			m_CharacterModel = AttachComponent(gameObject.AddComponent<CharacterModel>());
-			m_CharacterStatusModel = AttachComponent(gameObject.AddComponent<CharacterStatusModel>());
-            m_CharacterSkillModel = AttachComponent(gameObject.AddComponent<CharacterSkillModel>());
+            characterBasicData = AttachComponent(gameObject.AddComponent<CharacterBasicData>());
+            characterStatusData = AttachComponent(gameObject.AddComponent<CharacterStatusData>());
+            characterSkillData = AttachComponent(gameObject.AddComponent<CharacterSkillData>());
 
-			//	View
-			m_CharacterView = AttachComponent(gameObject.AddComponent<CharacterView>());
+            characterView = AttachComponent(gameObject.AddComponent<CharacterView>());
 
-			//	Controller
-			m_BasicController = AttachComponent(gameObject.AddComponent<BasicController>());
-			m_CharacterStatusController = AttachComponent(gameObject.AddComponent<CharacterStatusController>());
+            behaviorController = AttachComponent(gameObject.AddComponent<BehaviorController>());
+            stateController = AttachComponent(gameObject.AddComponent<StateController>());
+            characterStatusController = AttachComponent(gameObject.AddComponent<CharacterStatusController>());
 			//m_SkillController = AttachComponent(gameObject.AddComponent<SkillController>());
 		}
 
@@ -65,44 +61,44 @@ namespace Entity
 
 			EntityType = EntityType.Character;
 
-			m_CharacterModel.Initialize(param[1], param[2]);
-			m_CharacterStatusModel.Initialize(param[3], param[4], param[5]);
-            m_CharacterSkillModel.Initialize();
+            characterBasicData.Initialize(param[1], param[2]);
+            characterStatusData.Initialize(param[3], param[4], param[5]);
+            characterSkillData.Initialize();
         }
 		#endregion
 
 		#region Interface For Convenience
 		public int Level
 		{
-			get { return m_CharacterModel.Level; }
-			set { m_CharacterModel.Level = value; }
+			get { return characterBasicData.Level; }
+			set { characterBasicData.Level = value; }
 		}
 
 		public int CurrentHP 
 		{
-			get { return m_CharacterStatusModel.CurrentHP; }
-			set { m_CharacterStatusModel.CurrentHP = value; }
+			get { return characterStatusData.CurrentHP; }
+			set { characterStatusData.CurrentHP = value; }
 		}
 
 		public int CurrentMP
 		{
-			get { return m_CharacterStatusModel.CurrentMP; }
-			set { m_CharacterStatusModel.CurrentHP = value; }
+			get { return characterStatusData.CurrentMP; }
+			set { characterStatusData.CurrentHP = value; }
 		}
 
-		public int MaximumHP { get { return m_CharacterStatusModel.MaximumHP; } }
+		public int MaximumHP { get { return characterStatusData.MaximumHP; } }
 
-		public int MaximumMP { get { return m_CharacterStatusModel.MaximumMP; } }
+		public int MaximumMP { get { return characterStatusData.MaximumMP; } }
 
-		public bool IsAlive { get { return m_CharacterStatusModel.CurrentHP > 0; } }
+		public bool IsAlive { get { return characterStatusData.CurrentHP > 0; } }
 
-		public bool IsSelectableFirstStatus { get { return m_CharacterStatusModel.SelectableFirstStatusCount > 0; } }
+		public bool IsSelectableFirstStatus { get { return characterStatusData.SelectableFirstStatusCount > 0; } }
 
-		public Transform ModelTransform { get { return m_CharacterView.ModelTransform; } }
+		public Transform ModelTransform { get { return characterView.ModelTransform; } }
 	
-		public override float MovementSpeed { get { return m_CharacterStatusModel.MovementSpeed; } }
+		public override float MovementSpeed { get { return characterStatusData.MovementSpeed; } }
 
-        public int BasicAttackSkillID { get { return m_CharacterSkillModel.BasicAttackSkillID;  } }
+        public int BasicAttackSkillID { get { return characterSkillData.BasicAttackSkillID;  } }
 		#endregion
 	}
 }

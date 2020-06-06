@@ -12,26 +12,24 @@ namespace Entity
 		}
 		#endregion
 
-		//	Model
-		private GameItemModel m_GameItemModel = null;
+		private GameItemBasicData gameItemBasicData = null;
 
-		//	View
-		private BasicView m_BasicView = null;
+		private EntityBasicView entityBasicView = null;
 
-		//	Controller
-		private BasicController m_BasicController = null;
+        private BehaviorController behaviorController = null;
+        private StateController stateController = null;
 
-		private MasterData.GameItem m_MasterData__ = null;
-		public MasterData.GameItem m_MasterData
+        private MasterData.GameItem masterData = null;
+		public MasterData.GameItem MasterData
 		{
 			get
 			{
-				if (m_MasterData__ == null)
+				if (masterData == null)
 				{
-					m_MasterData__ = MasterDataManager.Instance.GetMasterData<MasterData.GameItem>(m_GameItemModel.MasterDataID);
+                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.GameItem>(gameItemBasicData.MasterDataID);
 				}
 
-				return m_MasterData__;
+				return masterData;
 			}
 		}
 
@@ -40,15 +38,13 @@ namespace Entity
 		{
 			base.InitComponents();
 
-			//	Model
-			m_GameItemModel = AttachComponent(gameObject.AddComponent<GameItemModel>());
+            gameItemBasicData = AttachComponent(gameObject.AddComponent<GameItemBasicData>());
 
-			//	View
-			m_BasicView = AttachComponent(gameObject.AddComponent<BasicView>());
+            entityBasicView = AttachComponent(gameObject.AddComponent<EntityBasicView>());
 
-			//	Controller
-			m_BasicController = AttachComponent(gameObject.AddComponent<BasicController>());
-		}
+            behaviorController = AttachComponent(gameObject.AddComponent<BehaviorController>());
+            stateController = AttachComponent(gameObject.AddComponent<StateController>());
+        }
 
 		public override void Initialize(params object[] param)
 		{
@@ -56,17 +52,17 @@ namespace Entity
 
 			EntityType = EntityType.GameItem;
 
-			m_GameItemModel.Initialize(param[1], param[2], param[3], param[4]);
+            gameItemBasicData.Initialize(param[1], param[2], param[3], param[4]);
 		}
 		#endregion
 
 		#region Interface For Convenience
-		public override float MovementSpeed { get { return m_GameItemModel.MovementSpeed; } }
+		public override float MovementSpeed { get { return gameItemBasicData.MovementSpeed; } }
 
 		public int CurrentHP
 		{
-			get { return m_GameItemModel.CurrentHP; }
-			set { m_GameItemModel.CurrentHP = value; }
+			get { return gameItemBasicData.CurrentHP; }
+			set { gameItemBasicData.CurrentHP = value; }
 		}
 		#endregion
 	}

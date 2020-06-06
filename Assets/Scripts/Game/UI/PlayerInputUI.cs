@@ -55,7 +55,7 @@ public class PlayerInputUI : MonoBehaviour
 	{
         m_Entity = EntityManager.Instance.GetEntity(characterID) as Character;
 
-		foreach(int skillID in m_Entity.m_MasterData.SkillIDs)
+		foreach(int skillID in m_Entity.MasterData.SkillIDs)
 		{
 			MasterData.Skill masterSkill = MasterDataManager.Instance.GetMasterData<MasterData.Skill>(skillID);
 

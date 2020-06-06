@@ -66,20 +66,22 @@ namespace Entity
 
         public virtual void Tick(int tick)
         {
-            GetComponents<State.StateBase>().ForEach(state =>
+            var allComponents = GetComponents<IComponent>();
+            var tickables = allComponents.FindAll(x => x is ITickable).Cast<ITickable>().ToList();
+            tickables.Sort((x, y) =>
+            {
+                int value_x = x is State.StateBase ? 300 : x is Behavior.BehaviorBase ? 200 : 0;
+                int value_y = y is State.StateBase ? 300 : y is Behavior.BehaviorBase ? 200 : 0;
+
+                return value_y.CompareTo(value_x);
+            });
+
+            tickables.ForEach(tickable =>
             {
                 //  Iterating중에 Entity가 Destroy 안되었는지 체크
                 if (IsValid)
                 {
-                    state.Tick(tick);
-                }
-            });
-
-            GetComponents<Behavior.BehaviorBase>().ForEach(behavior =>
-            {
-                if (IsValid)
-                {
-                    behavior.Tick(tick);
+                    tickable.Tick(tick);
                 }
             });
         }
@@ -153,46 +155,36 @@ namespace Entity
 
         public void SendCommandToViews(ICommand command)
         {
-            SendCommand(command, new List<Type> { typeof(IViewComponent) });
-        }
-
-        public void SendCommandToModels(ICommand command)
-        {
-            SendCommand(command, new List<Type> { typeof(IModelComponent) });
-        }
-
-        public void SendCommandToControllers(ICommand command)
-        {
-            SendCommand(command, new List<Type> { typeof(IControllerComponent) });
+            SendCommand(command, new List<Type> { typeof(ViewComponentBase), typeof(MonoViewComponentBase) });
         }
 
         #region PhysicsSimulation
         public virtual void OnBeforePhysicsSimulation(int tick)
         {
-            BasicView basicView = GetComponent<BasicView>();
+            EntityBasicView entityBasicView = GetComponent<EntityBasicView>();
 
-            basicView.ModelTransform.hasChanged = false;
-            basicView.ModelTransform.GetComponent<Rigidbody>().isKinematic = false;
+            entityBasicView.ModelTransform.hasChanged = false;
+            entityBasicView.ModelTransform.GetComponent<Rigidbody>().isKinematic = false;
         }
 
         public virtual void OnAfterPhysicsSimulation(int tick)
         {
-            BasicView basicView = GetComponent<BasicView>();
+            EntityBasicView entityBasicView = GetComponent<EntityBasicView>();
 
-            if (basicView.ModelTransform.hasChanged)
+            if (entityBasicView.ModelTransform.hasChanged)
             {
-                if (Position != basicView.Position)
+                if (Position != entityBasicView.Position)
                 {
-                    Position = basicView.Position;
+                    Position = entityBasicView.Position;
                 }
 
-                if (Rotation != basicView.Rotation)
+                if (Rotation != entityBasicView.Rotation)
                 {
-                    Rotation = basicView.Rotation;
+                    Rotation = entityBasicView.Rotation;
                 }
             }
 
-            basicView.ModelTransform.GetComponent<Rigidbody>().isKinematic = true;
+            entityBasicView.ModelTransform.GetComponent<Rigidbody>().isKinematic = true;
         }
         #endregion
     }
