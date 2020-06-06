@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Room.unity
     guid: be6bb34a73d918e408a2e843fa1b4955
+  - enabled: 1
+    path: Assets/Scenes/Maps/RiftOfSummoner.unity
+    guid: 6fedb6227a64e484491a9df56b203f9d
   m_configObjects: {}
