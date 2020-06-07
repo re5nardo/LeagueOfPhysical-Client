@@ -7,10 +7,10 @@ namespace LOP
 {
     public class Room : PunBehaviour
     {
-        private Game game = null;
-        private RoomProtocolDispatcher protocolDispatcher = null;
-
         public static Room Instance { get; private set; }
+
+        private RoomProtocolDispatcher protocolDispatcher = null;
+        private Game game = null;
 
         public static bool IsInstantiated()
         {
@@ -18,10 +18,13 @@ namespace LOP
         }
 
         #region MonoBehaviour
-        private IEnumerator Start()
+        private void Awake()
         {
             Instance = this;
+        }
 
+        private IEnumerator Start()
+        {
             yield return StartCoroutine(Initialize());
 
             PhotonNetwork.isMessageQueueRunning = true;
@@ -44,22 +47,21 @@ namespace LOP
 
         private IEnumerator Initialize()
         {
-            game = gameObject.AddComponent<Game>();
-            yield return StartCoroutine(game.Initialize());
-
             protocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
+            game = GetGame();
+
+            yield return StartCoroutine(game.Initialize());
             
             RoomNetwork.Instance.onMessage += OnNetworkMessage;
         }
 
+        private Game GetGame()
+        {
+            return FindObjectOfType<Game>();
+        }
+
         private void Clear()
         {
-            if (game != null)
-            {
-                Destroy(game);
-                game = null;
-            }
-
             if (protocolDispatcher != null)
             {
                 Destroy(protocolDispatcher);

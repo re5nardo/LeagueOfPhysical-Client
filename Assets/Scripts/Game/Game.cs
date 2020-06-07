@@ -10,35 +10,38 @@ namespace LOP
 {
     public partial class Game : GameFramework.Game
     {
-        [SerializeField] private GameUI gameUI = null;
-
         public new static Game Current { get { return GameFramework.Game.Current as Game; } }
 
         public GameUI GameUI { get { return gameUI; } }
         public MyInfo MyInfo { get { return myInfo; } }
         public GameEventManager GameEventManager { get { return gameEventManager; } }
 
+        private GameUI gameUI = null;
         private MyInfo myInfo = null;
         private GameEventManager gameEventManager = null;
         private GameProtocolDispatcher protocolDispatcher = null;
 
         public override IEnumerator Initialize()
         {
+            GameFramework.Game.Current = this;
+
             yield return SceneManager.LoadSceneAsync("RiftOfSummoner", LoadSceneMode.Additive);
 
             Physics.autoSimulation = false;
 
-            GameUI.Initialize();
             EntityManager.Instantiate();
             ResourcePool.Instantiate();
 
+            gameUI = GetGameUI();
             myInfo = gameObject.AddComponent<MyInfo>();
-            tickUpdater = gameObject.AddComponent<TickUpdater>();
             gameEventManager = gameObject.AddComponent<GameEventManager>();
+            protocolDispatcher = gameObject.AddComponent<GameProtocolDispatcher>();
+            tickUpdater = gameObject.AddComponent<TickUpdater>();
+
+            GameUI.Initialize();
+            tickUpdater.Initialize(1 / 30f, false, OnTick, OnTickEnd);
 
             RoomNetwork.Instance.onMessage += OnNetworkMessage;
-
-            tickUpdater.Initialize(1 / 30f, false, OnTick, OnTickEnd);
         }
 
         protected override void Clear()
@@ -53,16 +56,22 @@ namespace LOP
                 myInfo = null;
             }
 
-            if (tickUpdater != null)
-            {
-                Destroy(tickUpdater);
-                tickUpdater = null;
-            }
-
             if (gameEventManager != null)
             {
                 Destroy(gameEventManager);
                 gameEventManager = null;
+            }
+
+            if (protocolDispatcher != null)
+            {
+                Destroy(protocolDispatcher);
+                protocolDispatcher = null;
+            }
+
+            if (tickUpdater != null)
+            {
+                Destroy(tickUpdater);
+                tickUpdater = null;
             }
 
             if (RoomNetwork.IsInstantiated())
@@ -116,6 +125,11 @@ namespace LOP
             //BroadCastGameEvent();
 
             //gameEvents.Clear();
+        }
+
+        private GameUI GetGameUI()
+        {
+            return FindObjectOfType<GameUI>();
         }
 
         private void OnNetworkMessage(IMessage msg, object[] objects)

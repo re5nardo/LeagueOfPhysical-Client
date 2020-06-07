@@ -6,7 +6,7 @@ using System;
 
 public class GameProtocolDispatcher : MonoBehaviour
 {
-    private Dictionary<int, Action<IPhotonEventMessage>> protocolHandlers = new Dictionary<int, Action<IPhotonEventMessage>>();
+    private Dictionary<byte, Action<IPhotonEventMessage>> protocolHandlers = new Dictionary<byte, Action<IPhotonEventMessage>>();
 
     private void Awake()
     {
