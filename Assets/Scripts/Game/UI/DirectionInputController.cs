@@ -7,7 +7,7 @@ using Entity;
 public class DirectionInputController : MonoBehaviour
 {
     [SerializeField] private DirectionKey directionKey = null;
-    [SerializeField] private InputDisplayUI inputDisplayUI = null;
+    [SerializeField] private InputCircleDisplay inputCircleDisplay = null;
 
     public event Action<Vector2> onPress;
     public event Action<Vector2> onRelease;
@@ -29,7 +29,7 @@ public class DirectionInputController : MonoBehaviour
 
     public Vector2 GetPressedPosition()
     {
-        return directionKey.GetPressedPosition();
+        return directionKey.PressedPosition;
     }
 
     #region Event Handler
@@ -38,14 +38,14 @@ public class DirectionInputController : MonoBehaviour
         if (!EntityManager.Instance.GetMyCharacter().IsAlive)
             return;
 
-        inputDisplayUI.Show(Camera.main.ScreenToWorldPoint(vec2ScreenPosition));
+        inputCircleDisplay.Show(vec2ScreenPosition);
 
         onPress?.Invoke(vec2ScreenPosition);
     }
 
     private void OnDirectionKeyRelease(Vector2 vec2ScreenPosition)
     {
-        inputDisplayUI.Hide();
+        inputCircleDisplay.Hide();
 
         onRelease?.Invoke(vec2ScreenPosition);
     }
@@ -56,11 +56,7 @@ public class DirectionInputController : MonoBehaviour
         if (!character.IsAlive)
             return;
 
-        //	임시 코드.. 나중에 클래스 프로퍼티 or State로 빼서 처리해야 함
-        if (character.GetComponent<Behavior.BehaviorBase>() != null)
-            return;
-
-        inputDisplayUI.OnTouchHold(Camera.main.ScreenToWorldPoint(vec2ScreenPosition));
+        inputCircleDisplay.OnTouchHold(vec2ScreenPosition);
 
         onHold?.Invoke(vec2ScreenPosition);
     }

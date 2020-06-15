@@ -7,8 +7,7 @@ using UnityEngine.UI;
 public class SkillButtonBase : MonoBehaviour
 {
 	public RawImage textureIcon = null;
-
-	public Action<int> onClicked = null;
+    public event Action<int> onClicked = null;
 
 	protected int skillID = -1;
 

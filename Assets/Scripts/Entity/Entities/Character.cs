@@ -58,8 +58,8 @@ namespace Entity
 		public override void Initialize(params object[] param)
 		{
 			EntityID = (int)param[0];
-
 			EntityType = EntityType.Character;
+            EntityRole = (EntityRole)param[6];
 
             characterBasicData.Initialize(param[1], param[2]);
             characterStatusData.Initialize(param[3], param[4], param[5]);

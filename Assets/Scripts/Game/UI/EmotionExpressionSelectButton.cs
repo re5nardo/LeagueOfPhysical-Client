@@ -5,38 +5,38 @@ using System;
 
 public class EmotionExpressionSelectButton : MonoBehaviour
 {
-	[SerializeField] private UITextureButton uiTextureButton = null;
+	[SerializeField] private TextureButton textureButton = null;
 
 	public event Action<int> onClicked = null;
 
-    private int m_nEmotionExpressionID = -1;
+    private int emotionExpressionID = -1;
 
     public void SetData(int nEmotionExpressionID)
     {
-        m_nEmotionExpressionID = nEmotionExpressionID;
+        emotionExpressionID = nEmotionExpressionID;
 
         MasterData.EmotionExpression master = MasterDataManager.Instance.GetMasterData<MasterData.EmotionExpression>(nEmotionExpressionID);
 
-		uiTextureButton.textureImage.texture = Resources.Load<Texture>(master.ResID);
+        textureButton.texture.texture = Resources.Load<Texture>(master.ResID);
     }
 
     public int GetEmotionExpressionID()
     {
-        return m_nEmotionExpressionID;
+        return emotionExpressionID;
     }
 
 	private void Awake()
 	{
-		uiTextureButton.onClicked += OnUITextureButtonClicked;
+        textureButton.button.onClick.AddListener(OnUITextureButtonClicked);
 	}
 
 	private void OnDestroy()
 	{
-		uiTextureButton.onClicked -= OnUITextureButtonClicked;
+        textureButton.button.onClick.RemoveListener(OnUITextureButtonClicked);
 	}
 
 	private void OnUITextureButtonClicked()
 	{
-		onClicked?.Invoke(m_nEmotionExpressionID);
+		onClicked?.Invoke(emotionExpressionID);
 	}
 }

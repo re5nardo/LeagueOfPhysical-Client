@@ -16,8 +16,8 @@ public class EntityBehaviorStartHandler : IHandler<IGameEvent>
             return;
         }
 
-        if (entityBehaviorStart.behaviorMasterID == MasterDataDefine.BehaviorID.MOVE
-        || entityBehaviorStart.behaviorMasterID == MasterDataDefine.BehaviorID.ROTATION)
+        if (entityBehaviorStart.behaviorMasterID == Define.MasterData.BehaviorID.MOVE
+        || entityBehaviorStart.behaviorMasterID == Define.MasterData.BehaviorID.ROTATION)
         {
             //	Do nothing
             //	이 녀석들도 마찬가지로 클라이언트에서 플레이 해야 할까...?

@@ -11,6 +11,7 @@ public class ProjectileBuilder
 	private Vector3 m_vec3AngularVelocity = Vector3.zero;
 	private string m_strModelPath = "";
 	private float m_fMovementSpeed = default;
+    private EntityRole m_EntityRole = default;
 
     public ProjectileBuilder SetEntityID(int nEntityID)
     {
@@ -60,12 +61,18 @@ public class ProjectileBuilder
 		return this;
 	}
 
+    public ProjectileBuilder SetEntityRole(EntityRole entityRole)
+    {
+        m_EntityRole = entityRole;
+        return this;
+    }
+
     public Projectile Build()
     {
         GameObject goProjectile = new GameObject(string.Format("Entity_{0}", m_nEntityID));
         Projectile projectile = goProjectile.AddComponent<Projectile>();
 
-        projectile.Initialize(m_nEntityID, m_nMasterDataID, m_strModelPath, m_fMovementSpeed);
+        projectile.Initialize(m_nEntityID, m_nMasterDataID, m_strModelPath, m_fMovementSpeed, m_EntityRole);
         projectile.Position = m_vec3Position;
         projectile.Rotation = m_vec3Rotation;
 		projectile.Velocity = m_vec3Velocity;
@@ -86,5 +93,6 @@ public class ProjectileBuilder
 		m_vec3AngularVelocity = Vector3.zero;
 		m_strModelPath = "";
 		m_fMovementSpeed = default;
-	}
+        m_EntityRole = default;
+    }
 }

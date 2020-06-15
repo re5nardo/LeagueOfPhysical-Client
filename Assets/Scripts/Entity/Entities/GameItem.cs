@@ -49,8 +49,8 @@ namespace Entity
 		public override void Initialize(params object[] param)
 		{
 			EntityID = (int)param[0];
-
 			EntityType = EntityType.GameItem;
+            EntityRole = (EntityRole)param[5];
 
             gameItemBasicData.Initialize(param[1], param[2], param[3], param[4]);
 		}

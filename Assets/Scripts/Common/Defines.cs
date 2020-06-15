@@ -16,7 +16,14 @@ namespace Define
     {
         public class HealthBar
         {
-            public const string PLAYER = "HealthBar/PlayerHealthBar";
+            public const string PLAYER = "UI/PlayerHealthBar";
+        }
+
+        public class UI
+        {
+            public const string FLOATING_ITEM = "UI/FloatingItem";
+            public const string FLOATING_GET_MONEY = "UI/FloatingGetMoney";
+            public const string EMOTION_EXPRESSION_VIEWER = "UI/EmotionExpressionViewer";
         }
     }
 

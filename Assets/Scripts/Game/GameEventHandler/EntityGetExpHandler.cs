@@ -13,11 +13,11 @@ public class EntityGetExpHandler : IHandler<IGameEvent>
 
         Character userCharacter = EntityManager.Instance.GetMyCharacter();
 
-        GameObject goExpGetUI = ResourcePool.Instance.GetResource("UI/ExpGetUI", LOP.Game.Current.GameUI.GetTopMostGameRoomPanel().transform);
+        GameObject goFloatingItem = ResourcePool.Instance.GetResource(Define.ResourcePath.UI.FLOATING_ITEM, LOP.Game.Current.GameUI.GetTopMostCanvas().transform);
 
-        ExpGetUI expGetUI = goExpGetUI.GetComponent<ExpGetUI>();
-        expGetUI.SetData(userCharacter.Position, string.Format("+Exp {0}", entityGetExp.exp));
+        FloatingItem floatingItem = goFloatingItem.GetComponent<FloatingItem>();
+        floatingItem.SetData(Camera.main.WorldToScreenPoint(userCharacter.Position), string.Format("+Exp {0}", entityGetExp.exp));
 
-        goExpGetUI.AddComponent<ResourceReturnAgent>().m_fDelayTime = 1.5f;
+        goFloatingItem.AddComponent<ResourceReturnAgent>().m_fDelayTime = 1.5f;
     }
 }

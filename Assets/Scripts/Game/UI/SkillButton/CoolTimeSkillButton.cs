@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using UnityEngine.UI;
+using GameFramework;
 
 public class CoolTimeSkillButton : SkillButtonBase
 {
@@ -11,6 +11,8 @@ public class CoolTimeSkillButton : SkillButtonBase
 
 	private float coolTime = float.PositiveInfinity;
 	private float remainTime = float.PositiveInfinity;
+
+    private int lastUpdateTick = -1;
 
 	private void Start()
 	{
@@ -22,19 +24,24 @@ public class CoolTimeSkillButton : SkillButtonBase
 		if (skillID == -1 || float.IsInfinity(coolTime))
 			return;
 
-        remainTime -= Time.deltaTime;
+        if (Game.Current != null && Game.Current.CurrentTick != lastUpdateTick)
+        {
+            remainTime -= Game.Current.TickInterval;
+            
+            Refresh();
 
-		Refresh();
+            lastUpdateTick = Game.Current.CurrentTick;
+        }
 	}
 
-	public void SetCoolTime(float fCoolTime)
+	public void SetCoolTime(float coolTime)
 	{
-        coolTime = fCoolTime;
+        this.coolTime = coolTime;
 	}
 
-	public void SetRemainTime(float fRemainTime)
+	public void SetRemainTime(float remainTime)
 	{
-        remainTime = fRemainTime;
+        this.remainTime = remainTime;
 	}
 
 	public void Refresh()
@@ -71,7 +78,7 @@ public class CoolTimeSkillButton : SkillButtonBase
 		if (remainTime > 0)
 			return;
 
-		onClicked?.Invoke(skillID);
+        base.OnClicked();
 	}
 	#endregion
 }

@@ -12,6 +12,7 @@ public class GameItemBuilder
 	private string m_strModelPath = "";
 	private int m_nHP = default;
 	private int m_nMaximumHP = default;
+    private EntityRole m_EntityRole = default;
 
 	public GameItemBuilder SetEntityID(int nEntityID)
 	{
@@ -67,12 +68,18 @@ public class GameItemBuilder
 		return this;
 	}
 
-	public GameItem Build()
+    public GameItemBuilder SetEntityRole(EntityRole entityRole)
+    {
+        m_EntityRole = entityRole;
+        return this;
+    }
+
+    public GameItem Build()
 	{
 		GameObject goGameItem = new GameObject(string.Format("Entity_{0}", m_nEntityID));
         GameItem gameItem = goGameItem.AddComponent<GameItem>();
 
-		gameItem.Initialize(m_nEntityID, m_nMasterDataID, m_strModelPath, m_nHP, m_nMaximumHP);
+		gameItem.Initialize(m_nEntityID, m_nMasterDataID, m_strModelPath, m_nHP, m_nMaximumHP, m_EntityRole);
 		gameItem.Position = m_vec3Position;
 		gameItem.Rotation = m_vec3Rotation;
 		gameItem.Velocity = m_vec3Velocity;
@@ -94,5 +101,6 @@ public class GameItemBuilder
 		m_strModelPath = "";
 		m_nHP = default;
 		m_nMaximumHP = default;
-	}
+        m_EntityRole = default;
+    }
 }

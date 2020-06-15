@@ -50,7 +50,7 @@ public class RoomConnector : PunBehaviour
 
         tryingToEnterRoom = true;
 
-        PhotonNetwork.player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "CharacterID", Random.Range(MasterDataDefine.CharacterID.EVELYNN, MasterDataDefine.CharacterID.MALPHITE + 1) } });
+        PhotonNetwork.player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "CharacterID", Random.Range(Define.MasterData.CharacterID.EVELYNN, Define.MasterData.CharacterID.MALPHITE + 1) } });
 
         PhotonNetwork.JoinRoom(roomName);
     }

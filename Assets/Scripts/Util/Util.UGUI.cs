@@ -22,5 +22,15 @@ public partial class Util
 
             return WorldObject_ScreenPosition;
         }
+
+        //  Canvas.renderMode must be RenderMode.ScreenSpaceOverlay
+        public static Vector3 ConvertScreenToLocalPoint(RectTransform rtParent, Vector2 screenPoint)
+        {
+            Vector2 localPoint = Vector2.zero;
+
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(rtParent, screenPoint, null, out localPoint);
+
+            return new Vector3(localPoint.x, localPoint.y);
+        }
     }
 }

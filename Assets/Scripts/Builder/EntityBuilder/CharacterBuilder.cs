@@ -13,6 +13,7 @@ public class CharacterBuilder
 	private FirstStatus m_FirstStatus = default;
 	private SecondStatus m_SecondStatus = default;
 	private int m_nSelectableFirstStatusCount = default;
+    private EntityRole m_EntityRole = default;
 
     public CharacterBuilder SetEntityID(int nEntityID)
     {
@@ -74,12 +75,18 @@ public class CharacterBuilder
 		return this;
 	}
 
-	public Character Build()
+    public CharacterBuilder SetEntityRole(EntityRole entityRole)
+    {
+        m_EntityRole = entityRole;
+        return this;
+    }
+
+    public Character Build()
     {
         GameObject goCharacter = new GameObject(string.Format("Entity_{0}", m_nEntityID));
         Character character = goCharacter.AddComponent<Character>();
 
-        character.Initialize(m_nEntityID, m_nMasterDataID, m_strModelPath, m_FirstStatus, m_SecondStatus, m_nSelectableFirstStatusCount);
+        character.Initialize(m_nEntityID, m_nMasterDataID, m_strModelPath, m_FirstStatus, m_SecondStatus, m_nSelectableFirstStatusCount, m_EntityRole);
 		character.Position = m_vec3Position;
 		character.Rotation = m_vec3Rotation;
 		character.Velocity = m_vec3Velocity;
@@ -102,5 +109,6 @@ public class CharacterBuilder
 		m_FirstStatus = default;
 		m_SecondStatus = default;
 		m_nSelectableFirstStatusCount = default;
-	}
+        m_EntityRole = default;
+    }
 }

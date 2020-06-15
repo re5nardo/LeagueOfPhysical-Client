@@ -14,40 +14,34 @@ public class PlayerHealthBar : HealthBarBase
     [SerializeField] private Slider sliderExp = null;
 
     private WeakReference targetEntity = null;
-    private Transform trMine = null;
-    private RectTransform rtMine = null;
-    private RectTransform rtCanvas = null;
+    private Transform tfMine = null;
 
-    private Vector3 screenOffset = new Vector3(0, Screen.height * 0.08f, 0);
+    private RectTransform rectTransformParent = null;
+    private RectTransform RectTransformParent { get { return rectTransformParent ?? (rectTransformParent = transform.parent?.GetComponent<RectTransform>()); } }
 
 	private void Awake()
     {
         m_HealthBarType = HealthBarType.Player;
-        trMine = transform;
-        rtMine = GetComponent<RectTransform>();
-        rtCanvas = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+        tfMine = transform;
     }
 
     private void LateUpdate()
     {
-        if (targetEntity != null && targetEntity.IsAlive)
+        if (targetEntity != null && targetEntity.IsAlive && RectTransformParent != null)
         {
             Character character = targetEntity.Target as Character;
 
             //  UI
             level.text = character.Level.ToString();
-            sliderHP.value = (float)character.CurrentHP / character.MaximumHP;
-            sliderMP.value = (float)character.CurrentMP / character.MaximumMP;
-//            m_sliderExp.value = character.GetCurrentExpPercent() / 100.0f;
+            sliderHP.value = character.MaximumHP == 0 ? 0 : (float)character.CurrentHP / character.MaximumHP;
+            sliderMP.value = character.MaximumMP == 0 ? 0 : (float)character.CurrentMP / character.MaximumMP;
+            //            m_sliderExp.value = character.GetCurrentExpPercent() / 100.0f;
 
             //  Position
-            Vector3 vec3Pos = Camera.main.WorldToScreenPoint(character.Position);
-            //vec3Pos.z = 0;
-
-            rtMine.anchoredPosition = Util.UGUI.ConvertWorldToCanvas(vec3Pos + screenOffset, rtCanvas);
+            var center = Util.UGUI.ConvertScreenToLocalPoint(RectTransformParent, Camera.main.WorldToScreenPoint(character.Position));
+            tfMine.localPosition = new Vector3(center.x, center.y + 50, center.z);
         }
     }
-
 	
 	public void SetTarget(Character character)
     {
@@ -56,9 +50,9 @@ public class PlayerHealthBar : HealthBarBase
         GlobalMonoBehavior.StartCoroutine(WaitForMasterData(character));
       
         level.text = character.Level.ToString();
-        sliderHP.value = (float)character.CurrentHP / character.MaximumHP;
-        sliderMP.value = (float)character.CurrentMP / character.MaximumMP;
-//        m_sliderExp.value = character.GetCurrentExpPercent() / 100.0f;
+        sliderHP.value = character.MaximumHP == 0 ? 0 : (float)character.CurrentHP / character.MaximumHP;
+        sliderMP.value = character.MaximumMP == 0 ? 0 : (float)character.CurrentMP / character.MaximumMP;
+        //        m_sliderExp.value = character.GetCurrentExpPercent() / 100.0f;
     }
 
     private IEnumerator WaitForMasterData(Character character)

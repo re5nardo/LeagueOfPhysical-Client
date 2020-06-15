@@ -49,8 +49,8 @@ namespace Entity
 		public override void Initialize(params object[] param)
 		{
 			EntityID = (int)param[0];
-
 			EntityType = EntityType.Projectile;
+            EntityRole = (EntityRole)param[4];
 
             projectileBasicData.Initialize(param[1], param[2], param[3]);
 		}

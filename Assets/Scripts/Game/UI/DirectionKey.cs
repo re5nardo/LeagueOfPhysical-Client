@@ -8,46 +8,41 @@ public class DirectionKey : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 	[HideInInspector] public Vector2Handler onPress = null;
 	[HideInInspector] public Vector2Handler onRelease = null;
 
-    private Vector2 m_vec2PressedPosition;  //  Screen Coordinates
+    private Vector2 pressedPosition; 
+    public Vector2 PressedPosition { get { return pressedPosition; } }
 
-    private bool m_bIsTouching = false;
-
-    public Vector2 GetPressedPosition()
-    {
-        return m_vec2PressedPosition;
-    }
-
-    public bool IsTouching()
-    {
-        return m_bIsTouching;
-    }
+    private Vector2 lastPosition;
 
     #region Event Handler
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("Mouse Down: " + eventData.pointerCurrentRaycast.gameObject.name);
+        pressedPosition = lastPosition = eventData.position;
 
-        m_bIsTouching = true;
+        onPress?.Invoke(eventData.position);
 
-        m_vec2PressedPosition = eventData.pointerCurrentRaycast.worldPosition;
-
-        onPress?.Invoke(m_vec2PressedPosition);
+        StartCoroutine("ProcessHold");
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("Mouse Up");
+        onRelease?.Invoke(eventData.position);
 
-        m_bIsTouching = false;
-
-        onRelease?.Invoke(eventData.pointerCurrentRaycast.worldPosition);
+        StopCoroutine("ProcessHold");
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("Dragging");
-
-        onHold?.Invoke(eventData.pointerCurrentRaycast.worldPosition);
+        lastPosition = eventData.position;
     }
     #endregion
+
+    private IEnumerator ProcessHold()
+    {
+        while (true)
+        {
+            yield return null;
+
+            onHold?.Invoke(lastPosition);
+        }
+    }
 }

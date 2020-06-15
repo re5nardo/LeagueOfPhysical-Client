@@ -160,6 +160,7 @@ public class EntityManager : GameFramework.EntityManager
 
 			entity = Character.Builder()
                 .SetEntityID(characterSnapInfo.m_nEntityID)
+                .SetEntityRole(characterSnapInfo.m_EntityRole)
                 .SetMasterDataID(characterSnapInfo.m_nMasterDataID)
                 .SetModelPath(characterSnapInfo.m_strModel)
                 .SetFirstStatus(characterSnapInfo.m_FirstStatus)
@@ -177,6 +178,7 @@ public class EntityManager : GameFramework.EntityManager
 
 			entity = Projectile.Builder()
                 .SetEntityID(projectileSnapInfo.m_nEntityID)
+                .SetEntityRole(projectileSnapInfo.m_EntityRole)
                 .SetMasterDataID(projectileSnapInfo.m_nMasterDataID)
                 .SetModelPath(projectileSnapInfo.m_strModel)
                 .SetPosition(projectileSnapInfo.m_Position)
@@ -192,7 +194,8 @@ public class EntityManager : GameFramework.EntityManager
 
 			entity = GameItem.Builder()
 				.SetEntityID(gameItemSnapInfo.m_nEntityID)
-				.SetMasterDataID(gameItemSnapInfo.m_nMasterDataID)
+                .SetEntityRole(gameItemSnapInfo.m_EntityRole)
+                .SetMasterDataID(gameItemSnapInfo.m_nMasterDataID)
 				.SetModelPath(gameItemSnapInfo.m_strModel)
 				.SetPosition(gameItemSnapInfo.m_Position)
 				.SetRotation(gameItemSnapInfo.m_Rotation)

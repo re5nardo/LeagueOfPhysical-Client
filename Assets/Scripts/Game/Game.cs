@@ -39,7 +39,7 @@ namespace LOP
             tickUpdater = gameObject.AddComponent<TickUpdater>();
 
             GameUI.Initialize();
-            tickUpdater.Initialize(1 / 30f, false, OnTick, OnTickEnd);
+            tickUpdater.Initialize(1 / 30f, false, null, null);
 
             RoomNetwork.Instance.onMessage += OnNetworkMessage;
         }
@@ -85,48 +85,6 @@ namespace LOP
             InvokeRepeating("NotifyPlayerLookAtPosition", 0f, 0.1f);
         }
 
-        private void OnTick(int tick)
-        {
-            var entities = EntityManager.Instance.GetAllEntities().Cast<MonoEntityBase>().ToList();
-
-            //  sort
-            //  ...
-
-            entities.ForEach(entity =>
-            {
-                //  Iterating중에 Entity가 Destroy 안되었는지 체크
-                if (entity.IsValid)
-                {
-                    entity.Tick(tick);
-                }
-            });
-
-            entities.ForEach(entity =>
-            {
-                if (entity.IsValid)
-                {
-                    entity.OnBeforePhysicsSimulation(tick);
-                }
-            });
-
-            Physics.Simulate(TickInterval);
-
-            entities.ForEach(entity =>
-            {
-                if (entity.IsValid)
-                {
-                    entity.OnAfterPhysicsSimulation(tick);
-                }
-            });
-        }
-
-        private void OnTickEnd(int tick)
-        {
-            //BroadCastGameEvent();
-
-            //gameEvents.Clear();
-        }
-
         private GameUI GetGameUI()
         {
             return FindObjectOfType<GameUI>();
@@ -150,7 +108,7 @@ namespace LOP
             GameUI.CameraController.SetTarget(character.ModelTransform);
             GameUI.CameraController.StartFollowTarget();
 
-            GameUI.PlayerInputUI.SetCharacterID(character.EntityID);
+            GameUI.PlayerInputController.SetCharacterID(character.EntityID);
         }
     }
 }

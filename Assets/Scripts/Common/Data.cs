@@ -85,6 +85,17 @@ public enum EntityType
 	GameItem = 3,
 }
 
+[Serializable][Flags]
+public enum EntityRole
+{
+    None        = 0,
+    NPC         = 1 << 0,
+    Monster     = 1 << 1,
+    Player      = 1 << 2,
+
+    All         = NPC | Monster | Player,
+}
+
 [Serializable]
 public enum HealthBarType
 {

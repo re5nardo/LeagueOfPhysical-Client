@@ -12,6 +12,7 @@ namespace Entity
         public int EntityID { get; protected set; } = -1;
 
         public EntityType EntityType { get; protected set; } = EntityType.None;
+        public EntityRole EntityRole { get; protected set; } = EntityRole.None;
 
         public bool IsValid
         {

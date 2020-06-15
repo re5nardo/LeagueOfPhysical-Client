@@ -274,7 +274,7 @@ public class CameraController : MonoBehaviour
     {
         m_toggleFollowTarget.isOn = false;
 
-        Vector2 vec2Direction = vec2ScreenPosition - m_DirectionKey.GetPressedPosition();
+        Vector2 vec2Direction = vec2ScreenPosition - m_DirectionKey.PressedPosition;
         Vector3 vec3Direction = new Vector3(vec2Direction.x, 0f, vec2Direction.y);
         vec3Direction.Normalize();
 

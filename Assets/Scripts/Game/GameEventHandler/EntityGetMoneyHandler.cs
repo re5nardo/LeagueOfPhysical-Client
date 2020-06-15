@@ -10,11 +10,12 @@ public class EntityGetMoneyHandler : IHandler<IGameEvent>
     {
         EntityGetMoney entityGetMoney = gameEvent as EntityGetMoney;
 
-        GameObject goMoneyGetUI = ResourcePool.Instance.GetResource("UI/MoneyGetUI", LOP.Game.Current.GameUI.GetTopMostGameRoomPanel().transform);
+        GameObject goFloatingGetMoney = ResourcePool.Instance.GetResource(Define.ResourcePath.UI.FLOATING_GET_MONEY, LOP.Game.Current.GameUI.GetTopMostCanvas().transform);
 
-        MoneyGetUI moneyGetUI = goMoneyGetUI.GetComponent<MoneyGetUI>();
-        moneyGetUI.SetData(entityGetMoney.position, string.Format("+{0}", entityGetMoney.money));
+        FloatingItem floatingItem = goFloatingGetMoney.GetComponent<FloatingItem>();
 
-        goMoneyGetUI.AddComponent<ResourceReturnAgent>().m_fDelayTime = 1.5f;
+        floatingItem.SetData(Camera.main.WorldToScreenPoint(entityGetMoney.position), string.Format("+{0}", entityGetMoney.money));
+
+        goFloatingGetMoney.AddComponent<ResourceReturnAgent>().m_fDelayTime = 1.5f;
     }
 }

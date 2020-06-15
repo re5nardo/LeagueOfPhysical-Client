@@ -22,10 +22,10 @@ public class EntityDamageHandler : IHandler<IGameEvent>
             (entity as Character).CurrentHP = entityDamage.afterHP;
         }
 
-        GameObject goCommonTextUI = ResourcePool.Instance.GetResource("UI/CommonTextUI", LOP.Game.Current.GameUI.GetTopMostGameRoomPanel().transform);
-        CommonTextUI commonTextUI = goCommonTextUI.GetComponent<CommonTextUI>();
-        commonTextUI.SetData(entity.Position, string.Format("-{0}", entityDamage.damage), Color.red);
+        GameObject goFloatingItem = ResourcePool.Instance.GetResource(Define.ResourcePath.UI.FLOATING_ITEM, LOP.Game.Current.GameUI.GetTopMostCanvas().transform);
+        FloatingItem floatingItem = goFloatingItem.GetComponent<FloatingItem>();
+        floatingItem.SetData(Camera.main.WorldToScreenPoint(entity.Position), string.Format("-{0}", entityDamage.damage), Color.red);
 
-        goCommonTextUI.AddComponent<ResourceReturnAgent>().m_fDelayTime = 2f;
+        goFloatingItem.AddComponent<ResourceReturnAgent>().m_fDelayTime = 2f;
     }
 }

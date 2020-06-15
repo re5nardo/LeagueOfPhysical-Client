@@ -5,41 +5,31 @@ using UnityEngine;
 public class GameUI : MonoBehaviour
 {
     [SerializeField] private CameraController m_CameraController = null;
-    [SerializeField] private EmotionExpressionSelectUI m_EmotionExpressionSelectUI = null;
-    [SerializeField] private UISpriteButton m_ButtonEmotionExpression = null;
-    [SerializeField] private FirstStatusSelectionUI m_FirstStatusSelectionUI = null;
-    [SerializeField] private UISpriteButton m_ButtonFirstStatus = null;
-    [SerializeField] private AbilitySelectionUI m_AbilitySelectionUI = null;
-    [SerializeField] private PlayerInputUI m_PlayerInputUI = null;
+    [SerializeField] private EmotionExpressionSelector m_EmotionExpressionSelector = null;
+    [SerializeField] private TextureButton m_ButtonEmotionExpression = null;
+    [SerializeField] private PlayerInputController m_PlayerInputController = null;
 
     public CameraController             CameraController            { get { return m_CameraController; } }
-    public EmotionExpressionSelectUI    EmotionExpressionSelectUI   { get { return m_EmotionExpressionSelectUI; } }
-    public FirstStatusSelectionUI       FirstStatusSelectionUI      { get { return m_FirstStatusSelectionUI; } }
-    public AbilitySelectionUI           AbilitySelectionUI          { get { return m_AbilitySelectionUI; } }
-    public PlayerInputUI                PlayerInputUI               { get { return m_PlayerInputUI; } }
+    public EmotionExpressionSelector    EmotionExpressionSelector   { get { return m_EmotionExpressionSelector; } }
+    public PlayerInputController        PlayerInputController       { get { return m_PlayerInputController; } }
 
     public void Initialize()
     {
-        m_ButtonEmotionExpression.onClicked = () =>
+        m_ButtonEmotionExpression.button.onClick.AddListener(() =>
         {
-            m_EmotionExpressionSelectUI.Show();
-        };
-
-        m_ButtonFirstStatus.onClicked = () =>
-        {
-            m_FirstStatusSelectionUI.Toggle();
-        };
+            EmotionExpressionSelector.Show();
+        });
     }
 
     public void Clear()
     {
-        m_ButtonEmotionExpression.onClicked = null;
-        m_ButtonFirstStatus.onClicked = null;
+        m_ButtonEmotionExpression.button.onClick.RemoveAllListeners();
     }
 
-    public GameObject GetTopMostGameRoomPanel()
+    public Canvas GetTopMostCanvas()
     {
-        GameObject[] gameRoomPanels = GameObject.FindGameObjectsWithTag("GameRoomPanel");
-        return gameRoomPanels[gameRoomPanels.Length - 1];
+        var canvases = GameObject.FindObjectsOfType<Canvas>();
+
+        return canvases[canvases.Length - 1];
     }
 }
