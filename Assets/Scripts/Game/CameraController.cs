@@ -258,9 +258,9 @@ public class CameraController : MonoBehaviour
         m_fUserZoomValue--;
     }
 
-    public void OnFollowTargetToggled(bool bValue)
+    public void OnFollowTargetToggled(Toggle toggle)
     {
-        if (bValue)
+        if (toggle.isOn)
         {
             StartFollowTarget();
         }

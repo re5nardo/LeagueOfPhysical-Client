@@ -59,7 +59,7 @@ public class PingChecker : MonoBehaviour
             response = false;
             lastReqTime = DateTime.Now;
 
-            RoomNetwork.Instance.Send(new CS_Ping(), PhotonNetwork.masterClient.ID);
+            RoomNetwork.Instance.Send(new CS_Ping(), PhotonNetwork.masterClient.ID, bInstant: true);
 
             yield return new WaitUntil(() => response);
 
