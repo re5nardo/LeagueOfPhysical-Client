@@ -25,6 +25,11 @@ namespace LOP
             //  PhotonType Register
             PhotonTypeRegister.Register();
 
+            //  Debug Console
+            if (Debug.isDebugBuild)
+            {
+                UnityEngine.Object.Instantiate(Resources.Load("IngameDebugConsole/IngameDebugConsole"));
+            }
 
             //            CatalogData.Instance.UpdateData();
             //            UserProfileData.Instance.UpdateData();
