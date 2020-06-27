@@ -347,4 +347,9 @@ public partial class Util
             return resultStream.ToArray();
         }
     }
+
+    public static int IndexOf(Type enumType, object value)
+    {
+        return Array.IndexOf(Enum.GetValues(enumType), value);
+    }
 }

@@ -28,8 +28,21 @@ public class GameUI : MonoBehaviour
 
     public Canvas GetTopMostCanvas()
     {
-        var canvases = GameObject.FindObjectsOfType<Canvas>();
-
-        return canvases[canvases.Length - 1];
+        return ManagedCanvasManager.Instance.GetTopMost(CanvasLayer.Contents).Canvas;
     }
+
+    public Canvas GetHealthBarCanvas()
+    {
+        var target = ManagedCanvasManager.Instance.Get(CanvasLayer.Contents, "Canvas - 100") ?? ManagedCanvasManager.Instance.GetTopMost(CanvasLayer.Contents);
+
+        return target.Canvas;
+    }
+
+    public Canvas GetFloatingItemCanvas()
+    {
+        var target = ManagedCanvasManager.Instance.Get(CanvasLayer.Contents, "Canvas - 400") ?? ManagedCanvasManager.Instance.GetTopMost(CanvasLayer.Contents);
+
+        return target.Canvas;
+    }
+
 }

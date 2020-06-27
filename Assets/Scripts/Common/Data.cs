@@ -114,3 +114,10 @@ public enum FirstStatusElement
 	WIS = 5,
 	CHA = 6,
 }
+
+public enum CanvasLayer
+{
+    Contents    = 1 << 0,
+    Popup       = 1 << 1,
+    System      = 1 << 2,
+}
