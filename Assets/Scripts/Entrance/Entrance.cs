@@ -101,7 +101,9 @@ public class Entrance : PunBehaviour
 	{
         textState.text = "마스터 서버에 접속하였습니다.";
 
-		foreach(TypedLobbyInfo lobbyInfo in PhotonNetwork.LobbyStatistics)
+        Debug.Log("PhotonNetwork.player.UserId : " + PhotonNetwork.player.UserId);
+
+        foreach (TypedLobbyInfo lobbyInfo in PhotonNetwork.LobbyStatistics)
 		{
 			Debug.Log(string.Format("[Lobby Info] Type : {0}, IsDefault : {1}, Name : {2}, RoomCount : {3}, PlayerCount : {4}", lobbyInfo.Type, lobbyInfo.IsDefault, lobbyInfo.Name, lobbyInfo.RoomCount, lobbyInfo.PlayerCount));
 		}
