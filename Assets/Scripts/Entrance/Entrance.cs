@@ -88,7 +88,7 @@ public class Entrance : PunBehaviour
                         Invoke("CheckMatchState", 1f);
                         break;
                     case "Matched":
-                        RoomConnector.TryToEnterRoom((string)result["GameId"]);
+                        RoomConnector.TryToEnterRoom((string)result["gameId"]);
                         break;
                     default:
                         textState.gameObject.SetActive(false);

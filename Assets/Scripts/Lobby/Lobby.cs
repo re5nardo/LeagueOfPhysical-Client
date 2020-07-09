@@ -44,7 +44,7 @@ public class Lobby : MonoBehaviour
                         break;
                     case "Matched":
                         text.text = "Room에 입장합니다.";
-                        RoomConnector.TryToEnterRoom((string)result["GameId"]);
+                        RoomConnector.TryToEnterRoom((string)result["gameId"]);
                         break;
                     default:
                         text.text = "";
