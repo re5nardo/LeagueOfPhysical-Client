@@ -68,8 +68,39 @@ public class Entrance : PunBehaviour
 
         yield return new WaitUntil(() => LOP.Application.IsInitialized);
 
-        textState.gameObject.SetActive(false);
-        goBtnJoinLobby.SetActive(true);
+        CheckMatchState();
+    }
+
+    private void CheckMatchState()
+    {
+        if (IsInvoking("CheckMatchState"))
+        {
+            CancelInvoke("CheckMatchState");
+        }
+
+        MatchStateManager.Instance.GetMatchState(
+            result =>
+            {
+                switch((string)result["state"])
+                {
+                    case "Matching":
+                        MatchStateManager.Instance.CancelMatchRequest();
+                        Invoke("CheckMatchState", 1f);
+                        break;
+                    case "Matched":
+                        RoomConnector.TryToEnterRoom((string)result["GameId"]);
+                        break;
+                    default:
+                        textState.gameObject.SetActive(false);
+                        goBtnJoinLobby.SetActive(true);
+                        break;
+                }
+            },
+            error =>
+            {
+                Debug.LogError(error);
+            }
+        );
     }
 
     private void ConnectToMasterServer()
