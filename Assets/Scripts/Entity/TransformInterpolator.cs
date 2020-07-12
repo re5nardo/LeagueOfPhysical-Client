@@ -40,16 +40,34 @@ public class TransformInterpolator : MonoBehaviour
    
     private void Update()
     {
-        if (localTime < Game.Current.GameTime)
+        UpdateLocalTime();
+    
+        SyncedMovement();
+    }
+
+    private void UpdateLocalTime()
+    {
+        float gap = localTime - Game.Current.GameTime;
+
+        if (gap < -0.5)
         {
-            localTime = Game.Current.GameTime;  //  lerping??
+            localTime = Game.Current.GameTime;
         }
-        else if (localTime - Game.Current.GameTime < 1)
+        else if (gap < 0)
+        {
+            localTime += (Time.deltaTime * 2);
+        }
+        else if (gap > 0.1)
+        {
+            localTime += (Time.deltaTime * 0.5f);
+        }
+        else if (gap > 0.5)
+        {
+        }
+        else
         {
             localTime += Time.deltaTime;
         }
-
-        SyncedMovement();
     }
 
 	private void SyncedMovement()
