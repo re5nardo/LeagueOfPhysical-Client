@@ -83,6 +83,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1619047590203563908}
   - component: {fileID: 1619047590203563909}
+  - component: {fileID: 2383323066159316933}
   m_Layer: 5
   m_Name: TickStatusChecker
   m_TagString: Untagged
@@ -167,6 +168,18 @@ MonoBehaviour:
   - {fileID: 1619047590778843002}
   - {fileID: 1619047591590483850}
   - {fileID: 1619047590741254806}
+--- !u!225 &2383323066159316933
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1619047590203563911}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &1619047590228001972
 GameObject:
   m_ObjectHideFlags: 0
