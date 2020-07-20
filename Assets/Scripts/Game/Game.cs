@@ -39,7 +39,7 @@ namespace LOP
             tickUpdater = gameObject.AddComponent<TickUpdater>();
 
             GameUI.Initialize();
-            tickUpdater.Initialize(1 / 30f, true, null, null, 0.15f);
+            tickUpdater.Initialize(1 / 30f, true, null, null);
 
             RoomNetwork.Instance.onMessage += OnNetworkMessage;
 

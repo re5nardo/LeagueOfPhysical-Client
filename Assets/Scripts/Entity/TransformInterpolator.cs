@@ -49,24 +49,21 @@ public class TransformInterpolator : MonoBehaviour
     {
         float gap = localTime - Game.Current.GameTime;
 
-        if (gap < -0.5)
+        if (gap < -0.1)
         {
             localTime = Game.Current.GameTime;
         }
         else if (gap < 0)
         {
-            localTime += (Time.deltaTime * 2);
+            localTime += (Time.deltaTime * 1.6f);
         }
-        else if (gap > 0.1)
-        {
-            localTime += (Time.deltaTime * 0.5f);
-        }
-        else if (gap > 0.5)
-        {
-        }
-        else
+        else if (gap < 0.1)
         {
             localTime += Time.deltaTime;
+        }
+        else if (gap < 0.2)
+        {
+            localTime += (Time.deltaTime * 0.7f);
         }
     }
 
