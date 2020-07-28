@@ -28,9 +28,9 @@ public class PlayerInputController : MonoBehaviour
 	{
 		if (playerMoveInput != null)
 		{
-			playerMoveInput.m_lSequence = sequence++;
-			playerMoveInput.m_nEntityID = EntityManager.Instance.GetMyEntityID();
-			playerMoveInput.m_fGameTime = Game.Current.GameTime - Time.deltaTime;
+			playerMoveInput.sequence = sequence++;
+			playerMoveInput.entityID = EntityManager.Instance.GetMyEntityID();
+			playerMoveInput.tick = Game.Current.CurrentTick;
 
 			CS_NotifyMoveInputData notifyMoveInputData = new CS_NotifyMoveInputData();
 			notifyMoveInputData.m_PlayerMoveInput = playerMoveInput;
