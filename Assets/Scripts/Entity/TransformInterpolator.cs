@@ -59,7 +59,7 @@ public class TransformInterpolator : MonoBehaviour
         {
             localTime += (Time.deltaTime * 2);
         }
-        else if (gap < 0.05)    //  0.05 기준 (latency 정도로 맞추면 될 듯??)
+        else if (gap < 0)    //  0이어도 상관 없으려나.. 흠..
         {
             localTime += (Time.deltaTime * 1.5f);
         }
@@ -116,7 +116,7 @@ public class TransformInterpolator : MonoBehaviour
 
         //  Position
         float distance = (currentPosition - lastPosition).magnitude;
-        if ((distance > (m_Entity.MovementSpeed * Time.deltaTime * 3)) /*순간이동*/ || distance <= (m_Entity.MovementSpeed * Time.deltaTime) /*이동 범위 내*/)   
+        if ((distance > (m_Entity.MovementSpeed * Time.deltaTime * 3)) /*순간이동*/ || distance <= (m_Entity.MovementSpeed * Time.deltaTime) /*범위 내*/)   
         {
             currentPosition = currentPosition;
         }
@@ -126,7 +126,16 @@ public class TransformInterpolator : MonoBehaviour
         }
         lastPosition = m_Entity.Position = currentPosition;
 
-        //  Rotation (현재는 보정x)
+        //  Rotation
+        float rotate = Mathf.Abs(currentRotation.y - lastRotation.y);
+        if ((rotate > (Behavior.Rotation.ANGULAR_SPEED * Time.deltaTime * 3)) /*순간이동*/ || rotate <= (Behavior.Rotation.ANGULAR_SPEED * Time.deltaTime) /*범위 내*/)
+        {
+            currentRotation = currentRotation;
+        }
+        else
+        {
+            currentRotation = Quaternion.LerpUnclamped(Quaternion.Euler(lastRotation), Quaternion.Euler(currentRotation), 1.1f).eulerAngles;    //  보정
+        }
         lastRotation = m_Entity.Rotation = currentRotation;
 
         //  Velocity (현재는 보정x)

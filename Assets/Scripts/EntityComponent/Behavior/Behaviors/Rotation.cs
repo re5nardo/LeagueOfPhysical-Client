@@ -9,7 +9,7 @@ namespace Behavior
         private Vector3 m_vec3Direction;
 
         // Angular speed in degrees per sec.
-        private float m_fAngularSpeed = 720f;
+        public const float ANGULAR_SPEED = 720f;
 
         #region BehaviorBase
         protected override bool OnBehaviorUpdate()
@@ -37,7 +37,7 @@ namespace Behavior
                 }
             }
 
-            Entity.AngularVelocity = new Vector3(0, sign * m_fAngularSpeed, 0);
+            Entity.AngularVelocity = new Vector3(0, sign * ANGULAR_SPEED, 0);
 
             float rotated = Entity.AngularVelocity.y * DeltaTime;
 
