@@ -4,9 +4,9 @@ using UnityEngine;
 using GameEvent;
 using GameFramework;
 
-public class EntityBehaviorStartHandler : IHandler<IGameEvent>
+public class EntityBehaviorStartHandler
 {
-    public void Handle(IGameEvent gameEvent)
+    public static void Handle(IGameEvent gameEvent)
     {
         EntityBehaviorStart entityBehaviorStart = gameEvent as EntityBehaviorStart;
 

@@ -5,9 +5,9 @@ using GameEvent;
 using GameFramework;
 using Entity;
 
-public class EntityDamageHandler : IHandler<IGameEvent>
+public class EntityDamageHandler
 {
-    public void Handle(IGameEvent gameEvent)
+    public static void Handle(IGameEvent gameEvent)
     {
         EntityDamage entityDamage = gameEvent as EntityDamage;
 

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
 
-public class SC_SyncTickHandler : IHandler<IPhotonEventMessage>
+public class SC_SyncTickHandler
 {
-    public void Handle(IPhotonEventMessage msg)
+    public static void Handle(IPhotonEventMessage msg)
     {
         SC_SyncTick syncTick = msg as SC_SyncTick;
 

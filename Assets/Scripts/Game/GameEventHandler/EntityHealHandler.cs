@@ -5,9 +5,9 @@ using GameEvent;
 using GameFramework;
 using Entity;
 
-public class EntityHealHandler : IHandler<IGameEvent>
+public class EntityHealHandler
 {
-    public void Handle(IGameEvent gameEvent)
+    public static void Handle(IGameEvent gameEvent)
     {
         EntityHeal entityHeal = gameEvent as EntityHeal;
 

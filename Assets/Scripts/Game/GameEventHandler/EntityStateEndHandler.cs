@@ -4,9 +4,9 @@ using UnityEngine;
 using GameEvent;
 using GameFramework;
 
-public class EntityStateEndHandler : IHandler<IGameEvent>
+public class EntityStateEndHandler
 {
-    public void Handle(IGameEvent gameEvent)
+    public static void Handle(IGameEvent gameEvent)
     {
         EntityStateEnd entityStateEnd = gameEvent as EntityStateEnd;
     }

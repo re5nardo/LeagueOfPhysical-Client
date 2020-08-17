@@ -4,9 +4,9 @@ using UnityEngine;
 using GameEvent;
 using GameFramework;
 
-public class EntityGetMoneyHandler : IHandler<IGameEvent>
+public class EntityGetMoneyHandler
 {
-    public void Handle(IGameEvent gameEvent)
+    public static void Handle(IGameEvent gameEvent)
     {
         EntityGetMoney entityGetMoney = gameEvent as EntityGetMoney;
 

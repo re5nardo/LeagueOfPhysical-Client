@@ -5,9 +5,9 @@ using GameEvent;
 using GameFramework;
 using Entity;
 
-public class EntityDieHandler : IHandler<IGameEvent>
+public class EntityDieHandler
 {
-    public void Handle(IGameEvent gameEvent)
+    public static void Handle(IGameEvent gameEvent)
     {
         EntityDie entityDie = gameEvent as EntityDie;
 

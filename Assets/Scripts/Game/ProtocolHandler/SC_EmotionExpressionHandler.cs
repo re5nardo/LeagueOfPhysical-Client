@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
 
-public class SC_EmotionExpressionHandler : IHandler<IPhotonEventMessage>
+public class SC_EmotionExpressionHandler
 {
-    public void Handle(IPhotonEventMessage msg)
+    public static void Handle(IPhotonEventMessage msg)
     {
         SC_EmotionExpression emotionExpression = msg as SC_EmotionExpression;
 

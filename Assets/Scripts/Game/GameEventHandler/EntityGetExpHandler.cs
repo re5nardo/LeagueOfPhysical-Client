@@ -5,9 +5,9 @@ using GameEvent;
 using GameFramework;
 using Entity;
 
-public class EntityGetExpHandler : IHandler<IGameEvent>
+public class EntityGetExpHandler
 {
-    public void Handle(IGameEvent gameEvent)
+    public static void Handle(IGameEvent gameEvent)
     {
         EntityGetExp entityGetExp = gameEvent as EntityGetExp;
 

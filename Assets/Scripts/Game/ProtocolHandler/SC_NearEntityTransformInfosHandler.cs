@@ -4,9 +4,9 @@ using UnityEngine;
 using GameFramework;
 using Entity;
 
-public class SC_NearEntityTransformInfosHandler : IHandler<IPhotonEventMessage>
+public class SC_NearEntityTransformInfosHandler
 {
-    public void Handle(IPhotonEventMessage msg)
+    public static void Handle(IPhotonEventMessage msg)
     {
         SC_NearEntityTransformInfos nearEntityTransformInfos = msg as SC_NearEntityTransformInfos;
 

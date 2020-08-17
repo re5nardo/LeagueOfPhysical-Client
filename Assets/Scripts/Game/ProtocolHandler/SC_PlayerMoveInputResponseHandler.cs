@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
 
-public class SC_PlayerMoveInputResponseHandler : IHandler<IPhotonEventMessage>
+public class SC_PlayerMoveInputResponseHandler
 {
-    public void Handle(IPhotonEventMessage msg)
+    public static void Handle(IPhotonEventMessage msg)
     {
         SC_PlayerMoveInputResponse playerMoveInputResponse = msg as SC_PlayerMoveInputResponse;
 

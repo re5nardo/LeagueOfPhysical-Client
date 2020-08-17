@@ -10,12 +10,12 @@ public class GameProtocolDispatcher : MonoBehaviour
 
     private void Awake()
     {
-        protocolHandlers.Add(PhotonEvent.SC_EnterRoom, LOP.Game.Current.OnEnterRoom);
-        protocolHandlers.Add(PhotonEvent.SC_GameEvents, new SC_GameEventsHandler().Handle);
-        protocolHandlers.Add(PhotonEvent.SC_NearEntityTransformInfos, new SC_NearEntityTransformInfosHandler().Handle);
-        protocolHandlers.Add(PhotonEvent.SC_SyncTick, new SC_SyncTickHandler().Handle);
-        protocolHandlers.Add(PhotonEvent.SC_EmotionExpression, new SC_EmotionExpressionHandler().Handle);
-        protocolHandlers.Add(PhotonEvent.SC_PlayerMoveInputResponse, new SC_PlayerMoveInputResponseHandler().Handle);
+        protocolHandlers.Add(PhotonEvent.SC_EnterRoom,                  LOP.Game.Current.OnEnterRoom);
+        protocolHandlers.Add(PhotonEvent.SC_GameEvents,                 SC_GameEventsHandler.Handle);
+        protocolHandlers.Add(PhotonEvent.SC_NearEntityTransformInfos,   SC_NearEntityTransformInfosHandler.Handle);
+        protocolHandlers.Add(PhotonEvent.SC_SyncTick,                   SC_SyncTickHandler.Handle);
+        protocolHandlers.Add(PhotonEvent.SC_EmotionExpression,          SC_EmotionExpressionHandler.Handle);
+        protocolHandlers.Add(PhotonEvent.SC_PlayerMoveInputResponse,    SC_PlayerMoveInputResponseHandler.Handle);
     }
 
     private void OnDestroy()

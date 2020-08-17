@@ -5,9 +5,9 @@ using GameEvent;
 using GameFramework;
 using Entity;
 
-public class EntityLevelUpHandler : IHandler<IGameEvent>
+public class EntityLevelUpHandler
 {
-    public void Handle(IGameEvent gameEvent)
+    public static void Handle(IGameEvent gameEvent)
     {
         EntityLevelUp entityLevelUp = gameEvent as EntityLevelUp;
 

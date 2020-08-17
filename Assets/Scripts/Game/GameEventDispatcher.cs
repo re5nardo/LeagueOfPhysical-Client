@@ -7,20 +7,20 @@ using System;
 
 public class GameEventDispatcher : MonoBehaviour
 {
-    private Dictionary<Type, IHandler<IGameEvent>> gameEventHandler = new Dictionary<Type, IHandler<IGameEvent>>();
+    private Dictionary<Type, Action<IGameEvent>> gameEventHandler = new Dictionary<Type, Action<IGameEvent>>();
 
     private void Awake()
     {
-        gameEventHandler.Add(typeof(EntityBehaviorStart),    new EntityBehaviorStartHandler());
-        gameEventHandler.Add(typeof(EntityBehaviorEnd),      new EntityBehaviorEndHandler());
-        gameEventHandler.Add(typeof(EntityStateStart),       new EntityStateStartHandler());
-        gameEventHandler.Add(typeof(EntityStateEnd),         new EntityStateEndHandler());
-        gameEventHandler.Add(typeof(EntityDamage),           new EntityDamageHandler());
-        gameEventHandler.Add(typeof(EntityHeal),             new EntityHealHandler());
-        gameEventHandler.Add(typeof(EntityDie),              new EntityDieHandler());
-        gameEventHandler.Add(typeof(EntityGetExp),           new EntityGetExpHandler());
-        gameEventHandler.Add(typeof(EntityGetMoney),         new EntityGetMoneyHandler());
-        gameEventHandler.Add(typeof(EntityLevelUp),          new EntityLevelUpHandler());
+        gameEventHandler.Add(typeof(EntityBehaviorStart),    EntityBehaviorStartHandler.Handle);
+        gameEventHandler.Add(typeof(EntityBehaviorEnd),      EntityBehaviorEndHandler.Handle);
+        gameEventHandler.Add(typeof(EntityStateStart),       EntityStateStartHandler.Handle);
+        gameEventHandler.Add(typeof(EntityStateEnd),         EntityStateEndHandler.Handle);
+        gameEventHandler.Add(typeof(EntityDamage),           EntityDamageHandler.Handle);
+        gameEventHandler.Add(typeof(EntityHeal),             EntityHealHandler.Handle);
+        gameEventHandler.Add(typeof(EntityDie),              EntityDieHandler.Handle);
+        gameEventHandler.Add(typeof(EntityGetExp),           EntityGetExpHandler.Handle);
+        gameEventHandler.Add(typeof(EntityGetMoney),         EntityGetMoneyHandler.Handle);
+        gameEventHandler.Add(typeof(EntityLevelUp),          EntityLevelUpHandler.Handle);
     }
 
     private void OnDestroy()
@@ -30,11 +30,11 @@ public class GameEventDispatcher : MonoBehaviour
 
     public void DispatchGameEvent(IGameEvent gameEvent)
     {
-        IHandler<IGameEvent> handler = null;
+        Action<IGameEvent> handler = null;
 
         if (gameEventHandler.TryGetValue(gameEvent.GetType(), out handler))
         {
-            handler?.Handle(gameEvent);
+            handler?.Invoke(gameEvent);
         }
     }
 }
