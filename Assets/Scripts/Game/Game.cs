@@ -39,7 +39,7 @@ namespace LOP
             tickUpdater = gameObject.AddComponent<TickUpdater>();
 
             GameUI.Initialize();
-            tickUpdater.Initialize(1 / 30f, true, null, null);
+            tickUpdater.Initialize(1 / 30f, true, OnTick, null);
 
             RoomNetwork.Instance.onMessage += OnNetworkMessage;
 
@@ -85,6 +85,23 @@ namespace LOP
         protected override void OnBeforeRun()
         {
             InvokeRepeating("NotifyPlayerLookAtPosition", 0f, 0.1f);
+        }
+
+        private void OnTick(int tick)
+        {
+            var entities = EntityManager.Instance.GetAllEntities().Cast<MonoEntityBase>().ToList();
+
+            //  sort
+            //  ...
+
+            entities.ForEach(entity =>
+            {
+                //  Iterating중에 Entity가 Destroy 안되었는지 체크
+                if (entity.IsValid)
+                {
+                    entity.Tick(tick);
+                }
+            });
         }
 
         private GameUI GetGameUI()
