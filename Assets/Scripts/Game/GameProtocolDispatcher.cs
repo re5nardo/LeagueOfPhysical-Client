@@ -15,6 +15,7 @@ public class GameProtocolDispatcher : MonoBehaviour
         protocolHandlers.Add(PhotonEvent.SC_NearEntityTransformInfos, new SC_NearEntityTransformInfosHandler().Handle);
         protocolHandlers.Add(PhotonEvent.SC_SyncTick, new SC_SyncTickHandler().Handle);
         protocolHandlers.Add(PhotonEvent.SC_EmotionExpression, new SC_EmotionExpressionHandler().Handle);
+        protocolHandlers.Add(PhotonEvent.SC_PlayerMoveInputResponse, new SC_PlayerMoveInputResponseHandler().Handle);
     }
 
     private void OnDestroy()

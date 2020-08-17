@@ -13,7 +13,7 @@ public class SC_NearEntityTransformInfosHandler : IHandler<IPhotonEventMessage>
         foreach (EntityTransformInfo entityTransformInfo in nearEntityTransformInfos.m_listEntityTransformInfo)
         {
             IEntity entity = EntityManager.Instance.GetEntity(entityTransformInfo.m_nEntityID);
-            if (entity == null)
+            if (entity == null || entity.EntityID == EntityManager.Instance.GetMyEntityID())
             {
                 continue;
             }

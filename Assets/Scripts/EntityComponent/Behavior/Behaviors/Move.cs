@@ -17,15 +17,21 @@ namespace Behavior
 
 			Vector3 moved = toMove.normalized * Entity.MovementSpeed * DeltaTime;
 
+            var startPosition = Entity.Position;
+
             if (Util.Approximately(toMove.sqrMagnitude, moved.sqrMagnitude) || toMove.sqrMagnitude <= moved.sqrMagnitude)
             {
 				Entity.Position = m_vec3Destination;
+
+                FPM_Manager.Instance.AddMoveInput(startPosition, Entity.Position - startPosition);
 
                 return false;
             }
             else
             {
 				Entity.Position += moved;
+
+                FPM_Manager.Instance.AddMoveInput(startPosition, Entity.Position - startPosition);
 
                 return true;
             }

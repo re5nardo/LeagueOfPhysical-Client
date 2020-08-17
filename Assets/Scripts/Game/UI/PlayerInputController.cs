@@ -19,38 +19,35 @@ public class PlayerInputController : MonoBehaviour
 
 	private Dictionary<int, Action<IMessage, int>> messageHandler = new Dictionary<int, Action<IMessage, int>>();
 
-	private long sequence = 0;
-	private PlayerMoveInput playerMoveInput = null;
-	private SkillInputData skillInputData = null;
     private Character Entity = null;
+    private Queue<PlayerMoveInput> playerMoveInputs = new Queue<PlayerMoveInput>();
+    private SkillInputData skillInputData = null;
 
-	private void LateUpdate()
-	{
-		if (playerMoveInput != null)
-		{
-			playerMoveInput.sequence = sequence++;
-			playerMoveInput.entityID = EntityManager.Instance.GetMyEntityID();
-			playerMoveInput.tick = Game.Current.CurrentTick;
+    private void Update()
+    {
+        //  Move
+        if (playerMoveInputs.Count > 0)
+        {
+            PlayerMoveInput playerMoveInput = playerMoveInputs.Dequeue();
 
-			CS_NotifyMoveInputData notifyMoveInputData = new CS_NotifyMoveInputData();
-			notifyMoveInputData.m_PlayerMoveInput = playerMoveInput;
+            if (playerMoveInput.inputData != Vector3.zero)
+            {
+                FPM_Manager.Instance.ProcessInput(playerMoveInput);
+            }
+        }
 
-			RoomNetwork.Instance.Send(notifyMoveInputData, PhotonNetwork.masterClient.ID, bInstant: true);
+        //  Skill
+        if (skillInputData != null)
+        {
+            CS_NotifySkillInputData notifySkillInputData = new CS_NotifySkillInputData();
+            notifySkillInputData.m_SkillInputData = skillInputData;
 
-			playerMoveInput = null;
-		}
+            RoomNetwork.Instance.Send(notifySkillInputData, PhotonNetwork.masterClient.ID, bInstant: true);
 
-		if (skillInputData != null)
-		{
-			CS_NotifySkillInputData notifySkillInputData = new CS_NotifySkillInputData();
-			notifySkillInputData.m_SkillInputData = skillInputData;
-
-			RoomNetwork.Instance.Send(notifySkillInputData, PhotonNetwork.masterClient.ID, bInstant: true);
-
-			skillInputData = null;
-		}
-	}
-
+            skillInputData = null;
+        }
+    }
+   
 	public void SetCharacterID(int characterID)
 	{
         Entity = EntityManager.Instance.GetEntity(characterID) as Character;
@@ -169,42 +166,40 @@ public class PlayerInputController : MonoBehaviour
 	#endregion
 
 	#region Event Handler
-	private void OnMoveControllerPress(Vector2 vec2ScreenPosition)
+	private void OnMoveControllerPress(Vector2 screenPosition)
 	{
 		if (!EntityManager.Instance.GetMyCharacter().IsAlive)
 			return;
 
-		playerMoveInput = new PlayerMoveInput(inputType: PlayerMoveInput.InputType.Press);
-	}
+        playerMoveInputs.Enqueue(new PlayerMoveInput(inputType: PlayerMoveInput.InputType.Press));
+    }
 
-	private void OnMoveControllerRelease(Vector2 vec2ScreenPosition)
+	private void OnMoveControllerRelease(Vector2 screenPosition)
 	{
-		playerMoveInput = new PlayerMoveInput(inputType: PlayerMoveInput.InputType.Release);
-	}
+        if (!EntityManager.Instance.GetMyCharacter().IsAlive)
+            return;
 
-	private void OnMoveControllerHold(Vector2 vec2ScreenPosition)
+        playerMoveInputs.Enqueue(new PlayerMoveInput(inputType: PlayerMoveInput.InputType.Release));
+    }
+
+	private void OnMoveControllerHold(Vector2 holdPosition)
 	{
 		Character character = EntityManager.Instance.GetMyCharacter();
 		if (!character.IsAlive)
 			return;
 
-		Vector2 vec2DirectionKeyForMoveStart = moveController.GetPressedPosition();
+		Vector2 pressedPosition = moveController.GetPressedPosition();
 
-		if (vec2ScreenPosition == vec2DirectionKeyForMoveStart)
+		if (holdPosition == pressedPosition)
 			return;
 		
-		Vector2 vec2FinalDir = vec2ScreenPosition - vec2DirectionKeyForMoveStart;
-
-		float y = Util.Math.FindDegree(vec2FinalDir);
-		y += LOP.Game.Current.GameUI.CameraController.GetRotation_Y();
+		float y = Util.Math.FindDegree(holdPosition - pressedPosition) + LOP.Game.Current.GameUI.CameraController.GetRotation_Y();
 
 		float x = Mathf.Sin(Mathf.Deg2Rad * y);
 		float z = Mathf.Cos(Mathf.Deg2Rad * y);
 
-		Vector3 dir = new Vector3(x, 0, z);
-
-		playerMoveInput = new PlayerMoveInput(inputData: dir.normalized * Time.deltaTime, inputType: PlayerMoveInput.InputType.Hold);
-	}
+        playerMoveInputs.Enqueue(new PlayerMoveInput(inputData: new Vector3(x, 0, z).normalized, inputType: PlayerMoveInput.InputType.Hold));
+    }
 
 	private void OnBasicAttackControllerRelease(Vector2 vec2ScreenPosition)
 	{
