@@ -9,6 +9,8 @@ namespace LOP
     {
         public static Room Instance { get; private set; }
 
+        public float Latency { get; private set; } = 0.03f;     //  sec
+
         private RoomProtocolDispatcher protocolDispatcher = null;
         private Game game = null;
 

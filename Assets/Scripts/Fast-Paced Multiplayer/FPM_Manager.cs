@@ -84,7 +84,7 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>, ITickable
         //  클라이언트 선처리 (서버에 도달했을 때 예측해서)
         if (playerMoveInput.inputType == PlayerMoveInput.InputType.Press || playerMoveInput.inputType == PlayerMoveInput.InputType.Hold)
         {
-            StartCoroutine(AddPlayerMoveInput(playerMoveInput, 0.03f/*latency*/));
+            StartCoroutine(AddPlayerMoveInput(playerMoveInput, LOP.Room.Instance.Latency));
         }
         else if (playerMoveInput.inputType == PlayerMoveInput.InputType.Release)
         {
