@@ -10,16 +10,24 @@ public class SC_NearEntityTransformInfosHandler
     {
         SC_NearEntityTransformInfos nearEntityTransformInfos = msg as SC_NearEntityTransformInfos;
 
-        foreach (EntityTransformInfo entityTransformInfo in nearEntityTransformInfos.m_listEntityTransformInfo)
+        foreach (EntityTransformInfo entityTransformInfo in nearEntityTransformInfos.entityTransformInfos)
         {
             IEntity entity = EntityManager.Instance.GetEntity(entityTransformInfo.m_nEntityID);
-            if (entity == null || entity.EntityID == EntityManager.Instance.GetMyEntityID())
+            if (entity == null)
             {
                 continue;
             }
 
-            TransformInterpolator transformInterpolator = Util.GetOrAddComponent<TransformInterpolator>((entity as MonoEntityBase).gameObject);
-            transformInterpolator.SetData(entityTransformInfo);
+            if (entity.EntityID == EntityManager.Instance.GetMyEntityID())
+            {
+                TransformInterpolator_User transformInterpolator_User = Util.GetOrAddComponent<TransformInterpolator_User>((entity as MonoEntityBase).gameObject);
+                transformInterpolator_User.SetData(entityTransformInfo);
+            }
+            else
+            {
+                TransformInterpolator transformInterpolator = Util.GetOrAddComponent<TransformInterpolator>((entity as MonoEntityBase).gameObject);
+                transformInterpolator.SetData(entityTransformInfo);
+            }
         }
     }
 }

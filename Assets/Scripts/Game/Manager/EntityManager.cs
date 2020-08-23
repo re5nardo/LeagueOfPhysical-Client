@@ -66,11 +66,6 @@ public class EntityManager : GameFramework.EntityManager
 	}
 #endregion
 
-    public void StartManager()
-    {
-
-    }
-
 	#region Message Handler
 	private void OnMessage(IMessage msg, object[] objects)
 	{
@@ -99,7 +94,18 @@ public class EntityManager : GameFramework.EntityManager
 
 			if (entity.EntityID == EntityManager.Instance.GetMyEntityID())
 			{
-				LOP.Game.Current.OnMyCharacterCreated(entity as Character);
+                TransformInterpolator_User transformInterpolator_User = Util.GetOrAddComponent<TransformInterpolator_User>((entity as MonoEntityBase).gameObject);
+
+                EntityTransformInfo info = new EntityTransformInfo();
+                info.m_nEntityID = entitySnapInfo.m_nEntityID;
+                info.m_Position = entitySnapInfo.m_Position;
+                info.m_Rotation = entitySnapInfo.m_Rotation;
+                info.m_Velocity = entitySnapInfo.m_Velocity;
+                info.m_GameTime = entityAppear.m_fGameTime;
+
+                transformInterpolator_User.SetData(info);
+
+                LOP.Game.Current.OnMyCharacterCreated(entity as Character);
 			}
 			else
 			{

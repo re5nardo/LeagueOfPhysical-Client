@@ -1,19 +1,64 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Entity;
 using GameFramework;
 
 //  Fast-Paced Multiplayer (FPM)
 //  https://www.gabrielgambetta.com/client-server-game-architecture.html
 
-public class FPM_Manager : MonoSingleton<FPM_Manager>
+public class FPM_Manager : MonoSingleton<FPM_Manager>, ITickable
 {
-    private List<PlayerTransformInput> pendingInputs = new List<PlayerTransformInput>();
+    private Queue<PlayerMoveInput> playerMoveInputs = new Queue<PlayerMoveInput>();         //  플레이어 인풋
+    private List<PlayerTransformInput> pendingInputs = new List<PlayerTransformInput>();    //  인풋에 의해 position & rotation 변화 값
 
     private long sequence = 0;
     private long lastInputConfirm = -1;
     private int lastProcessTick = -1;
+
+    public Vector3 PendingPosition
+    {
+        get
+        {
+            var value = Vector3.zero;
+            pendingInputs.ForEach(pending =>
+            {
+                value += pending.positionOffset;
+            });
+
+            return value;
+        }
+    }
+
+    public Vector3 PendingRotation
+    {
+        get
+        {
+            var value = Vector3.zero;
+            pendingInputs.ForEach(pending =>
+            {
+                value += pending.rotationOffset;
+            });
+
+            return value;
+        }
+    }
+
+    public void Tick(int tick)
+    {
+        if (playerMoveInputs.Count == 0)
+            return;
+
+        var playerMoveInput = playerMoveInputs.Dequeue();
+
+        var myCharacter = EntityManager.Instance.GetMyCharacter();
+
+        AddPendingPositionInput(myCharacter.Position, playerMoveInput.inputData.ToVector3().normalized * Game.Current.TickInterval * myCharacter.MovementSpeed);
+
+        float dest_y = Quaternion.LookRotation(playerMoveInput.inputData).eulerAngles.y;
+        float mine_y = myCharacter.Rotation.y;
+
+        AddPendingRotationInput(myCharacter.Rotation, new Vector3(0, dest_y - mine_y, 0));
+    }
 
     public void ProcessInput(PlayerMoveInput playerMoveInput)
     {
@@ -39,29 +84,28 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         //  클라이언트 선처리 (서버에 도달했을 때 예측해서)
         if (playerMoveInput.inputType == PlayerMoveInput.InputType.Press || playerMoveInput.inputType == PlayerMoveInput.InputType.Hold)
         {
-            //  delay (latency..)
-            StartCoroutine(MoveAfterDelay(playerMoveInput.inputData, 0.02f));
+            StartCoroutine(AddPlayerMoveInput(playerMoveInput, 0.03f/*latency*/));
         }
         else if (playerMoveInput.inputType == PlayerMoveInput.InputType.Release)
         {
-            //  stop move behavior
+            //  Stop move behavior
             //  ...
         }
 
         lastProcessTick = Game.Current.CurrentTick;
     }
     
-    private IEnumerator MoveAfterDelay(Vector3 input, float delay)
+    private IEnumerator AddPlayerMoveInput(PlayerMoveInput playerMoveInput, float delay)
     {
-        yield return new WaitForSeconds(delay);
+        if (delay > 0)
+        {
+            yield return new WaitForSeconds(delay);
+        }
 
-        var myCharacter = EntityManager.Instance.GetMyCharacter();
-
-        var behaviorController = myCharacter.GetComponent<BehaviorController>();
-        behaviorController.MoveNRotation(myCharacter.Position + input.normalized * Game.Current.TickInterval * 3 * myCharacter.MovementSpeed);
+        playerMoveInputs.Enqueue(playerMoveInput);
     }
 
-    public void AddMoveInput(Vector3 position, Vector3 offset)
+    private void AddPendingPositionInput(Vector3 position, Vector3 offset)
     {
         var myCharacter = EntityManager.Instance.GetMyCharacter();
 
@@ -78,7 +122,7 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         pendingInputs.Add(playerTransformInput);
     }
 
-    public void AddRotationInput(Vector3 rotation, Vector3 offset)
+    private void AddPendingRotationInput(Vector3 rotation, Vector3 offset)
     {
         var myCharacter = EntityManager.Instance.GetMyCharacter();
 
@@ -105,31 +149,8 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
     #region Reconcile
     private void Reconcile(SC_PlayerMoveInputResponse playerMoveInputResponse)
     {
-        Character character = EntityManager.Instance.GetMyCharacter();
-
-        // Received the authoritative position of this client's entity
-        character.Position = playerMoveInputResponse.m_Position;
-        character.Rotation = playerMoveInputResponse.m_Rotation;
-        
-        int nIndex = 0;
-        while (nIndex < pendingInputs.Count)
-        {
-            PlayerTransformInput input = pendingInputs[nIndex];
-
-            if (input.sequence <= playerMoveInputResponse.m_lLastProcessedSequence)
-            {
-                // Already processed. Its effect is already taken into account into the world update
-                // we just got, so we can drop it
-                pendingInputs.RemoveAt(nIndex);
-            }
-            else
-            {
-                // Not processed by the server yet. Re-apply it
-                character.Position += input.positionOffset;
-                character.Rotation += input.rotationOffset;
-                nIndex++;
-            }
-        }
+        //  해당 틱에서 처리되었을 position & rotation pending input 제거하기 위해 +2
+        pendingInputs.RemoveAll(pending => pending.sequence <= (playerMoveInputResponse.m_lLastProcessedSequence + 2));
     }
     #endregion
 }

@@ -89,6 +89,8 @@ namespace LOP
 
         private void OnTick(int tick)
         {
+            FPM_Manager.Instance.Tick(tick);
+
             var entities = EntityManager.Instance.GetAllEntities().Cast<MonoEntityBase>().ToList();
 
             //  sort
