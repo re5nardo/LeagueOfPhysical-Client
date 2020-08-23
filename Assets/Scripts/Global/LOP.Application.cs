@@ -29,6 +29,7 @@ namespace LOP
             if (Debug.isDebugBuild)
             {
                 UnityEngine.Object.Instantiate(Resources.Load("IngameDebugConsole/IngameDebugConsole"));
+                DebugCommandRegister.Instantiate();
             }
 
             //            CatalogData.Instance.UpdateData();
