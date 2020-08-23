@@ -6,24 +6,23 @@ using GameFramework;
 
 public class TransformInterpolator : MonoBehaviour
 {
-    private MonoEntityBase m_Entity__ = null;
-    private MonoEntityBase m_Entity
+    private MonoEntityBase entity = null;
+    private MonoEntityBase Entity
     {
         get
         {
-            if(m_Entity__ == null)
+            if(entity == null)
             {
-                m_Entity__ = GetComponent<MonoEntityBase>();
+                entity = GetComponent<MonoEntityBase>();
             }
 
-            return m_Entity__;
+            return entity;
         }
     }
 
 	private const int MAX_BUFFER_COUNT = 5;
 
-	private List<EntityTransformInfo> m_listEntityTransformInfo = new List<EntityTransformInfo>();
-    private float localTime = 0;
+	private List<EntityTransformInfo> entityTransformInfos = new List<EntityTransformInfo>();
 
     private Vector3 lastPosition = default;
     private Vector3 lastRotation = default;
@@ -32,55 +31,23 @@ public class TransformInterpolator : MonoBehaviour
 
     public void SetData(EntityTransformInfo entityTransformInfo)
     {
-		m_listEntityTransformInfo.Add(entityTransformInfo);
+        entityTransformInfos.Add(entityTransformInfo);
 
-		if (m_listEntityTransformInfo.Count > MAX_BUFFER_COUNT)
+		if (entityTransformInfos.Count > MAX_BUFFER_COUNT)
 		{
-			m_listEntityTransformInfo.RemoveRange(0, m_listEntityTransformInfo.Count - MAX_BUFFER_COUNT);
+            entityTransformInfos.RemoveRange(0, entityTransformInfos.Count - MAX_BUFFER_COUNT);
 		}
 	}
    
     private void Update()
     {
-        UpdateLocalTime();
-    
         SyncedMovement();
     }
 
-    private void UpdateLocalTime()
-    {
-        float gap = localTime - Game.Current.GameTime;
-
-        if (gap < -0.2)
-        {
-            localTime = Game.Current.GameTime;
-        }
-        if (gap < -0.1)
-        {
-            localTime += (Time.deltaTime * 2);
-        }
-        else if (gap < 0)    //  0이어도 상관 없으려나.. 흠..
-        {
-            localTime += (Time.deltaTime * 1.5f);
-        }
-        else if (gap < 0.1)
-        {
-            localTime += Time.deltaTime;
-        }
-        else if (gap < 0.2)
-        {
-            localTime += (Time.deltaTime * 0.5f);
-        }
-        else
-        {
-            localTime += 0;
-        }
-    }
-
-	private void SyncedMovement()
+    private void SyncedMovement()
 	{
-        EntityTransformInfo before = m_listEntityTransformInfo.FindLast(x => x.m_GameTime <= localTime);
-        EntityTransformInfo next = m_listEntityTransformInfo.Find(x => x.m_GameTime >= localTime);
+        EntityTransformInfo before = entityTransformInfos.FindLast(x => x.m_GameTime <= Game.Current.GameTime);
+        EntityTransformInfo next = entityTransformInfos.Find(x => x.m_GameTime >= Game.Current.GameTime);
 
         if (before == null && next == null)
             return;
@@ -92,11 +59,11 @@ public class TransformInterpolator : MonoBehaviour
 
         if (before != null && next != null)
         {
-            float t = (before.m_GameTime == next.m_GameTime) ? 0 : (localTime - before.m_GameTime) / (next.m_GameTime - before.m_GameTime);
+            float t = (before.m_GameTime == next.m_GameTime) ? 0 : (Game.Current.GameTime - before.m_GameTime) / (next.m_GameTime - before.m_GameTime);
 
             if (float.IsNaN(t))
             {
-                Debug.LogWarning(string.Format("localTime : {0}, before.m_GameTime : {1}, next.m_GameTime : {2}", localTime, before.m_GameTime, next.m_GameTime));
+                Debug.LogWarning(string.Format("localTime : {0}, before.m_GameTime : {1}, next.m_GameTime : {2}", Game.Current.GameTime, before.m_GameTime, next.m_GameTime));
             }
 
             currentPosition = Vector3.Lerp(before.m_Position, next.m_Position, t);
@@ -106,7 +73,7 @@ public class TransformInterpolator : MonoBehaviour
         }
         else if (before != null)
         {
-            float elapsed = localTime - before.m_GameTime;
+            float elapsed = Game.Current.GameTime - before.m_GameTime;
 
             currentPosition = before.m_Position + before.m_Velocity.ToVector3() * elapsed;
             currentRotation = before.m_Rotation + before.m_AngularVelocity.ToVector3() * elapsed;
@@ -116,7 +83,7 @@ public class TransformInterpolator : MonoBehaviour
 
         //  Position
         float distance = (currentPosition - lastPosition).magnitude;
-        if ((distance > (m_Entity.MovementSpeed * Time.deltaTime * 3)) /*순간이동*/ || distance <= (m_Entity.MovementSpeed * Time.deltaTime) /*범위 내*/)   
+        if ((distance > (Entity.MovementSpeed * Time.deltaTime * 3)) /*순간이동*/ || distance <= (Entity.MovementSpeed * Time.deltaTime) /*범위 내*/)   
         {
             currentPosition = currentPosition;
         }
@@ -124,7 +91,7 @@ public class TransformInterpolator : MonoBehaviour
         {
             currentPosition = Vector3.LerpUnclamped(lastPosition, currentPosition, 1.1f);    //  보정
         }
-        lastPosition = m_Entity.Position = currentPosition;
+        lastPosition = Entity.Position = currentPosition;
 
         //  Rotation
         float rotate = Mathf.Abs(currentRotation.y - lastRotation.y);
@@ -136,12 +103,12 @@ public class TransformInterpolator : MonoBehaviour
         {
             currentRotation = Quaternion.LerpUnclamped(Quaternion.Euler(lastRotation), Quaternion.Euler(currentRotation), 1.1f).eulerAngles;    //  보정
         }
-        lastRotation = m_Entity.Rotation = currentRotation;
+        lastRotation = Entity.Rotation = currentRotation;
 
         //  Velocity (현재는 보정x)
-        lastVelocity = m_Entity.Velocity = currentVelocity;
+        lastVelocity = Entity.Velocity = currentVelocity;
 
         //  AngularVelocity (현재는 보정x)
-        lastAngularVelocity = m_Entity.AngularVelocity = currentAngularVelocity;
+        lastAngularVelocity = Entity.AngularVelocity = currentAngularVelocity;
     }
 }
