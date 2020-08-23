@@ -41,21 +41,15 @@ namespace Behavior
 
             float rotated = Entity.AngularVelocity.y * DeltaTime;
 
-            var startRotation = Entity.Rotation;
-
             if (Util.Approximately(toRotate, rotated) || Mathf.Abs(toRotate) <= Mathf.Abs(rotated))
             {
                 Entity.Rotation = Quaternion.LookRotation(m_vec3Direction).eulerAngles;
-
-                FPM_Manager.Instance.AddRotationInput(startRotation, Entity.Rotation - startRotation);
 
                 return false;
             }
             else
             {
                 Entity.Rotation = new Vector3(Entity.Rotation.x, (Entity.Rotation.y + rotated) % 360, Entity.Rotation.z);
-
-                FPM_Manager.Instance.AddRotationInput(startRotation, Entity.Rotation - startRotation);
 
                 return true;
             }
