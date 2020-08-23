@@ -142,8 +142,7 @@ public class CameraController : MonoBehaviour
         {
             Vector3 targetPosition = m_trTarget.position + m_vec3Offset;
 
-            //m_trCameraController.position = Vector3.SmoothDamp(m_trCameraController.position, targetPosition, ref velocity, smoothTime);
-            m_trCameraController.position = targetPosition;
+            m_trCameraController.position = Vector3.SmoothDamp(m_trCameraController.position, targetPosition, ref velocity, smoothTime);
         }
     }
 #endregion
