@@ -82,7 +82,7 @@ public class TransformInterpolator_User : MonoBehaviour
         }
 
         //  Position
-        currentPosition += FPM_Manager.Instance.PendingPosition * 0.3f;
+        currentPosition += FPM_Manager.Instance.PendingPosition * 0.1f;
         float distance = (currentPosition - lastPosition).magnitude;
         if ((distance > (Entity.MovementSpeed * Time.deltaTime * 3)) /*순간이동*/ || distance <= (Entity.MovementSpeed * Time.deltaTime) /*범위 내*/)
         {
