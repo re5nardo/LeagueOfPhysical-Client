@@ -65,25 +65,18 @@ namespace Entity
         {
         }
 
-        public virtual void Tick(int tick)
+        public virtual void OnTick(int tick)
         {
-            var allComponents = GetComponents<IComponent>();
-            var tickables = allComponents.FindAll(x => x is ITickable).Cast<ITickable>().ToList();
-            tickables.Sort((x, y) =>
+            //  States
+            GetComponents<State.StateBase>()?.ForEach(state =>
             {
-                int value_x = x is State.StateBase ? 300 : x is Behavior.BehaviorBase ? 200 : 0;
-                int value_y = y is State.StateBase ? 300 : y is Behavior.BehaviorBase ? 200 : 0;
-
-                return value_y.CompareTo(value_x);
+                state.OnTick(tick);
             });
 
-            tickables.ForEach(tickable =>
+            //  Behaviors
+            GetComponents<Behavior.BehaviorBase>()?.ForEach(behavior =>
             {
-                //  Iterating중에 Entity가 Destroy 안되었는지 체크
-                if (IsValid)
-                {
-                    tickable.Tick(tick);
-                }
+                behavior.OnTick(tick);
             });
         }
 

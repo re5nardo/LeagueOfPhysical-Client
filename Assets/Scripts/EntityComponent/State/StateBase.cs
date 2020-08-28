@@ -7,7 +7,7 @@ using GameFramework;
 
 namespace State
 {
-	public abstract class StateBase : MonoComponentBase, ITickable
+	public abstract class StateBase : MonoComponentBase
     {
 		public event Action<StateBase> onStateEnd = null;
 
@@ -47,17 +47,17 @@ namespace State
 
         new public MonoEntityBase Entity { get; private set; }
 
-		private MasterData.State m_MasterData__ = null;
-		public MasterData.State m_MasterData
+		private MasterData.State masterData = null;
+		public MasterData.State MasterData
 		{
 			get
 			{
-				if (m_MasterData__ == null)
+				if (masterData == null)
 				{
-					m_MasterData__ = MasterDataManager.Instance.GetMasterData<MasterData.State>(m_nStateMasterID);
+                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.State>(m_nStateMasterID);
 				}
 
-				return m_MasterData__;
+				return masterData;
 			}
 		}
 
@@ -97,10 +97,10 @@ namespace State
 
             OnStateStart();
 
-            Tick(Game.Current.CurrentTick);
+            OnTick(Game.Current.CurrentTick);
         }
 
-        public void Tick(int tick)
+        public void OnTick(int tick)
         {
             if (lastTick == tick)
             {

@@ -31,6 +31,7 @@ namespace LOP
 
             EntityManager.Instantiate();
             ResourcePool.Instantiate();
+            FPM_Manager.Instantiate();
 
             gameUI = GetGameUI();
             myInfo = gameObject.AddComponent<MyInfo>();
@@ -89,21 +90,9 @@ namespace LOP
 
         private void OnTick(int tick)
         {
-            FPM_Manager.Instance.Tick(tick);
-
-            var entities = EntityManager.Instance.GetAllEntities().Cast<MonoEntityBase>().ToList();
-
-            //  sort
-            //  ...
-
-            entities.ForEach(entity =>
-            {
-                //  Iterating중에 Entity가 Destroy 안되었는지 체크
-                if (entity.IsValid)
-                {
-                    entity.Tick(tick);
-                }
-            });
+            TickPubSubService.Publish("EarlyTick", tick);
+            TickPubSubService.Publish("Tick", tick);
+            TickPubSubService.Publish("LateTick", tick);
         }
 
         private GameUI GetGameUI()

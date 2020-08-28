@@ -36,8 +36,8 @@ namespace Behavior
         {
             base.SetData(nBehaviorMasterID);
 
-            m_fLifespan = m_MasterData.Lifespan;
-            m_fAttackTime = float.Parse(m_MasterData.ClassParams.Find(x => x.Contains("AttackTime")).Split(':')[1]);
+            m_fLifespan = MasterData.Lifespan;
+            m_fAttackTime = float.Parse(MasterData.ClassParams.Find(x => x.Contains("AttackTime")).Split(':')[1]);
         }
         #endregion
     }

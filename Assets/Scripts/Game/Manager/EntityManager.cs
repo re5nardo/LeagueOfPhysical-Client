@@ -53,6 +53,8 @@ public class EntityManager : GameFramework.EntityManager
 		m_dicMessageHandler.Add(PhotonEvent.SC_EntityDisAppear, OnSC_EntityDisAppear);
 
 		RoomNetwork.Instance.onMessage += OnMessage;
+
+        TickPubSubService.AddSubscriber("Tick", OnTick);
 	}
 
     private void OnDestroy()
@@ -63,7 +65,9 @@ public class EntityManager : GameFramework.EntityManager
 		{
 			RoomNetwork.Instance.onMessage -= OnMessage;
 		}
-	}
+
+        TickPubSubService.RemoveSubscriber("Tick", OnTick);
+    }
 #endregion
 
 	#region Message Handler
@@ -228,5 +232,19 @@ public class EntityManager : GameFramework.EntityManager
     public int GetMyEntityID()
     {
         return LOP.Game.Current.MyInfo.EntityID;
+    }
+
+    private void OnTick(int tick)
+    {
+        //  sort
+        //  ...
+
+        GetAllEntities<MonoEntityBase>()?.ForEach(entity =>
+        {
+            if (entity.IsValid)
+            {
+                entity.OnTick(tick);
+            }
+        });
     }
 }

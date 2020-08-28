@@ -6,7 +6,7 @@ using GameFramework;
 //  Fast-Paced Multiplayer (FPM)
 //  https://www.gabrielgambetta.com/client-server-game-architecture.html
 
-public class FPM_Manager : MonoSingleton<FPM_Manager>, ITickable
+public class FPM_Manager : MonoSingleton<FPM_Manager>
 {
     private Queue<PlayerMoveInput> playerMoveInputs = new Queue<PlayerMoveInput>();         //  플레이어 인풋
     private List<PlayerTransformInput> pendingInputs = new List<PlayerTransformInput>();    //  인풋에 의해 position & rotation 변화 값
@@ -43,7 +43,19 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>, ITickable
         }
     }
 
-    public void Tick(int tick)
+    protected override void Awake()
+    {
+        base.Awake();
+
+        TickPubSubService.AddSubscriber("Tick", OnTick);
+    }
+
+    private void OnDestroy()
+    {
+        TickPubSubService.RemoveSubscriber("Tick", OnTick);
+    }
+
+    private void OnTick(int tick)
     {
         if (playerMoveInputs.Count == 0)
             return;
