@@ -96,7 +96,7 @@ public class EntityManager : GameFramework.EntityManager
 
 			var entity = CreateEntity(entitySnapInfo);
 
-			if (entity.EntityID == EntityManager.Instance.GetMyEntityID())
+			if (entity.EntityID == Entities.MyEntityID)
 			{
                 TransformInterpolator_User transformInterpolator_User = Util.GetOrAddComponent<TransformInterpolator_User>((entity as MonoEntityBase).gameObject);
 
@@ -153,11 +153,6 @@ public class EntityManager : GameFramework.EntityManager
         UnregisterEntity(nEntityID);
 
         Destroy(entity.gameObject);
-    }
-
-    public HashSet<int> GetAllEntityIDs() 
-    {
-        return new HashSet<int>(m_dicEntity.Keys);
     }
 
     private IEntity CreateEntity(EntitySnapInfo entitySnapInfo)
@@ -222,16 +217,6 @@ public class EntityManager : GameFramework.EntityManager
         }
 
         return entity;
-    }
-
-    public Character GetMyCharacter()
-    {
-        return GetEntity(GetMyEntityID()) as Character;
-    }
-
-    public int GetMyEntityID()
-    {
-        return LOP.Game.Current.MyInfo.EntityID;
     }
 
     private void OnTick(int tick)

@@ -12,13 +12,13 @@ public class SC_NearEntityTransformInfosHandler
 
         foreach (EntityTransformInfo entityTransformInfo in nearEntityTransformInfos.entityTransformInfos)
         {
-            IEntity entity = EntityManager.Instance.GetEntity(entityTransformInfo.m_nEntityID);
+            IEntity entity = Entities.Get(entityTransformInfo.m_nEntityID);
             if (entity == null)
             {
                 continue;
             }
 
-            if (entity.EntityID == EntityManager.Instance.GetMyEntityID())
+            if (entity.EntityID == Entities.MyEntityID)
             {
                 TransformInterpolator_User transformInterpolator_User = Util.GetOrAddComponent<TransformInterpolator_User>((entity as MonoEntityBase).gameObject);
                 transformInterpolator_User.SetData(entityTransformInfo);

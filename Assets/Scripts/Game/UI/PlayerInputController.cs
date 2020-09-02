@@ -50,7 +50,7 @@ public class PlayerInputController : MonoBehaviour
    
 	public void SetCharacterID(int characterID)
 	{
-        Entity = EntityManager.Instance.GetEntity(characterID) as Character;
+        Entity = Entities.Get<Character>(characterID);
 
 		foreach(int skillID in Entity.MasterData.SkillIDs)
 		{
@@ -168,7 +168,7 @@ public class PlayerInputController : MonoBehaviour
 	#region Event Handler
 	private void OnMoveControllerPress(Vector2 screenPosition)
 	{
-		if (!EntityManager.Instance.GetMyCharacter().IsAlive)
+		if (!Entities.MyCharacter.IsAlive)
 			return;
 
         playerMoveInputs.Enqueue(new PlayerMoveInput(inputType: PlayerMoveInput.InputType.Press));
@@ -176,7 +176,7 @@ public class PlayerInputController : MonoBehaviour
 
 	private void OnMoveControllerRelease(Vector2 screenPosition)
 	{
-        if (!EntityManager.Instance.GetMyCharacter().IsAlive)
+        if (!Entities.MyCharacter.IsAlive)
             return;
 
         playerMoveInputs.Enqueue(new PlayerMoveInput(inputType: PlayerMoveInput.InputType.Release));
@@ -184,8 +184,7 @@ public class PlayerInputController : MonoBehaviour
 
 	private void OnMoveControllerHold(Vector2 holdPosition)
 	{
-		Character character = EntityManager.Instance.GetMyCharacter();
-		if (!character.IsAlive)
+		if (!Entities.MyCharacter.IsAlive)
 			return;
 
 		Vector2 pressedPosition = moveController.GetPressedPosition();
@@ -203,22 +202,20 @@ public class PlayerInputController : MonoBehaviour
 
 	private void OnBasicAttackControllerRelease(Vector2 vec2ScreenPosition)
 	{
-        Character character = EntityManager.Instance.GetMyCharacter();
-        if (!character.IsAlive)
+        if (!Entities.MyCharacter.IsAlive)
             return;
 
         Vector2 vec2FinalDir = vec2ScreenPosition - basicAttackController.GetPressedPosition();
 
         if (vec2FinalDir.magnitude < 40)
         {
-            skillInputData = new SkillInputData(character.EntityID, Entity.BasicAttackSkillID, Vector3.zero, Game.Current.GameTime);
+            skillInputData = new SkillInputData(Entities.MyEntityID, Entity.BasicAttackSkillID, Vector3.zero, Game.Current.GameTime);
         }
     }
 
 	private void OnBasicAttackControllerHold(Vector2 vec2ScreenPosition)
 	{
-		Character character = EntityManager.Instance.GetMyCharacter();
-		if (!character.IsAlive)
+		if (!Entities.MyCharacter.IsAlive)
 			return;
 
 		Vector2 vec2FinalDir = vec2ScreenPosition - basicAttackController.GetPressedPosition();
@@ -236,7 +233,7 @@ public class PlayerInputController : MonoBehaviour
             dir = Vector3.zero;
         }
 		
-		skillInputData = new SkillInputData(character.EntityID, Entity.BasicAttackSkillID, dir.normalized, Game.Current.GameTime);
+		skillInputData = new SkillInputData(Entities.MyEntityID, Entity.BasicAttackSkillID, dir.normalized, Game.Current.GameTime);
 	}
 
 	private void OnItemSlot1BtnClicked()
@@ -252,7 +249,7 @@ public class PlayerInputController : MonoBehaviour
 	private void OnSkillBtnClicked(int skillID)
 	{
 		CS_NotifySkillInputData notifySkillInputData = new CS_NotifySkillInputData();
-		notifySkillInputData.m_SkillInputData = new SkillInputData(EntityManager.Instance.GetMyEntityID(), skillID, default, Game.Current.GameTime);
+		notifySkillInputData.m_SkillInputData = new SkillInputData(Entities.MyEntityID, skillID, default, Game.Current.GameTime);
 
 		RoomNetwork.Instance.Send(notifySkillInputData, PhotonNetwork.masterClient.ID, bInstant: true);
 	}

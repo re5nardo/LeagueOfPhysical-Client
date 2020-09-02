@@ -62,14 +62,12 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
 
         var playerMoveInput = playerMoveInputs.Dequeue();
 
-        var myCharacter = EntityManager.Instance.GetMyCharacter();
-
-        AddPendingPositionInput(myCharacter.Position, playerMoveInput.inputData.ToVector3().normalized * Game.Current.TickInterval * myCharacter.MovementSpeed);
+        AddPendingPositionInput(Entities.MyCharacter.Position, playerMoveInput.inputData.ToVector3().normalized * Game.Current.TickInterval * Entities.MyCharacter.MovementSpeed);
 
         float dest_y = Quaternion.LookRotation(playerMoveInput.inputData).eulerAngles.y;
-        float mine_y = myCharacter.Rotation.y;
+        float mine_y = Entities.MyCharacter.Rotation.y;
 
-        AddPendingRotationInput(myCharacter.Rotation, new Vector3(0, dest_y - mine_y, 0));
+        AddPendingRotationInput(Entities.MyCharacter.Rotation, new Vector3(0, dest_y - mine_y, 0));
     }
 
     public void ProcessInput(PlayerMoveInput playerMoveInput)
@@ -79,13 +77,11 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
             return;
         }
 
-        var myCharacter = EntityManager.Instance.GetMyCharacter();
-
         playerMoveInput.tick = Game.Current.CurrentTick;
         playerMoveInput.sequence = sequence++;
-        playerMoveInput.entityID = myCharacter.EntityID;
-        playerMoveInput.position = myCharacter.Position;
-        playerMoveInput.rotation = myCharacter.Rotation;
+        playerMoveInput.entityID = Entities.MyCharacter.EntityID;
+        playerMoveInput.position = Entities.MyCharacter.Position;
+        playerMoveInput.rotation = Entities.MyCharacter.Rotation;
 
         CS_NotifyMoveInputData notifyMoveInputData = new CS_NotifyMoveInputData();
         notifyMoveInputData.m_PlayerMoveInput = playerMoveInput;
@@ -119,16 +115,14 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
 
     private void AddPendingPositionInput(Vector3 position, Vector3 offset)
     {
-        var myCharacter = EntityManager.Instance.GetMyCharacter();
-
         PlayerTransformInput playerTransformInput = new PlayerTransformInput();
 
         playerTransformInput.tick = Game.Current.CurrentTick;
         playerTransformInput.sequence = sequence++;
-        playerTransformInput.entityID = myCharacter.EntityID;
+        playerTransformInput.entityID = Entities.MyCharacter.EntityID;
         playerTransformInput.position = position;
         playerTransformInput.positionOffset = offset;
-        playerTransformInput.rotation = myCharacter.Rotation;
+        playerTransformInput.rotation = Entities.MyCharacter.Rotation;
         playerTransformInput.rotationOffset = Vector3.zero;
 
         pendingInputs.Add(playerTransformInput);
@@ -136,14 +130,12 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
 
     private void AddPendingRotationInput(Vector3 rotation, Vector3 offset)
     {
-        var myCharacter = EntityManager.Instance.GetMyCharacter();
-
         PlayerTransformInput playerTransformInput = new PlayerTransformInput();
 
         playerTransformInput.tick = Game.Current.CurrentTick;
         playerTransformInput.sequence = sequence++;
-        playerTransformInput.entityID = myCharacter.EntityID;
-        playerTransformInput.position = myCharacter.Position;
+        playerTransformInput.entityID = Entities.MyCharacter.EntityID;
+        playerTransformInput.position = Entities.MyCharacter.Position;
         playerTransformInput.positionOffset = Vector3.zero;
         playerTransformInput.rotation = rotation;
         playerTransformInput.rotationOffset = offset;

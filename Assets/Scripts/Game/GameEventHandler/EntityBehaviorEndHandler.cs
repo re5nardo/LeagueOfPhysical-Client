@@ -10,7 +10,7 @@ public class EntityBehaviorEndHandler
     {
         EntityBehaviorEnd entityBehaviorEnd = gameEvent as EntityBehaviorEnd;
 
-        IEntity entity = EntityManager.Instance.GetEntity(entityBehaviorEnd.entityID);
+        IEntity entity = Entities.Get(entityBehaviorEnd.entityID);
         if (entity == null)
         {
             return;

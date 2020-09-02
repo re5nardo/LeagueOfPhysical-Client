@@ -11,8 +11,6 @@ public class EntityLevelUpHandler
     {
         EntityLevelUp entityLevelUp = gameEvent as EntityLevelUp;
 
-        Character character = EntityManager.Instance.GetMyCharacter();
-
-        character.Level = entityLevelUp.level;
+        Entities.MyCharacter.Level = entityLevelUp.level;
     }
 }

@@ -10,7 +10,7 @@ public class EntityBehaviorStartHandler
     {
         EntityBehaviorStart entityBehaviorStart = gameEvent as EntityBehaviorStart;
 
-        IEntity entity = EntityManager.Instance.GetEntity(entityBehaviorStart.entityID);
+        IEntity entity = Entities.Get(entityBehaviorStart.entityID);
         if (entity == null)
         {
             return;

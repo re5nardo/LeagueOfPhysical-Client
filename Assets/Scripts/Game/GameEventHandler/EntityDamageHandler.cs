@@ -11,7 +11,7 @@ public class EntityDamageHandler
     {
         EntityDamage entityDamage = gameEvent as EntityDamage;
 
-        MonoEntityBase entity = EntityManager.Instance.GetEntity(entityDamage.damagedID) as MonoEntityBase;
+        MonoEntityBase entity = Entities.Get<MonoEntityBase>(entityDamage.damagedID);
 
         if (entity.EntityType == EntityType.GameItem)
         {

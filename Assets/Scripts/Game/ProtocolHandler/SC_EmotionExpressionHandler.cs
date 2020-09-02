@@ -9,7 +9,7 @@ public class SC_EmotionExpressionHandler
     {
         SC_EmotionExpression emotionExpression = msg as SC_EmotionExpression;
 
-        IEntity entity = EntityManager.Instance.GetEntity(emotionExpression.m_nEntityID);
+        IEntity entity = Entities.Get(emotionExpression.m_nEntityID);
         if (entity == null)
         {
             return;

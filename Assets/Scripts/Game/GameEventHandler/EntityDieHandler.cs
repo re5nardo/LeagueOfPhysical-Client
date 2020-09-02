@@ -11,7 +11,7 @@ public class EntityDieHandler
     {
         EntityDie entityDie = gameEvent as EntityDie;
 
-        Character dead = EntityManager.Instance.GetEntity(entityDie.deadID) as Character;
+        Character dead = Entities.Get<Character>(entityDie.deadID);
 
         BehaviorController behaviorController = dead.GetComponent<BehaviorController>();
         //behaviorController.Die();

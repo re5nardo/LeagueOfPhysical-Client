@@ -35,7 +35,7 @@ public class DirectionInputController : MonoBehaviour
     #region Event Handler
     private void OnDirectionKeyPress(Vector2 vec2ScreenPosition)
     {
-        if (!EntityManager.Instance.GetMyCharacter().IsAlive)
+        if (!Entities.MyCharacter.IsAlive)
             return;
 
         inputCircleDisplay.Show(vec2ScreenPosition);
@@ -52,8 +52,7 @@ public class DirectionInputController : MonoBehaviour
 
     private void OnDirectionKeyHold(Vector2 vec2ScreenPosition)
     {
-        Character character = EntityManager.Instance.GetMyCharacter();
-        if (!character.IsAlive)
+        if (!Entities.MyCharacter.IsAlive)
             return;
 
         inputCircleDisplay.OnTouchHold(vec2ScreenPosition);
