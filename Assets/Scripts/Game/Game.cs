@@ -40,7 +40,7 @@ namespace LOP
             tickUpdater = gameObject.AddComponent<TickUpdater>();
 
             GameUI.Initialize();
-            tickUpdater.Initialize(1 / 30f, true, Room.Instance.Latency, OnTick, null);
+            tickUpdater.Initialize(1 / 30f, true, Room.Instance.Latency, OnTick, OnTickEnd);
 
             RoomNetwork.Instance.onMessage += OnNetworkMessage;
 
@@ -93,6 +93,11 @@ namespace LOP
             TickPubSubService.Publish("EarlyTick", tick);
             TickPubSubService.Publish("Tick", tick);
             TickPubSubService.Publish("LateTick", tick);
+        }
+
+        private void OnTickEnd(int tick)
+        {
+            TickPubSubService.Publish("TickEnd", tick);
         }
 
         private GameUI GetGameUI()
