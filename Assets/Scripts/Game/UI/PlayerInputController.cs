@@ -30,7 +30,7 @@ public class PlayerInputController : MonoBehaviour
         {
             PlayerMoveInput playerMoveInput = playerMoveInputs.Dequeue();
 
-            if (playerMoveInput.inputData != Vector3.zero)
+            if (playerMoveInput.inputData.ToVector3() != Vector3.zero)
             {
                 FPM_Manager.Instance.ProcessInput(playerMoveInput);
             }

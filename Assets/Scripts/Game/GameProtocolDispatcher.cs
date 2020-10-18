@@ -12,10 +12,10 @@ public class GameProtocolDispatcher : MonoBehaviour
     {
         protocolHandlers.Add(PhotonEvent.SC_EnterRoom,                  LOP.Game.Current.OnEnterRoom);
         protocolHandlers.Add(PhotonEvent.SC_GameEvents,                 SC_GameEventsHandler.Handle);
-        protocolHandlers.Add(PhotonEvent.SC_NearEntityTransformInfos,   SC_NearEntityTransformInfosHandler.Handle);
         protocolHandlers.Add(PhotonEvent.SC_SyncTick,                   SC_SyncTickHandler.Handle);
         protocolHandlers.Add(PhotonEvent.SC_EmotionExpression,          SC_EmotionExpressionHandler.Handle);
         protocolHandlers.Add(PhotonEvent.SC_PlayerMoveInputResponse,    SC_PlayerMoveInputResponseHandler.Handle);
+        protocolHandlers.Add(PhotonEvent.SC_Synchronization,            SC_SynchronizationHandler.Handle);
     }
 
     private void OnDestroy()

@@ -7,7 +7,7 @@ using Entity;
 
 namespace Behavior
 {
-    public abstract class BehaviorBase : MonoComponentBase
+    public abstract class BehaviorBase : MonoComponentBase, ISynchronizable
     {
         public event Action<BehaviorBase> onBehaviorEnd = null;
 
@@ -20,6 +20,18 @@ namespace Behavior
         protected int lastTick = -1;
 
         private bool isPlaying = false;
+
+        #region ISynchronizable
+        public ISynchronizable Parent { get; set; } = null;
+        public bool Enable { get; set; } = true;
+        public bool EnableInHierarchy => Parent == null ? Enable : Parent.EnableInHierarchy && Enable;
+        public bool HasCoreChange => LastSendSnap == null ? true : !LastSendSnap.EqualsCore(CurrentSnap.Set(this));
+        public bool IsDirty => isDirty || LastSendSnap == null ? true : !LastSendSnap.EqualsValue(CurrentSnap.Set(this));
+        #endregion
+
+        private bool isDirty = false;
+        protected virtual ISnap LastSendSnap { get; set; } = new BehaviorSnap();
+        protected virtual ISnap CurrentSnap { get; set; } = new BehaviorSnap();
 
         protected float DeltaTime
         {
@@ -172,5 +184,35 @@ namespace Behavior
                 StopBehavior();
             }
         }
+
+        #region ISynchronizable
+        public void SetDirty()
+        {
+            isDirty = true;
+        }
+
+        public virtual ISnap GetSnap()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateSynchronizable()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void SendSynchronization()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void OnReceiveSynchronization(ISnap snap)
+        {
+        }
+
+        public virtual void Reconcile(ISnap snap)
+        {
+        }
+        #endregion
     }
 }

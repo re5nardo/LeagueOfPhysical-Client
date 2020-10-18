@@ -98,8 +98,6 @@ public class EntityManager : GameFramework.EntityManager
 
 			if (entity.EntityID == Entities.MyEntityID)
 			{
-                TransformInterpolator_User transformInterpolator_User = Util.GetOrAddComponent<TransformInterpolator_User>((entity as MonoEntityBase).gameObject);
-
                 EntityTransformInfo info = new EntityTransformInfo();
                 info.m_nEntityID = entitySnapInfo.m_nEntityID;
                 info.m_Position = entitySnapInfo.m_Position;
@@ -107,22 +105,16 @@ public class EntityManager : GameFramework.EntityManager
                 info.m_Velocity = entitySnapInfo.m_Velocity;
                 info.m_GameTime = entityAppear.m_fGameTime;
 
-                transformInterpolator_User.SetData(info);
-
                 LOP.Game.Current.OnMyCharacterCreated(entity as Character);
 			}
 			else
 			{
-				TransformInterpolator transformInterpolator = Util.GetOrAddComponent<TransformInterpolator>((entity as MonoEntityBase).gameObject);
-
 				EntityTransformInfo info = new EntityTransformInfo();
 				info.m_nEntityID = entitySnapInfo.m_nEntityID;
 				info.m_Position = entitySnapInfo.m_Position;
 				info.m_Rotation = entitySnapInfo.m_Rotation;
 				info.m_Velocity = entitySnapInfo.m_Velocity;
 				info.m_GameTime = entityAppear.m_fGameTime;
-
-				transformInterpolator.SetData(info);
 			}
 		}
 	}

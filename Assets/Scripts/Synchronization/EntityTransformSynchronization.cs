@@ -19,6 +19,9 @@ public class EntityTransformSynchronization : MonoComponentBase, ISynchronizable
     private EntityTransformSnap CurrentSnap { get; set; } = new EntityTransformSnap();
     private List<EntityTransformSnap> entityTransformSnaps = new List<EntityTransformSnap>();
 
+
+    private const int MAX_BUFFER_COUNT = 5;
+
     private Vector3 lastPosition = default;
     private Vector3 lastRotation = default;
     private Vector3 lastVelocity = default;
@@ -140,14 +143,16 @@ public class EntityTransformSynchronization : MonoComponentBase, ISynchronizable
     {
         entityTransformSnaps.Add(snap as EntityTransformSnap);
 
-        if (entityTransformSnaps.Count > 5)
+        if (entityTransformSnaps.Count > MAX_BUFFER_COUNT)
         {
-            entityTransformSnaps.RemoveRange(0, entityTransformSnaps.Count - 5);
+            entityTransformSnaps.RemoveRange(0, entityTransformSnaps.Count - MAX_BUFFER_COUNT);
         }
 
         Reconcile(snap);
     }
 
-    public void Reconcile(ISnap snap) { }
+    public void Reconcile(ISnap snap)
+    {
+    }
     #endregion
 }
