@@ -44,11 +44,6 @@ public class MonoEntitySynchronization : MonoComponentBase, ISynchronizableCompo
 
     public void OnReceiveSynchronization(ISnap snap)
     {
-        Reconcile(snap);
-    }
-
-    public void Reconcile(ISnap snap)
-    {
     }
 
     public void Add(ISynchronizable child)

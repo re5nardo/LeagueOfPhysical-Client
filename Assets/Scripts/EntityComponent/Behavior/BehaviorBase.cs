@@ -209,10 +209,6 @@ namespace Behavior
         public virtual void OnReceiveSynchronization(ISnap snap)
         {
         }
-
-        public virtual void Reconcile(ISnap snap)
-        {
-        }
         #endregion
     }
 }

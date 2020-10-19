@@ -118,6 +118,10 @@ public class EntityTransformSynchronization : MonoComponentBase, ISynchronizable
         lastAngularVelocity = Entity.AngularVelocity = currentAngularVelocity;
     }
 
+    private void Reconcile(ISnap snap)
+    {
+    }
+
     #region ISynchronizable
     public void SetDirty()
     {
@@ -149,10 +153,6 @@ public class EntityTransformSynchronization : MonoComponentBase, ISynchronizable
         }
 
         Reconcile(snap);
-    }
-
-    public void Reconcile(ISnap snap)
-    {
     }
     #endregion
 }
