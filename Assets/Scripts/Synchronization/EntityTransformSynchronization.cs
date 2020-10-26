@@ -22,10 +22,7 @@ public class EntityTransformSynchronization : MonoComponentBase, ISynchronizable
 
     private const int MAX_BUFFER_COUNT = 5;
 
-    private Vector3 lastPosition = default;
-    private Vector3 lastRotation = default;
-    private Vector3 lastVelocity = default;
-    private Vector3 lastAngularVelocity = default;
+    private EntityTransformSnap lastSnap = null;
 
     public override void OnAttached(IEntity entity)
     {
@@ -53,13 +50,10 @@ public class EntityTransformSynchronization : MonoComponentBase, ISynchronizable
         EntityTransformSnap before = entityTransformSnaps.FindLast(x => x.GameTime <= Game.Current.GameTime);
         EntityTransformSnap next = entityTransformSnaps.Find(x => x.GameTime >= Game.Current.GameTime);
 
-        if (before == null && next == null)
+        if (before == null)
+        {
             return;
-
-        Vector3 currentPosition = default;
-        Vector3 currentRotation = default;
-        Vector3 currentVelocity = default;
-        Vector3 currentAngularVelocity = default;
+        }
 
         if (before != null && next != null)
         {
@@ -70,52 +64,41 @@ public class EntityTransformSynchronization : MonoComponentBase, ISynchronizable
                 Debug.LogWarning(string.Format("localTime : {0}, before.m_GameTime : {1}, next.m_GameTime : {2}", Game.Current.GameTime, before.GameTime, next.GameTime));
             }
 
-            currentPosition = Vector3.Lerp(before.position, next.position, t);
-            currentRotation = Quaternion.Lerp(Quaternion.Euler(before.rotation), Quaternion.Euler(next.rotation), t).eulerAngles;
-            currentVelocity = Vector3.Lerp(before.velocity, next.velocity, t);
-            currentAngularVelocity = Vector3.Lerp(before.angularVelocity, next.angularVelocity, t);
-        }
-        else if (before != null)
-        {
-            float elapsed = Game.Current.GameTime - before.GameTime;
-
-            currentPosition = before.position + before.velocity.ToVector3() * elapsed;
-            currentRotation = before.rotation + before.angularVelocity.ToVector3() * elapsed;
-            currentVelocity = before.velocity;
-            currentAngularVelocity = before.angularVelocity;
-        }
-
-        //  Position
-        currentPosition += FPM_Manager.Instance.PendingPosition * 0.1f;
-        float distance = (currentPosition - lastPosition).magnitude;
-        if ((distance > ((Entity as Entity.MonoEntityBase).MovementSpeed * Time.deltaTime * 3)) /*순간이동*/ || distance <= ((Entity as Entity.MonoEntityBase).MovementSpeed * Time.deltaTime) /*범위 내*/)
-        {
-            currentPosition = currentPosition;
+            Entity.Position = Vector3.Lerp(before.position, next.position, t);
+            Entity.Rotation = Quaternion.Lerp(Quaternion.Euler(before.rotation), Quaternion.Euler(next.rotation), t).eulerAngles;
+            Entity.Velocity = Vector3.Lerp(before.velocity, next.velocity, t);
+            Entity.AngularVelocity = Vector3.Lerp(before.angularVelocity, next.angularVelocity, t);
         }
         else
         {
-            currentPosition = Vector3.LerpUnclamped(lastPosition, currentPosition, 1.1f);    //  보정
-        }
-        lastPosition = Entity.Position = currentPosition;
+            //  로테이션 예측한 값이 실제 값 보다 크거나 작으면, 실제 값으로 맞춰지는데 그 느낌이 튕기는(유쾌하지 않은) 느낌...
 
-        //  Rotation
-        currentRotation += FPM_Manager.Instance.PendingPosition * 0.1f;
-        float rotate = Mathf.Abs(currentRotation.y - lastRotation.y);
-        if ((rotate > (Behavior.Rotation.ANGULAR_SPEED * Time.deltaTime * 3)) /*순간이동*/ || rotate <= (Behavior.Rotation.ANGULAR_SPEED * Time.deltaTime) /*범위 내*/)
-        {
-            currentRotation = currentRotation;
-        }
-        else
-        {
-            currentRotation = Quaternion.LerpUnclamped(Quaternion.Euler(lastRotation), Quaternion.Euler(currentRotation), 1.1f).eulerAngles;    //  보정
-        }
-        lastRotation = Entity.Rotation = currentRotation;
+            if (lastSnap == null || lastSnap == before)
+            {
+                float elapsed = Game.Current.GameTime - before.GameTime;
 
-        //  Velocity (현재는 보정x)
-        lastVelocity = Entity.Velocity = currentVelocity;
+                Entity.Position = before.position + before.velocity.ToVector3() * elapsed;
+                Entity.Rotation = before.rotation + before.angularVelocity.ToVector3() * elapsed * 0.5f/*로테이션 예측 정도를 반으로 줄여서 로테이션이 튕겨보이는 현상 방지*/;
+                Entity.Velocity = before.velocity;
+                Entity.AngularVelocity = before.angularVelocity;
+            }
+            else
+            {
+                //  새로운 패킷이면 smoothing 작업을 해준다. (다음 프레임 예상 값과 현재 값의 중간 값)
+                float nextTime = Game.Current.GameTime + 0.033f;
+                float elapsed = nextTime - before.GameTime;
 
-        //  AngularVelocity (현재는 보정x)
-        lastAngularVelocity = Entity.AngularVelocity = currentAngularVelocity;
+                Vector3 expectedPosition = before.position + before.velocity.ToVector3() * elapsed;
+                Vector3 expectedRotation = before.rotation + before.angularVelocity.ToVector3() * elapsed * 0.5f/*로테이션 예측 정도를 반으로 줄여서 로테이션이 튕겨보이는 현상 방지*/;
+
+                Entity.Position = Vector3.Lerp(Entity.Position, expectedPosition, 0.5f);
+                Entity.Rotation = Quaternion.Lerp(Quaternion.Euler(Entity.Rotation), Quaternion.Euler(expectedRotation), 0.5f).eulerAngles;
+                Entity.Velocity = before.velocity;
+                Entity.AngularVelocity = before.angularVelocity;
+            }
+        }
+        
+        lastSnap = before;
     }
 
     private void Reconcile(ISnap snap)
