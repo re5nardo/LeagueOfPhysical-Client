@@ -15,5 +15,7 @@ public class EntityBehaviorEndHandler
         {
             return;
         }
+
+        entity.GetComponent<BehaviorController>()?.StopBehavior(entityBehaviorEnd.behaviorMasterID);
     }
 }
