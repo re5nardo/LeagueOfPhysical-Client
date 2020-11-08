@@ -9,7 +9,7 @@ namespace DebugCommandHandler
     {
         public static void Handle(float value1, float value2)
         {
-            Debug.LogWarning($"SpeedFactor {value1} {value2}");
+            DebugCommandPubSubService.Publish("SpeedFactor", new object[] { value1, value2 });
         }
     }
 }
