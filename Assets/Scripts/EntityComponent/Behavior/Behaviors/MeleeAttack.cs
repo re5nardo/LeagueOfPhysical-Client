@@ -24,12 +24,7 @@ namespace Behavior
 
         protected override bool OnBehaviorUpdate()
         {
-            if (LastUpdateTime < m_fAttackTime && m_fAttackTime <= CurrentUpdateTime)
-            {
-				//	Do nothing
-			}
-
-			return CurrentUpdateTime < m_fLifespan;
+            return true;
         }
 
         public override void SetData(int nBehaviorMasterID, params object[] param)

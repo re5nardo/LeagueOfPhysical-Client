@@ -19,12 +19,31 @@ namespace Behavior
 
         protected override bool OnBehaviorUpdate()
         {
-            return true;
+            Vector3 toMove = m_vec3Destination - Entity.Position;
+
+            Entity.Velocity = toMove.normalized * Entity.MovementSpeed;
+
+            Vector3 moved = toMove.normalized * Entity.MovementSpeed * DeltaTime;
+
+            if (Util.Approximately(toMove.sqrMagnitude, moved.sqrMagnitude) || toMove.sqrMagnitude <= moved.sqrMagnitude)
+            {
+                Entity.Position = m_vec3Destination;
+
+                return true;
+            }
+            else
+            {
+                Entity.Position += moved;
+
+                return true;
+            }
         }
 
         protected override void OnBehaviorEnd()
         {
             base.OnBehaviorEnd();
+
+            Entity.Velocity = Vector3.zero;
 
             Entity.SendCommandToViews(new AnimatorSetBool("Move", false));
         }
@@ -52,6 +71,15 @@ namespace Behavior
         public Vector3 GetDestination()
         {
             return m_vec3Destination;
+        }
+
+        public override void OnReceiveSynchronization(ISnap snap)
+        {
+            MoveSnap moveSnap = snap as MoveSnap;
+
+            m_vec3Destination = moveSnap.destination;
+
+            Entity.SendCommandToViews(new AnimatorSetBool("Move", true));
         }
     }
 }

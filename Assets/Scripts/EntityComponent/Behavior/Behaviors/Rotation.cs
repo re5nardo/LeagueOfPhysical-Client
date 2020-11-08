@@ -9,12 +9,52 @@ namespace Behavior
         private Vector3 m_vec3Direction;
 
         // Angular speed in degrees per sec.
+        private float m_fAngularSpeed = 360 * 2;
+
         public const float ANGULAR_SPEED = 360 * 2;
 
         #region BehaviorBase
         protected override bool OnBehaviorUpdate()
         {
-            return true;
+            float dest_y = Quaternion.LookRotation(m_vec3Direction).eulerAngles.y;
+            float mine_y = Entity.Rotation.y;
+
+            float toRotate = dest_y - mine_y;
+            if (Util.Approximately(toRotate, 0))
+                return true;
+
+            int sign = GetRotationSign(Entity.Forward, m_vec3Direction);
+            if (sign > 0)
+            {
+                if (dest_y < mine_y)
+                {
+                    toRotate = (dest_y + 360) - mine_y;
+                }
+            }
+            else
+            {
+                if (dest_y > mine_y)
+                {
+                    toRotate = dest_y - (mine_y + 360);
+                }
+            }
+
+            Entity.AngularVelocity = new Vector3(0, sign * m_fAngularSpeed, 0);
+
+            float rotated = Entity.AngularVelocity.y * DeltaTime;
+
+            if (Util.Approximately(toRotate, rotated) || Mathf.Abs(toRotate) <= Mathf.Abs(rotated))
+            {
+                Entity.Rotation = Quaternion.LookRotation(m_vec3Direction).eulerAngles;
+
+                return true;
+            }
+            else
+            {
+                Entity.Rotation = new Vector3(Entity.Rotation.x, (Entity.Rotation.y + rotated) % 360, Entity.Rotation.z);
+
+                return true;
+            }
         }
 
         public override void SetData(int nBehaviorMasterID, params object[] param)
