@@ -46,7 +46,7 @@ public class MonoEntitySynchronization : MonoComponentBase, ISynchronizableCompo
     {
         MonoEntitySnap monoEntitySnap = snap as MonoEntitySnap;
 
-        SC_SynchronizationHandler.Handle(monoEntitySnap.snaps);
+        SynchronizationManager.Handle(monoEntitySnap.snaps);
     }
 
     public void Add(ISynchronizable child)
