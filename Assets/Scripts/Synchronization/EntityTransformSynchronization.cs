@@ -42,7 +42,7 @@ public class EntityTransformSynchronization : MonoComponentBase, ISynchronizable
 
     private void Update()
     {
-        SyncedMovement();
+        //SyncedMovement();
     }
 
     private void SyncedMovement()
