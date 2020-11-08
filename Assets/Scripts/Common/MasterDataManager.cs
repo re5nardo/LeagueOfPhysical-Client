@@ -122,9 +122,7 @@ public class MasterDataManager : MonoSingleton<MasterDataManager>
 
 		if (m_dicMasterData.TryGetValue(typeof(T), out datas))
 		{
-			IMasterData data = default;
-
-			if (datas.TryGetValue(nKey, out data))
+			if (datas.TryGetValue(nKey, out IMasterData data))
 			{
 				return (T)data;
 			}
@@ -135,9 +133,7 @@ public class MasterDataManager : MonoSingleton<MasterDataManager>
 
     public List<T> GetAllMasterData<T>() where T : IMasterData
     {
-		Dictionary<int, IMasterData> datas = null;
-
-		if (m_dicMasterData.TryGetValue(typeof(T), out datas))
+		if (m_dicMasterData.TryGetValue(typeof(T), out Dictionary<int, IMasterData> datas))
 		{
 			return datas.Values.Cast<T>().ToList();
 		}

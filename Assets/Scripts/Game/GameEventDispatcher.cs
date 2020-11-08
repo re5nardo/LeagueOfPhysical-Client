@@ -30,9 +30,7 @@ public class GameEventDispatcher : MonoBehaviour
 
     public void DispatchGameEvent(IGameEvent gameEvent)
     {
-        Action<IGameEvent> handler = null;
-
-        if (gameEventHandler.TryGetValue(gameEvent.GetType(), out handler))
+        if (gameEventHandler.TryGetValue(gameEvent.GetType(), out Action<IGameEvent> handler))
         {
             handler?.Invoke(gameEvent);
         }
