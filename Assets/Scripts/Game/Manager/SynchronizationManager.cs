@@ -41,44 +41,31 @@ public class SynchronizationManager : MonoSingleton<SynchronizationManager>
 
     private void Handle(MonoEntitySnap monoEntitySnap)
     {
-        var entity = Entities.Get<Entity.MonoEntityBase>(int.Parse(monoEntitySnap.Id));
+        var entity = Entities.Get<Entity.MonoEntityBase>(monoEntitySnap.entityId);
 
         entity?.GetComponent<MonoEntitySynchronization>().OnReceiveSynchronization(monoEntitySnap);
     }
 
     private void Handle(EntityTransformSnap entityTransformSnap)
     {
-        var entity = Entities.Get<Entity.MonoEntityBase>(int.Parse(entityTransformSnap.Id));
+        var entity = Entities.Get<Entity.MonoEntityBase>(entityTransformSnap.entityId);
 
         entity?.GetComponent<EntityTransformSynchronization>().OnReceiveSynchronization(entityTransformSnap);
     }
 
     private void Handle(MoveSnap moveSnap)
     {
-        var entity = Entities.Get(int.Parse(moveSnap.Id));
+        var entity = Entities.Get(moveSnap.entityId);
 
         entity?.GetComponent<Behavior.Move>().OnReceiveSynchronization(moveSnap);
     }
 
     private void Handle(BehaviorSnap behaviorSnap)
     {
-        var entity = Entities.Get(int.Parse(behaviorSnap.Id));
-
-        if (behaviorSnap.behaviorName == typeof(Behavior.Move).Name)
+        var entity = Entities.Get(behaviorSnap.entityId);
+        if (entity.GetComponent<BehaviorController>().IsBehaviorRunning(behaviorSnap.behaviorMasterId, out var behavior))
         {
-            entity?.GetComponent<Behavior.Move>().OnReceiveSynchronization(behaviorSnap);
-        }
-        else if (behaviorSnap.behaviorName == typeof(Behavior.Rotation).Name)
-        {
-            entity?.GetComponent<Behavior.Rotation>().OnReceiveSynchronization(behaviorSnap);
-        }
-        else if (behaviorSnap.behaviorName == typeof(Behavior.MeleeAttack).Name)
-        {
-            entity?.GetComponent<Behavior.MeleeAttack>().OnReceiveSynchronization(behaviorSnap);
-        }
-        else if (behaviorSnap.behaviorName == typeof(Behavior.RangeAttack).Name)
-        {
-            entity?.GetComponent<Behavior.RangeAttack>().OnReceiveSynchronization(behaviorSnap);
+            behavior?.OnReceiveSynchronization(behaviorSnap);
         }
     }
 }
