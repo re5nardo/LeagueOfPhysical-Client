@@ -4,11 +4,12 @@ using UnityEngine;
 using Entity;
 using System;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerHealthBar : HealthBarBase
 {
-    [SerializeField] private Text nickname = null;
-    [SerializeField] private Text level = null;
+    [SerializeField] private TextMeshProUGUI nickname = null;
+    [SerializeField] private TextMeshProUGUI level = null;
     [SerializeField] private Slider sliderHP = null;
     [SerializeField] private Slider sliderMP = null;
     [SerializeField] private Slider sliderExp = null;
