@@ -10,7 +10,6 @@ public class CustomSerializationCode
 {
 	public const byte SC_EnterRoom = 3;
 	public const byte SC_EntitySkillInfo = 5;
-	public const byte SC_PlayerMoveInputResponse = 6;
 	public const byte SC_EmotionExpression = 7;
 	public const byte SC_EntityAppear = 14;
 	public const byte SC_EntityDisAppear = 15;
@@ -36,7 +35,6 @@ public class PhotonEvent
 {
 	public const byte SC_EnterRoom = 0;
 	public const byte SC_EntitySkillInfo = 2;
-	public const byte SC_PlayerMoveInputResponse = 3;
 	public const byte SC_EmotionExpression = 4;
 	public const byte SC_EntityAppear = 11;
 	public const byte SC_EntityDisAppear = 12;
@@ -292,22 +290,6 @@ public class SC_EntitySkillInfo : IPhotonEventMessage
 	public byte GetEventID()
 	{
 		return PhotonEvent.SC_EntitySkillInfo;
-	}
-}
-
-[Serializable]
-public class SC_PlayerMoveInputResponse : IPhotonEventMessage
-{
-    public int senderID { get; set; }
-    public int m_nTick = -1;
-    public int m_nEntityID = -1;
-	public SerializableVector3 m_Position;
-	public SerializableVector3 m_Rotation;
-	public long m_lLastProcessedSequence = -1;
-
-	public byte GetEventID()
-	{
-		return PhotonEvent.SC_PlayerMoveInputResponse;
 	}
 }
 
