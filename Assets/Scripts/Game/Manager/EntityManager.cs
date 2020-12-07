@@ -116,6 +116,8 @@ public class EntityManager : GameFramework.EntityManager
 				info.m_Velocity = entitySnapInfo.m_Velocity;
 				info.m_GameTime = entityAppear.m_fGameTime;
 			}
+
+            (entity as MonoEntityBase).gameObject.AddComponent<TransformFinalController>();
 		}
 	}
 

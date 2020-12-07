@@ -99,4 +99,17 @@ public class BehaviorController : MonoComponentBase
             }
         });
     }
+
+    public bool IsBehaviorRunning(int masterId, out BehaviorBase behavior)
+    {
+        var target = Entity.GetComponents<BehaviorBase>()?.Find(bh => bh.GetBehaviorMasterID() == masterId);
+        if (target != null)
+        {
+            behavior = target;
+            return true;
+        }
+
+        behavior = null;
+        return false;
+    }
 }

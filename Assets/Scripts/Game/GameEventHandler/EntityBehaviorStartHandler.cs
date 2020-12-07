@@ -16,6 +16,14 @@ public class EntityBehaviorStartHandler
             return;
         }
 
-        entity.GetComponent<BehaviorController>()?.StartBehavior(entityBehaviorStart.behaviorMasterID, entityBehaviorStart.param);
+        var behaviorController = entity.GetComponent<BehaviorController>();
+        if (behaviorController.IsBehaviorRunning(entityBehaviorStart.behaviorMasterID, out var behavior))
+        {
+            //behavior.SetData()
+        }
+        else
+        {
+            entity.GetComponent<BehaviorController>()?.StartBehavior(entityBehaviorStart.behaviorMasterID, entityBehaviorStart.param);
+        }
     }
 }
