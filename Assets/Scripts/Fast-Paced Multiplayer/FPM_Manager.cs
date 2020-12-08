@@ -64,7 +64,7 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         {
             Character character = Entities.Get<Character>(playerMoveInput.entityID);
             var behaviorController = character.GetComponent<BehaviorController>();
-            behaviorController.Move(character.Position + playerMoveInput.inputData.ToVector3().normalized * Game.Current.TickInterval * 3 * character.MovementSpeed);
+            behaviorController.Move(character.Position + playerMoveInput.inputData.ToVector3().normalized * Game.Current.TickInterval * 5 * character.MovementSpeed);
         }
     }
 }

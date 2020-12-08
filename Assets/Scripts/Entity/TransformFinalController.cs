@@ -59,7 +59,7 @@ public class TransformFinalController : MonoBehaviour
                 float elapsed = nextTime - before.GameTime;
 
                 Vector3 expectedPosition = before.position + before.velocity.ToVector3() * elapsed;
-                Vector3 expectedRotation = before.rotation + before.angularVelocity.ToVector3() * elapsed;
+                Vector3 expectedRotation = before.rotation + before.angularVelocity.ToVector3() * elapsed * 0.5f/*각속도가 커서 예측값이 실제값을 초과하는 경우가 빈번하여 예측 정도를 약화*/;
 
                 Entity.GetComponent<EntityBasicView>().Position = Vector3.Lerp(lastPosition, expectedPosition, 0.5f);
                 Entity.GetComponent<EntityBasicView>().Rotation = Quaternion.Lerp(Quaternion.Euler(lastRotation), Quaternion.Euler(expectedRotation), 0.5f).eulerAngles;
