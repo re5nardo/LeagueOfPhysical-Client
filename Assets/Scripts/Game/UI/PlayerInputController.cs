@@ -4,6 +4,7 @@ using UnityEngine;
 using Entity;
 using System;
 using GameFramework;
+using UniRx;
 
 public class PlayerInputController : MonoBehaviour
 {
@@ -30,10 +31,7 @@ public class PlayerInputController : MonoBehaviour
         {
             PlayerMoveInput playerMoveInput = playerMoveInputs.Dequeue();
 
-            if (playerMoveInput.inputData.ToVector3() != Vector3.zero)
-            {
-                FPM_Manager.Instance.ProcessInput(playerMoveInput);
-            }
+            MessageBroker.Default.Publish(playerMoveInput);
         }
 
         //  Skill
