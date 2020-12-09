@@ -64,5 +64,10 @@ namespace Behavior
         {
             m_vec3Direction = vec3Direction;
         }
+
+        public Vector3 GetDestination()
+        {
+            return Quaternion.LookRotation(m_vec3Direction).eulerAngles;
+        }
     }
 }
