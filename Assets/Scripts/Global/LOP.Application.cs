@@ -6,8 +6,8 @@ namespace LOP
 {
     public class Application
     {
-        private static bool isInitialized = false;
-        public static bool IsInitialized { get { return isInitialized; } }
+        public static bool IsApplicationQuitting => GlobalMonoBehavior.Instance.IsApplicationQuitting;
+        public static bool IsInitialized { get; private set; }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void OnBeforeSceneLoadRuntimeMethod()
@@ -38,7 +38,7 @@ namespace LOP
             //            yield return new WaitUntil(() => CatalogData.Instance.IsCached());
             //            yield return new WaitUntil(() => UserProfileData.Instance.IsCached());
 
-            isInitialized = true;
+            IsInitialized = true;
         }
     }
 }

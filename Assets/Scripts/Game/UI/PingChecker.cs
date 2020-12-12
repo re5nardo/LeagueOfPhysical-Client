@@ -22,7 +22,7 @@ public class PingChecker : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (RoomNetwork.IsInstantiated())
+        if (RoomNetwork.HasInstance())
         {
             RoomNetwork.Instance.onMessage -= OnMessage;
         }

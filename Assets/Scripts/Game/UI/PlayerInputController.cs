@@ -119,7 +119,7 @@ public class PlayerInputController : MonoBehaviour
 
         messageHandler.Clear();
 
-		if (RoomNetwork.IsInstantiated())
+		if (RoomNetwork.HasInstance())
 		{
 			RoomNetwork.Instance.onMessage -= OnMessage;
 		}

@@ -61,7 +61,7 @@ public class EntityManager : GameFramework.EntityManager
     {
 		m_dicMessageHandler.Clear();
 
-		if (RoomNetwork.IsInstantiated())
+		if (RoomNetwork.HasInstance())
 		{
 			RoomNetwork.Instance.onMessage -= OnMessage;
 		}

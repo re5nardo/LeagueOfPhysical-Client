@@ -35,7 +35,7 @@ public class CharacterView : EntityBasicView
 		if (m_HealthBar != null)
 		{
 			m_HealthBar.Clear();
-			if (ResourcePool.IsInstantiated())
+			if (ResourcePool.HasInstance())
 			{
 				ResourcePool.Instance.ReturnResource(m_HealthBar.gameObject);
 			}
@@ -51,7 +51,7 @@ public class CharacterView : EntityBasicView
 		if (m_HealthBar != null)
 		{
 			m_HealthBar.Clear();
-			if (ResourcePool.IsInstantiated())
+			if (ResourcePool.HasInstance())
 			{
 				ResourcePool.Instance.ReturnResource(m_HealthBar.gameObject);
 			}

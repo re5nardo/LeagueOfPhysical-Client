@@ -107,7 +107,7 @@ public class EntityBasicView : MonoViewComponentBase
 	{
 		if (m_goModel != null)
 		{
-			if (ResourcePool.IsInstantiated())
+			if (ResourcePool.HasInstance())
 			{
 				ResourcePool.Instance.ReturnResource(m_goModel);
 			}

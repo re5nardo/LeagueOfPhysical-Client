@@ -25,7 +25,7 @@ public class ManagedCanvas : MonoBehaviour
 
     public void Unregister()
     {
-        if (ManagedCanvasManager.IsInstantiated())
+        if (ManagedCanvasManager.HasInstance())
         {
             ManagedCanvasManager.Instance.Unregister(this);
         }

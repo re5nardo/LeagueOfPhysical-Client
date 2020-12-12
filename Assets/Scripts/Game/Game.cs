@@ -77,7 +77,7 @@ namespace LOP
                 tickUpdater = null;
             }
 
-            if (RoomNetwork.IsInstantiated())
+            if (RoomNetwork.HasInstance())
             {
                 RoomNetwork.Instance.onMessage -= OnNetworkMessage;
             }
