@@ -21,9 +21,10 @@ namespace LOP
 #if UNITY_EDITOR
             UnityEngine.Application.targetFrameRate = 30;
 #endif
-
             //  PhotonType Register
             PhotonTypeRegister.Register();
+
+            MasterDataManager.Instantiate();
 
             //  Debug Console
             if (Debug.isDebugBuild)

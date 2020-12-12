@@ -5,71 +5,39 @@ using GameFramework;
 
 namespace LOP
 {
-    public class Room : PunBehaviour
+    public class Room : MonoSingleton<Room>
     {
-        public static Room Instance { get; private set; }
+        [SerializeField] private Game game = null;
+        [SerializeField] private RoomProtocolDispatcher roomProtocolDispatcher = null;
+        [SerializeField] private RoomPunBehaviour roomPunBehaviour = null;
 
         public float Latency { get; private set; } = 0.03f;     //  sec
 
-        private RoomProtocolDispatcher protocolDispatcher = null;
-        private Game game = null;
-
-        public static bool IsInstantiated()
-        {
-            return Instance != null;
-        }
-
         #region MonoBehaviour
-        private void Awake()
-        {
-            Instance = this;
-        }
-
         private IEnumerator Start()
         {
-            yield return StartCoroutine(Initialize());
+            yield return Initialize();
 
             PhotonNetwork.isMessageQueueRunning = true;
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
+
             Clear();
-
-            Instance = null;
-        }
-        #endregion
-
-        #region PunBehaviour
-        public override void OnMasterClientSwitched(PhotonPlayer newMasterClient)
-        {
-            Debug.LogError("[OnMasterClientSwitched] Error!");
         }
         #endregion
 
         private IEnumerator Initialize()
         {
-            protocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
-            game = GetGame();
-
-            yield return StartCoroutine(game.Initialize());
+            yield return game.Initialize();
             
             RoomNetwork.Instance.onMessage += OnNetworkMessage;
         }
 
-        private Game GetGame()
-        {
-            return FindObjectOfType<Game>();
-        }
-
         private void Clear()
         {
-            if (protocolDispatcher != null)
-            {
-                Destroy(protocolDispatcher);
-                protocolDispatcher = null;
-            }
-
             if (RoomNetwork.HasInstance())
             {
                 RoomNetwork.Instance.onMessage -= OnNetworkMessage;
@@ -78,7 +46,7 @@ namespace LOP
 
         private void OnNetworkMessage(IMessage msg, object[] objects)
         {
-            protocolDispatcher.DispatchProtocol(msg as IPhotonEventMessage);
+            roomProtocolDispatcher.DispatchProtocol(msg as IPhotonEventMessage);
         }
     }
 }

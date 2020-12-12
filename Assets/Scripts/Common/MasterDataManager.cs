@@ -13,6 +13,8 @@ public class MasterDataManager : MonoSingleton<MasterDataManager>
     {
         base.Awake();
 
+        DontDestroyOnLoad(this);
+
         Initialize();
     }
 
