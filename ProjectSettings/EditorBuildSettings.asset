@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Maps/RiftOfSummoner.unity
     guid: 6fedb6227a64e484491a9df56b203f9d
+  - enabled: 1
+    path: Assets/Scenes/SubGame/RememberGame.unity
+    guid: 400a5df4e8ffd5e43bfc011990056221
   m_configObjects: {}
