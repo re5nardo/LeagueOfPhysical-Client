@@ -4,78 +4,55 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using GameFramework;
 using Entity;
-using System.Linq;
 
 namespace LOP
 {
     public partial class Game : GameFramework.Game
     {
-        public new static Game Current { get { return GameFramework.Game.Current as Game; } }
+        [SerializeField] private GameUI gameUI = null;
 
-        public GameUI GameUI { get { return gameUI; } }
-        public MyInfo MyInfo { get { return myInfo; } }
-        public GameEventManager GameEventManager { get { return gameEventManager; } }
+        public new static Game Current => GameFramework.Game.Current as Game;
 
-        private GameUI gameUI = null;
-        private MyInfo myInfo = null;
+        public GameUI GameUI => gameUI;
+        public MyInfo MyInfo => myInfo;
+        public GameEventManager GameEventManager => gameEventManager;
+
+        private GameProtocolDispatcher gameProtocolDispatcher = null;
         private GameEventManager gameEventManager = null;
-        private GameProtocolDispatcher protocolDispatcher = null;
+        private GameManager gameManager = null;
+        private MyInfo myInfo = null;
 
         public override IEnumerator Initialize()
         {
-            GameFramework.Game.Current = this;
-
-            yield return SceneManager.LoadSceneAsync("RiftOfSummoner", LoadSceneMode.Additive);
-
             Physics.autoSimulation = false;
+
+            tickUpdater = gameObject.AddComponent<TickUpdater>();
+            gameProtocolDispatcher = gameObject.AddComponent<GameProtocolDispatcher>();
+            gameEventManager = gameObject.AddComponent<GameEventManager>();
+            gameManager = gameObject.AddComponent<GameManager>();
+            myInfo = gameObject.AddComponent<MyInfo>();
+
+            RoomNetwork.Instance.onMessage += OnNetworkMessage;
+
+            tickUpdater.Initialize(1 / 30f, true, Room.Instance.Latency, OnTick, OnTickEnd);
+            GameUI.Initialize();
 
             EntityManager.Instantiate();
             ResourcePool.Instantiate();
             FPM_Manager.Instantiate();
+            
+            Initialized = true;
 
-            gameUI = GetGameUI();
-            myInfo = gameObject.AddComponent<MyInfo>();
-            gameEventManager = gameObject.AddComponent<GameEventManager>();
-            protocolDispatcher = gameObject.AddComponent<GameProtocolDispatcher>();
-            tickUpdater = gameObject.AddComponent<TickUpdater>();
-
-            GameUI.Initialize();
-            tickUpdater.Initialize(1 / 30f, true, Room.Instance.Latency, OnTick, OnTickEnd);
-
-            RoomNetwork.Instance.onMessage += OnNetworkMessage;
-
-            initialized = true;
+            yield break;
         }
 
         protected override void Clear()
         {
             base.Clear();
 
+            Physics.autoSimulation = true;
+
             GameUI.Clear();
-
-            if (myInfo != null)
-            {
-                Destroy(myInfo);
-                myInfo = null;
-            }
-
-            if (gameEventManager != null)
-            {
-                Destroy(gameEventManager);
-                gameEventManager = null;
-            }
-
-            if (protocolDispatcher != null)
-            {
-                Destroy(protocolDispatcher);
-                protocolDispatcher = null;
-            }
-
-            if (tickUpdater != null)
-            {
-                Destroy(tickUpdater);
-                tickUpdater = null;
-            }
 
             if (RoomNetwork.HasInstance())
             {
@@ -86,6 +63,8 @@ namespace LOP
         protected override void OnBeforeRun()
         {
             InvokeRepeating("NotifyPlayerLookAtPosition", 0f, 0.1f);
+
+            gameManager.StartGameManager();
         }
 
         private void OnTick(int tick)
@@ -100,15 +79,10 @@ namespace LOP
             TickPubSubService.Publish("TickEnd", tick);
             TickPubSubService.Publish("LateTickEnd", tick);
         }
-
-        private GameUI GetGameUI()
-        {
-            return FindObjectOfType<GameUI>();
-        }
-
+       
         private void OnNetworkMessage(IMessage msg, object[] objects)
         {
-            protocolDispatcher.DispatchProtocol(msg as IPhotonEventMessage);
+            gameProtocolDispatcher.DispatchProtocol(msg as IPhotonEventMessage);
         }
 
         private void NotifyPlayerLookAtPosition()

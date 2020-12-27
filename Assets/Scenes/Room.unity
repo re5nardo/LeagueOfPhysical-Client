@@ -1543,6 +1543,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3731dd12f31591a4286158495ad4b518, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tickUpdater: {fileID: 0}
+  gameUI: {fileID: 1555665390}
 --- !u!4 &1530100566
 Transform:
   m_ObjectHideFlags: 0
@@ -2331,8 +2333,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1969634553}
   - component: {fileID: 1969634552}
-  - component: {fileID: 1969634555}
-  - component: {fileID: 1969634554}
   m_Layer: 0
   m_Name: Room
   m_TagString: Untagged
@@ -2353,8 +2353,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   game: {fileID: 1530100565}
-  roomProtocolDispatcher: {fileID: 1969634555}
-  roomPunBehaviour: {fileID: 1969634554}
 --- !u!4 &1969634553
 Transform:
   m_ObjectHideFlags: 0
@@ -2369,30 +2367,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1969634554
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1969634551}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16e51858ad097c1489b398463d5ae3fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1969634555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1969634551}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d77b4b5e98e67b4d86b7ed00a3ca348, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2097564713
 GameObject:
   m_ObjectHideFlags: 0
