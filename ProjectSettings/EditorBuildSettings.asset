@@ -18,6 +18,15 @@ EditorBuildSettings:
     path: Assets/Scenes/Maps/RiftOfSummoner.unity
     guid: 6fedb6227a64e484491a9df56b203f9d
   - enabled: 1
+    path: Assets/Scenes/SubGame/Dodgeball.unity
+    guid: 0a5a3e218bc7f7f4391e85747d62daa7
+  - enabled: 1
+    path: Assets/Scenes/SubGame/ObserverAvoid.unity
+    guid: 00e59fcc3346b0d4fb5905970131599d
+  - enabled: 1
     path: Assets/Scenes/SubGame/RememberGame.unity
     guid: 400a5df4e8ffd5e43bfc011990056221
+  - enabled: 1
+    path: Assets/Scenes/SubGame/TargetShooting.unity
+    guid: 0ae888b774a81dd4195099a1fbd689d6
   m_configObjects: {}
