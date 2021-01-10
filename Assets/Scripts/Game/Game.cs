@@ -40,7 +40,9 @@ namespace LOP
             EntityManager.Instantiate();
             ResourcePool.Instantiate();
             FPM_Manager.Instantiate();
-            
+
+            gameManager.StartGameManager();
+
             Initialized = true;
 
             yield break;
@@ -63,8 +65,6 @@ namespace LOP
         protected override void OnBeforeRun()
         {
             InvokeRepeating("NotifyPlayerLookAtPosition", 0f, 0.1f);
-
-            gameManager.StartGameManager();
         }
 
         private void OnTick(int tick)
