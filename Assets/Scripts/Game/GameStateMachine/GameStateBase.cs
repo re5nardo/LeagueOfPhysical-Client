@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using GameFramework.FSM;
+using System;
 
-public abstract class GameStateBase : MonoBehaviour, IState<GameStateInput>
+public abstract class GameStateBase : MonoBehaviour, IState
 {
-    public IFiniteStateMachine<IState<GameStateInput>, GameStateInput> FSM
-    {
-        get => gameObject.GetOrAddComponent<GameStateMachine>() as IFiniteStateMachine<IState<GameStateInput>, GameStateInput>;
-    }
-  
+    public IFiniteStateMachine FSM => gameObject.GetOrAddComponent<GameStateMachine>();
+
     public virtual void Enter()
     {
     }
@@ -26,5 +24,5 @@ public abstract class GameStateBase : MonoBehaviour, IState<GameStateInput>
     {
     }
 
-    public abstract IState<GameStateInput> GetNext(GameStateInput input);
+    public abstract IState GetNext<I>(I input) where I : Enum;
 }

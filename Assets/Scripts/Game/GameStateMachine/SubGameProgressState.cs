@@ -21,15 +21,21 @@ public class SubGameProgressState : GameStateBase
         }
     }
 
-    public override IState<GameStateInput> GetNext(GameStateInput input)
+    public override IState GetNext<I>(I input)
     {
-        switch (input)
+        if (!Enum.TryParse(input.ToString(), out GameStateInput gameStateInput))
+        {
+            Debug.LogError($"Invalid input! input : {input}");
+            return default;
+        }
+
+        switch (gameStateInput)
         {
             case GameStateInput.StateDone:
             case GameStateInput.SubGameEndState:
                 return gameObject.GetOrAddComponent<SubGameEndState>();
         }
 
-        throw new Exception($"Invalid transition: {GetType().Name} with {input}");
+        throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");
     }
 }

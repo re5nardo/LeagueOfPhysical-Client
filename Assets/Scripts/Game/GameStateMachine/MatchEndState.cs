@@ -6,7 +6,7 @@ using System;
 
 public class MatchEndState : GameStateBase
 {
-    public override IState<GameStateInput> GetNext(GameStateInput input)
+    public override IState GetNext<I>(I input)
     {
         throw new Exception($"Invalid transition: {GetType().Name} with {input}");
     }

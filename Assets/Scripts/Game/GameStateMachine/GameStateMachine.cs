@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameFramework.FSM;
 using GameFramework;
+using System;
 
-public class GameStateMachine : MonoBehaviour, IFiniteStateMachine<GameStateBase, GameStateInput>
+public class GameStateMachine : MonoBehaviour, IFiniteStateMachine
 {
-    public GameStateBase InitState => gameObject.GetOrAddComponent<WaitForPlayersState>();
-    public GameStateBase CurrentState { get; private set; }
+    public IState InitState => gameObject.GetOrAddComponent<WaitForPlayersState>();
+    public IState CurrentState { get; private set; }
 
     private void Awake()
     {
@@ -26,7 +27,7 @@ public class GameStateMachine : MonoBehaviour, IFiniteStateMachine<GameStateBase
     {
         if (msg is SC_GameState gameState)
         {
-            CurrentState.OnGameStateMessage(gameState);
+            (CurrentState as GameStateBase).OnGameStateMessage(gameState);
         }
     }
 
@@ -41,9 +42,9 @@ public class GameStateMachine : MonoBehaviour, IFiniteStateMachine<GameStateBase
         CurrentState?.Execute();
     }
 
-    public GameStateBase MoveNext(GameStateInput input)
+    public IState MoveNext<I>(I input) where I : Enum
     {
-        var next = CurrentState.GetNext(input) as GameStateBase;
+        var next = CurrentState.GetNext(input);
 
         if (CurrentState == next)
         {
