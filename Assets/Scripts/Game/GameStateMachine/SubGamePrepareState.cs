@@ -5,30 +5,35 @@ using UnityEngine.SceneManagement;
 using GameFramework.FSM;
 using System;
 
-public class SubGamePrepareState : MonoBehaviour, IState<GameStateInput>
+public class SubGamePrepareState : GameStateBase
 {
-    public IFiniteStateMachine<IState<GameStateInput>, GameStateInput> FSM => gameObject.GetOrAddComponent<GameStateMachine>();
-
-    public void Enter()
+    public override void Enter()
     {
         StopCoroutine("Procedure");
         StartCoroutine("Procedure");
     }
 
-    public void Execute()
-    {
-    }
-
-    public void Exit()
+    public override void Exit()
     {
         StopCoroutine("Procedure");
     }
+    
+    public override void OnGameStateMessage(SC_GameState msg)
+    {
+        switch (msg.gameState)
+        {
+            case "SubGameProgressState":
+                FSM.MoveNext(GameStateInput.SubGameProgressState);
+                break;
+        }
+    }
 
-    public IState<GameStateInput> GetNext(GameStateInput input)
+    public override IState<GameStateInput> GetNext(GameStateInput input)
     {
         switch (input)
         {
             case GameStateInput.StateDone:
+            case GameStateInput.SubGameProgressState:
                 return gameObject.GetOrAddComponent<SubGameProgressState>();
         }
 
@@ -43,6 +48,7 @@ public class SubGamePrepareState : MonoBehaviour, IState<GameStateInput>
 
         yield return SubGameBase.Current.Initialize();
 
-        FSM.MoveNext(GameStateInput.StateDone);
+        //  Send packet
+        //  ...
     }
 }

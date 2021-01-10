@@ -4,31 +4,10 @@ using UnityEngine;
 using GameFramework.FSM;
 using System;
 
-public class MatchEndState : MonoBehaviour, IState<GameStateInput>
+public class MatchEndState : GameStateBase
 {
-    public IFiniteStateMachine<IState<GameStateInput>, GameStateInput> FSM => gameObject.GetOrAddComponent<GameStateMachine>();
-
-    public void Enter()
+    public override IState<GameStateInput> GetNext(GameStateInput input)
     {
-        Debug.Log("MatchEndState Enter");
-    }
-
-    public void Execute()
-    {
-    }
-
-    public void Exit()
-    {
-    }
-
-    public IState<GameStateInput> GetNext(GameStateInput input)
-    {
-        switch (input)
-        {
-            case GameStateInput.StateDone:
-                return gameObject.GetOrAddComponent<MatchEndState>();
-        }
-
         throw new Exception($"Invalid transition: {GetType().Name} with {input}");
     }
 }

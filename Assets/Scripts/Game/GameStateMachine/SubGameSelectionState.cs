@@ -4,19 +4,14 @@ using UnityEngine;
 using GameFramework.FSM;
 using System;
 
-public class SubGameProgressState : GameStateBase
+public class SubGameSelectionState : GameStateBase
 {
-    public override void Enter()
-    {
-        SubGameBase.Current.StartGame();
-    }
-
     public override void OnGameStateMessage(SC_GameState msg)
     {
         switch (msg.gameState)
         {
-            case "SubGameEndState":
-                FSM.MoveNext(GameStateInput.SubGameEndState);
+            case "SubGamePrepareState":
+                FSM.MoveNext(GameStateInput.SubGamePrepareState);
                 break;
         }
     }
@@ -26,8 +21,8 @@ public class SubGameProgressState : GameStateBase
         switch (input)
         {
             case GameStateInput.StateDone:
-            case GameStateInput.SubGameEndState:
-                return gameObject.GetOrAddComponent<SubGameEndState>();
+            case GameStateInput.SubGamePrepareState:
+                return gameObject.GetOrAddComponent<SubGamePrepareState>();
         }
 
         throw new Exception($"Invalid transition: {GetType().Name} with {input}");
