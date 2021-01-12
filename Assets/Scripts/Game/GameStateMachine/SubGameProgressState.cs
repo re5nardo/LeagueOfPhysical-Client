@@ -11,15 +11,15 @@ public class SubGameProgressState : GameStateBase
         SubGameBase.Current.StartGame();
     }
 
-    public override void OnGameStateMessage(SC_GameState msg)
-    {
-        switch (msg.gameState)
-        {
-            case "SubGameEndState":
-                FSM.MoveNext(GameStateInput.SubGameEndState);
-                break;
-        }
-    }
+    //public override void OnGameStateMessage(SC_GameState msg)
+    //{
+    //    switch (msg.gameState)
+    //    {
+    //        case "SubGameEndState":
+    //            FSM.MoveNext(GameStateInput.SubGameEndState);
+    //            break;
+    //    }
+    //}
 
     public override IState GetNext<I>(I input)
     {

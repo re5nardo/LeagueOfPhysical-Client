@@ -18,15 +18,15 @@ public class SubGameClearState : GameStateBase
         StopCoroutine("Procedure");
     }
 
-    public override void OnGameStateMessage(SC_GameState msg)
-    {
-        switch (msg.gameState)
-        {
-            case "MatchEndState":
-                FSM.MoveNext(GameStateInput.MatchEndState);
-                break;
-        }
-    }
+    //public override void OnGameStateMessage(SC_GameState msg)
+    //{
+    //    switch (msg.gameState)
+    //    {
+    //        case "MatchEndState":
+    //            FSM.MoveNext(GameStateInput.MatchEndState);
+    //            break;
+    //    }
+    //}
 
     public override IState GetNext<I>(I input)
     {

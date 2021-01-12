@@ -18,15 +18,15 @@ public class SubGamePrepareState : GameStateBase
         StopCoroutine("Procedure");
     }
     
-    public override void OnGameStateMessage(SC_GameState msg)
-    {
-        switch (msg.gameState)
-        {
-            case "SubGameProgressState":
-                FSM.MoveNext(GameStateInput.SubGameProgressState);
-                break;
-        }
-    }
+    //public override void OnGameStateMessage(SC_GameState msg)
+    //{
+    //    switch (msg.gameState)
+    //    {
+    //        case "SubGameProgressState":
+    //            FSM.MoveNext(GameStateInput.SubGameProgressState);
+    //            break;
+    //    }
+    //}
 
     public override IState GetNext<I>(I input)
     {

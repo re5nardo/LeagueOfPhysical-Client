@@ -6,19 +6,19 @@ using System;
 
 public class SubGameEndState : GameStateBase
 {
-    public override void OnGameStateMessage(SC_GameState msg)
-    {
-        switch (msg.gameState)
-        {
-            case "SubGameSelectionState":
-                FSM.MoveNext(GameStateInput.SubGameSelectionState);
-                break;
+    //public override void OnGameStateMessage(SC_GameState msg)
+    //{
+    //    switch (msg.gameState)
+    //    {
+    //        case "SubGameSelectionState":
+    //            FSM.MoveNext(GameStateInput.SubGameSelectionState);
+    //            break;
 
-            case "MatchEndState":
-                FSM.MoveNext(GameStateInput.MatchEndState);
-                break;
-        }
-    }
+    //        case "MatchEndState":
+    //            FSM.MoveNext(GameStateInput.MatchEndState);
+    //            break;
+    //    }
+    //}
 
     public override IState GetNext<I>(I input)
     {

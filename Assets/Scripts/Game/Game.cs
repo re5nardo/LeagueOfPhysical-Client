@@ -41,8 +41,6 @@ namespace LOP
             ResourcePool.Instantiate();
             FPM_Manager.Instantiate();
 
-            gameManager.StartGameManager();
-
             Initialized = true;
 
             yield break;

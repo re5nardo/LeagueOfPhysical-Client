@@ -20,9 +20,5 @@ public abstract class GameStateBase : MonoBehaviour, IState
     {
     }
 
-    public virtual void OnGameStateMessage(SC_GameState msg)
-    {
-    }
-
     public abstract IState GetNext<I>(I input) where I : Enum;
 }

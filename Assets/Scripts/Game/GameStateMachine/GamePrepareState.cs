@@ -1,17 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using GameFramework.FSM;
 using System;
 
-public class SubGameSelectionState : GameStateBase
+public class GamePrepareState : GameStateBase
 {
+    public override void Enter()
+    {
+        StopCoroutine("Procedure");
+        StartCoroutine("Procedure");
+    }
+
+    public override void Exit()
+    {
+        StopCoroutine("Procedure");
+    }
+
     //public override void OnGameStateMessage(SC_GameState msg)
     //{
     //    switch (msg.gameState)
     //    {
-    //        case "SubGamePrepareState":
-    //            FSM.MoveNext(GameStateInput.SubGamePrepareState);
+    //        case "SubGameProgressState":
+    //            FSM.MoveNext(GameStateInput.SubGameProgressState);
     //            break;
     //    }
     //}
@@ -27,10 +39,20 @@ public class SubGameSelectionState : GameStateBase
         switch (gameStateInput)
         {
             case GameStateInput.StateDone:
-            case GameStateInput.SubGamePrepareState:
-                return gameObject.GetOrAddComponent<SubGamePrepareState>();
+            case GameStateInput.SubGameProgressState:
+                return gameObject.GetOrAddComponent<SubGameProgressState>();
         }
 
         throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");
+    }
+
+    private IEnumerator Procedure()
+    {
+        //  게임에 기본 필요한 준비 (리소스 등등)
+
+        //  Send packet
+        //  ...
+
+        yield break;
     }
 }
