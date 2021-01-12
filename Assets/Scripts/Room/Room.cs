@@ -11,7 +11,6 @@ namespace LOP
 
         public float Latency { get; private set; } = 0.03f;     //  sec
 
-        private RoomProtocolDispatcher roomProtocolDispatcher = null;
         private RoomPunBehaviour roomPunBehaviour = null;
 
         #region MonoBehaviour
@@ -32,25 +31,13 @@ namespace LOP
 
         private IEnumerator Initialize()
         {
-            roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
             roomPunBehaviour = gameObject.AddComponent<RoomPunBehaviour>();
 
             yield return game.Initialize();
-            
-            RoomNetwork.Instance.onMessage += OnNetworkMessage;
         }
 
         private void Clear()
         {
-            if (RoomNetwork.HasInstance())
-            {
-                RoomNetwork.Instance.onMessage -= OnNetworkMessage;
-            }
-        }
-
-        private void OnNetworkMessage(IMessage msg, object[] objects)
-        {
-            roomProtocolDispatcher.DispatchProtocol(msg as IPhotonEventMessage);
         }
     }
 }

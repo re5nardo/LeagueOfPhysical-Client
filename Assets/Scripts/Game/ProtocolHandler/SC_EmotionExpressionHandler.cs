@@ -5,7 +5,7 @@ using GameFramework;
 
 public class SC_EmotionExpressionHandler
 {
-    public static void Handle(IPhotonEventMessage msg)
+    public static void Handle(IMessage msg)
     {
         SC_EmotionExpression emotionExpression = msg as SC_EmotionExpression;
 

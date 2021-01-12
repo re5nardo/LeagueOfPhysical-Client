@@ -17,7 +17,7 @@ namespace LOP
         public MyInfo MyInfo => myInfo;
         public GameEventManager GameEventManager => gameEventManager;
 
-        private GameProtocolDispatcher gameProtocolDispatcher = null;
+        private RoomProtocolHandler roomProtocolHandler = null;
         private GameEventManager gameEventManager = null;
         private GameManager gameManager = null;
         private MyInfo myInfo = null;
@@ -27,12 +27,15 @@ namespace LOP
             Physics.autoSimulation = false;
 
             tickUpdater = gameObject.AddComponent<TickUpdater>();
-            gameProtocolDispatcher = gameObject.AddComponent<GameProtocolDispatcher>();
+            roomProtocolHandler = gameObject.AddComponent<RoomProtocolHandler>();
             gameEventManager = gameObject.AddComponent<GameEventManager>();
             gameManager = gameObject.AddComponent<GameManager>();
             myInfo = gameObject.AddComponent<MyInfo>();
 
-            RoomNetwork.Instance.onMessage += OnNetworkMessage;
+            roomProtocolHandler[typeof(SC_EnterRoom)] = LOP.Game.Current.OnEnterRoom;
+            roomProtocolHandler[typeof(SC_SyncTick)] = SC_SyncTickHandler.Handle;
+            roomProtocolHandler[typeof(SC_EmotionExpression)] = SC_EmotionExpressionHandler.Handle;
+            roomProtocolHandler[typeof(SC_Synchronization)] = SC_SynchronizationHandler.Handle;
 
             tickUpdater.Initialize(1 / 30f, true, Room.Instance.Latency, OnTick, OnTickEnd);
             GameUI.Initialize();
@@ -53,11 +56,6 @@ namespace LOP
             Physics.autoSimulation = true;
 
             GameUI.Clear();
-
-            if (RoomNetwork.HasInstance())
-            {
-                RoomNetwork.Instance.onMessage -= OnNetworkMessage;
-            }
         }
 
         protected override void OnBeforeRun()
@@ -76,11 +74,6 @@ namespace LOP
         {
             TickPubSubService.Publish("TickEnd", tick);
             TickPubSubService.Publish("LateTickEnd", tick);
-        }
-       
-        private void OnNetworkMessage(IMessage msg, object[] objects)
-        {
-            gameProtocolDispatcher.DispatchProtocol(msg as IPhotonEventMessage);
         }
 
         private void NotifyPlayerLookAtPosition()

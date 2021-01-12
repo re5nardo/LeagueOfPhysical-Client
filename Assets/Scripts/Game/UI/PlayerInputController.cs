@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Entity;
-using System;
 using GameFramework;
 using UniRx;
 
@@ -18,8 +17,7 @@ public class PlayerInputController : MonoBehaviour
 	[SerializeField] private CoolTimeSkillButton activeSkill2Btn = null;
 	[SerializeField] private CoolTimeSkillButton ultimateSkillBtn = null;
 
-	private Dictionary<int, Action<IMessage, int>> messageHandler = new Dictionary<int, Action<IMessage, int>>();
-
+    private RoomProtocolHandler roomProtocolHandler = null;
     private Character Entity = null;
     private Queue<PlayerMoveInput> playerMoveInputs = new Queue<PlayerMoveInput>();
     private SkillInputData skillInputData = null;
@@ -96,9 +94,8 @@ public class PlayerInputController : MonoBehaviour
 		activeSkill2Btn.onClicked += OnSkillBtnClicked;
 		ultimateSkillBtn.onClicked += OnSkillBtnClicked;
 
-        messageHandler.Add(PhotonEvent.SC_EntitySkillInfo, OnSC_EntitySkillInfo);
-
-		RoomNetwork.Instance.onMessage += OnMessage;
+        roomProtocolHandler = gameObject.AddComponent<RoomProtocolHandler>();
+        roomProtocolHandler[typeof(SC_EntitySkillInfo)] = OnSC_EntitySkillInfo;
 	}
 
 	private void OnDestroy()
@@ -116,28 +113,10 @@ public class PlayerInputController : MonoBehaviour
         activeSkill1Btn.onClicked -= OnSkillBtnClicked;
 		activeSkill2Btn.onClicked -= OnSkillBtnClicked;
 		ultimateSkillBtn.onClicked -= OnSkillBtnClicked;
-
-        messageHandler.Clear();
-
-		if (RoomNetwork.HasInstance())
-		{
-			RoomNetwork.Instance.onMessage -= OnMessage;
-		}
 	}
 
 	#region Message Handler
-	private void OnMessage(IMessage msg, object[] objects)
-	{
-		int nEventID = (msg as IPhotonEventMessage).GetEventID();
-		int nSenderID = (int)objects[0];
-
-		if (messageHandler.ContainsKey(nEventID))
-		{
-            messageHandler[nEventID](msg, nSenderID);
-		}
-	}
-
-	private void OnSC_EntitySkillInfo(IMessage msg, int nSenderID)
+	private void OnSC_EntitySkillInfo(IMessage msg)
 	{
 		SC_EntitySkillInfo entitySkillInfo = msg as SC_EntitySkillInfo;
 

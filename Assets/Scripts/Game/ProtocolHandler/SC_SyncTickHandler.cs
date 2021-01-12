@@ -5,7 +5,7 @@ using GameFramework;
 
 public class SC_SyncTickHandler
 {
-    public static void Handle(IPhotonEventMessage msg)
+    public static void Handle(IMessage msg)
     {
         SC_SyncTick syncTick = msg as SC_SyncTick;
 

@@ -9,35 +9,21 @@ public class PingChecker : MonoBehaviour
 {
     [SerializeField] private Text ping = null;
 
+    private RoomProtocolHandler roomProtocolHandler = null;
     private bool response = false;
     private DateTime lastReqTime = DateTime.Now;
     private List<double> RTTs = new List<double>();
 
     private void Start()
     {
-        RoomNetwork.Instance.onMessage += OnMessage;
+        roomProtocolHandler = gameObject.AddComponent<RoomProtocolHandler>();
+        roomProtocolHandler[typeof(SC_Ping)] = OnSC_Ping;
 
         StartCoroutine(PingCoroutine());
     }
 
-    private void OnDestroy()
-    {
-        if (RoomNetwork.HasInstance())
-        {
-            RoomNetwork.Instance.onMessage -= OnMessage;
-        }
-    }
-
     #region Message Handler
-    private void OnMessage(IMessage msg, object[] objects)
-    {
-        if (msg is SC_Ping)
-        {
-            OnSC_Ping(msg as SC_Ping, (int)objects[0]);
-        }
-    }
-
-    private void OnSC_Ping(SC_Ping ping, int nSenderID)
+    private void OnSC_Ping(IMessage msg)
     {
         response = true;
 

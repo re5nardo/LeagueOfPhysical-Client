@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GameFramework;
 
 namespace LOP
 {
     public partial class Game
     {
         #region Protocol Handler
-        public void OnEnterRoom(IPhotonEventMessage msg)
+        public void OnEnterRoom(IMessage msg)
         {
             SC_EnterRoom enterRoom = msg as SC_EnterRoom;
 

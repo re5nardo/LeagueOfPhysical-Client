@@ -5,7 +5,7 @@ using GameFramework;
 
 public class SC_SynchronizationHandler
 {
-    public static void Handle(IPhotonEventMessage msg)
+    public static void Handle(IMessage msg)
     {
         SC_Synchronization synchronization = msg as SC_Synchronization;
 

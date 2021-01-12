@@ -41,7 +41,7 @@ public class EntityManager : GameFramework.EntityManager
     }
     #endregion
 
-    private Dictionary<int, Action<IMessage, int>> m_dicMessageHandler = new Dictionary<int, Action<IMessage, int>>();
+    private RoomProtocolHandler roomProtocolHandler = null;
 
     #region MonoBehaviour
     private void Awake()
@@ -49,40 +49,21 @@ public class EntityManager : GameFramework.EntityManager
         m_PositionGrid = new Grid();
         m_PositionGrid.SetGrid(10);
 
-        m_dicMessageHandler.Add(PhotonEvent.SC_EntityAppear, OnSC_EntityAppear);
-		m_dicMessageHandler.Add(PhotonEvent.SC_EntityDisAppear, OnSC_EntityDisAppear);
-
-		RoomNetwork.Instance.onMessage += OnMessage;
+        roomProtocolHandler = gameObject.AddComponent<RoomProtocolHandler>();
+        roomProtocolHandler[typeof(SC_EntityAppear)] = OnSC_EntityAppear;
+        roomProtocolHandler[typeof(SC_EntityDisAppear)] = OnSC_EntityDisAppear;
 
         TickPubSubService.AddSubscriber("Tick", OnTick);
 	}
 
     private void OnDestroy()
     {
-		m_dicMessageHandler.Clear();
-
-		if (RoomNetwork.HasInstance())
-		{
-			RoomNetwork.Instance.onMessage -= OnMessage;
-		}
-
         TickPubSubService.RemoveSubscriber("Tick", OnTick);
     }
 #endregion
 
 	#region Message Handler
-	private void OnMessage(IMessage msg, object[] objects)
-	{
-		int nEventID = (msg as IPhotonEventMessage).GetEventID();
-		int nSenderID = (int)objects[0];
-
-		if (m_dicMessageHandler.ContainsKey(nEventID))
-		{
-			m_dicMessageHandler[nEventID](msg, nSenderID);
-		}
-	}
-
-	private void OnSC_EntityAppear(IMessage msg, int nSenderID)
+	private void OnSC_EntityAppear(IMessage msg)
 	{
 		SC_EntityAppear entityAppear = msg as SC_EntityAppear;
 
@@ -121,7 +102,7 @@ public class EntityManager : GameFramework.EntityManager
 		}
 	}
 
-	private void OnSC_EntityDisAppear(IMessage msg, int nSenderID)
+	private void OnSC_EntityDisAppear(IMessage msg)
 	{
 		SC_EntityDisAppear entityDisAppear = msg as SC_EntityDisAppear;
 
