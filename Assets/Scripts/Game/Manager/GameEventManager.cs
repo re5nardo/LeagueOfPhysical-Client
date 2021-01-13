@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class GameEventManager : MonoBehaviour
 {
-    private RoomProtocolHandler roomProtocolHandler = null;
+    private RoomProtocolDispatcher roomProtocolDispatcher = null;
     private GameEventDispatcher gameEventDispatcher = null;
 
     private void Awake()
     {
-        roomProtocolHandler = gameObject.AddComponent<RoomProtocolHandler>();
-        roomProtocolHandler[typeof(SC_GameEvents)] = (msg) =>
+        roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
+        roomProtocolDispatcher[typeof(SC_GameEvents)] = (msg) =>
         {
             SC_GameEvents gameEvents = msg as SC_GameEvents;
 

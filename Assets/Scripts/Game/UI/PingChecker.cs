@@ -9,15 +9,15 @@ public class PingChecker : MonoBehaviour
 {
     [SerializeField] private Text ping = null;
 
-    private RoomProtocolHandler roomProtocolHandler = null;
+    private RoomProtocolDispatcher roomProtocolDispatcher = null;
     private bool response = false;
     private DateTime lastReqTime = DateTime.Now;
     private List<double> RTTs = new List<double>();
 
     private void Start()
     {
-        roomProtocolHandler = gameObject.AddComponent<RoomProtocolHandler>();
-        roomProtocolHandler[typeof(SC_Ping)] = OnSC_Ping;
+        roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
+        roomProtocolDispatcher[typeof(SC_Ping)] = OnSC_Ping;
 
         StartCoroutine(PingCoroutine());
     }

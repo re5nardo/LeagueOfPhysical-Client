@@ -41,7 +41,7 @@ public class EntityManager : GameFramework.EntityManager
     }
     #endregion
 
-    private RoomProtocolHandler roomProtocolHandler = null;
+    private RoomProtocolDispatcher roomProtocolDispatcher = null;
 
     #region MonoBehaviour
     private void Awake()
@@ -49,9 +49,9 @@ public class EntityManager : GameFramework.EntityManager
         m_PositionGrid = new Grid();
         m_PositionGrid.SetGrid(10);
 
-        roomProtocolHandler = gameObject.AddComponent<RoomProtocolHandler>();
-        roomProtocolHandler[typeof(SC_EntityAppear)] = OnSC_EntityAppear;
-        roomProtocolHandler[typeof(SC_EntityDisAppear)] = OnSC_EntityDisAppear;
+        roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
+        roomProtocolDispatcher[typeof(SC_EntityAppear)] = OnSC_EntityAppear;
+        roomProtocolDispatcher[typeof(SC_EntityDisAppear)] = OnSC_EntityDisAppear;
 
         TickPubSubService.AddSubscriber("Tick", OnTick);
 	}

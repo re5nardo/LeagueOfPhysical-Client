@@ -17,7 +17,7 @@ namespace LOP
         public MyInfo MyInfo => myInfo;
         public GameEventManager GameEventManager => gameEventManager;
 
-        private RoomProtocolHandler roomProtocolHandler = null;
+        private RoomProtocolDispatcher roomProtocolDispatcher = null;
         private GameEventManager gameEventManager = null;
         private GameManager gameManager = null;
         private MyInfo myInfo = null;
@@ -27,15 +27,15 @@ namespace LOP
             Physics.autoSimulation = false;
 
             tickUpdater = gameObject.AddComponent<TickUpdater>();
-            roomProtocolHandler = gameObject.AddComponent<RoomProtocolHandler>();
+            roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
             gameEventManager = gameObject.AddComponent<GameEventManager>();
             gameManager = gameObject.AddComponent<GameManager>();
             myInfo = gameObject.AddComponent<MyInfo>();
 
-            roomProtocolHandler[typeof(SC_EnterRoom)] = LOP.Game.Current.OnEnterRoom;
-            roomProtocolHandler[typeof(SC_SyncTick)] = SC_SyncTickHandler.Handle;
-            roomProtocolHandler[typeof(SC_EmotionExpression)] = SC_EmotionExpressionHandler.Handle;
-            roomProtocolHandler[typeof(SC_Synchronization)] = SC_SynchronizationHandler.Handle;
+            roomProtocolDispatcher[typeof(SC_EnterRoom)] = LOP.Game.Current.OnEnterRoom;
+            roomProtocolDispatcher[typeof(SC_SyncTick)] = SC_SyncTickHandler.Handle;
+            roomProtocolDispatcher[typeof(SC_EmotionExpression)] = SC_EmotionExpressionHandler.Handle;
+            roomProtocolDispatcher[typeof(SC_Synchronization)] = SC_SynchronizationHandler.Handle;
 
             tickUpdater.Initialize(1 / 30f, true, Room.Instance.Latency, OnTick, OnTickEnd);
             GameUI.Initialize();

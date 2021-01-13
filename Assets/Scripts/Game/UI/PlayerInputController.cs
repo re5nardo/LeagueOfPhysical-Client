@@ -17,7 +17,7 @@ public class PlayerInputController : MonoBehaviour
 	[SerializeField] private CoolTimeSkillButton activeSkill2Btn = null;
 	[SerializeField] private CoolTimeSkillButton ultimateSkillBtn = null;
 
-    private RoomProtocolHandler roomProtocolHandler = null;
+    private RoomProtocolDispatcher roomProtocolDispatcher = null;
     private Character Entity = null;
     private Queue<PlayerMoveInput> playerMoveInputs = new Queue<PlayerMoveInput>();
     private SkillInputData skillInputData = null;
@@ -94,8 +94,8 @@ public class PlayerInputController : MonoBehaviour
 		activeSkill2Btn.onClicked += OnSkillBtnClicked;
 		ultimateSkillBtn.onClicked += OnSkillBtnClicked;
 
-        roomProtocolHandler = gameObject.AddComponent<RoomProtocolHandler>();
-        roomProtocolHandler[typeof(SC_EntitySkillInfo)] = OnSC_EntitySkillInfo;
+        roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
+        roomProtocolDispatcher[typeof(SC_EntitySkillInfo)] = OnSC_EntitySkillInfo;
 	}
 
 	private void OnDestroy()
