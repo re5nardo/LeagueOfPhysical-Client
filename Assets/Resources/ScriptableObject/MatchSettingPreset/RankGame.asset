@@ -9,11 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9454b50e75a186f48af685303e57e46d, type: 3}
-  m_Name: ObserverAvoid
+  m_Script: {fileID: 11500000, guid: ceb6c795173c54649a849f9141e3da60, type: 3}
+  m_Name: RankGame
   m_EditorClassIdentifier: 
-  title: ObserverAvoid
-  description: ObserverAvoid
-  sceneName: ObserverAvoid
-  minPlayers: 2
-  availableMatchType: 0000000001000000
+  title: RankGame
+  description: RankGame

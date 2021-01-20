@@ -121,3 +121,23 @@ public enum CanvasLayer
     Popup       = 1 << 1,
     System      = 1 << 2,
 }
+
+[Serializable]
+public enum MatchType
+{
+    Friendly = 0,
+    Rank = 1,
+}
+
+[Serializable]
+public struct MatchSetting
+{
+    public MatchType matchType;
+    public string subGameName;
+
+    public MatchSetting(MatchType matchType, string subGameName)
+    {
+        this.matchType = matchType;
+        this.subGameName = subGameName;
+    }
+}
