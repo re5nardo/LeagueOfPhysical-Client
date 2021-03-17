@@ -4,7 +4,7 @@ using UnityEngine;
 using GameFramework.FSM;
 using System;
 
-public class SubGameProgressState : GameStateBase
+public class SubGameProgressState : MonoStateBase
 {
     public override void Enter()
     {

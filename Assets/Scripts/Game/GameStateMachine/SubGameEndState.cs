@@ -4,7 +4,7 @@ using UnityEngine;
 using GameFramework.FSM;
 using System;
 
-public class SubGameEndState : GameStateBase
+public class SubGameEndState : MonoStateBase
 {
     //public override void OnGameStateMessage(SC_GameState msg)
     //{

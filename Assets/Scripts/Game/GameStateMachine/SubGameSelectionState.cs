@@ -4,7 +4,7 @@ using UnityEngine;
 using GameFramework.FSM;
 using System;
 
-public class SubGameSelectionState : GameStateBase
+public class SubGameSelectionState : MonoStateBase
 {
     //public override void OnGameStateMessage(SC_GameState msg)
     //{

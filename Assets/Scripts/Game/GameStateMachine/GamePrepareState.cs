@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using GameFramework.FSM;
 using System;
 
-public class GamePrepareState : GameStateBase
+public class GamePrepareState : MonoStateBase
 {
     public override void Enter()
     {
