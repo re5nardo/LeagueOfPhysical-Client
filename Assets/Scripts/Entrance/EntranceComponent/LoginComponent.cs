@@ -3,20 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using PlayFab;
 using PlayFab.ClientModels;
-using System;
 
 //  https://api.playfab.com/docs/tutorials/landing-tournaments/photon-unity
-public class LoginComponent : MonoBehaviour
+public class LoginComponent : EntranceComponent
 {
     public string customId = "";
-
-    public Action successCallback;
-    public Action<PlayFabError> errorCallback;
-
+  
     private string _playFabPlayerIdCache;
 
-    public void StartLogin()
+    public override void OnStart()
     {
+        logger?.Invoke("Login중입니다");
+
         Login();
     }
 
@@ -44,7 +42,12 @@ public class LoginComponent : MonoBehaviour
     {
 #if UNITY_EDITOR
         var request = new LoginWithCustomIDRequest { CustomId = customId == "" ? PlayFabSettings.DeviceUniqueIdentifier : customId, CreateAccount = true };
-        PlayFabClientAPI.LoginWithCustomID(request, RequestPhotonToken, errorCallback);
+        PlayFabClientAPI.LoginWithCustomID(request, RequestPhotonToken, error =>
+        {
+            Debug.LogWarning("Something went wrong with your first API call.  :(");
+            Debug.LogError("Here's some debug information:");
+            Debug.LogError(error.GenerateErrorReport());
+        });
 #endif
     }
 
@@ -93,7 +96,12 @@ public class LoginComponent : MonoBehaviour
         PlayFabClientAPI.GetPhotonAuthenticationToken(new GetPhotonAuthenticationTokenRequest()
             {
                 PhotonApplicationId = PhotonNetwork.PhotonServerSettings.AppID
-            }, AuthenticateWithPhoton, errorCallback);
+            }, AuthenticateWithPhoton, error =>
+            {
+                Debug.LogWarning("Something went wrong with your first API call.  :(");
+                Debug.LogError("Here's some debug information:");
+                Debug.LogError(error.GenerateErrorReport());
+            });
     }
 
     /*
@@ -117,6 +125,8 @@ public class LoginComponent : MonoBehaviour
         //We finally tell Photon to use this authentication parameters throughout the entire application.
         PhotonNetwork.AuthValues = customAuth;
 
-        successCallback();
+        Debug.Log("Congratulations, you made your first successful API call!");
+
+        IsSuccess = true;
     }
 }
