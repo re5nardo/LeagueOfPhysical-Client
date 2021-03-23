@@ -9,7 +9,7 @@ public class LOPWebAPI
     /// </summary>
     public static void CreateMatchmakingTicket(CreateMatchmakingTicketRequest request, Action<CreateMatchmakingTicketResult> resultCallback, Action<LOPHttpError> errorCallback, object customData = null, Dictionary<string, string> extraHeaders = null)
     {
-        LOPHttp.MakeApiCall("/match/createMatchmakingTicket", request, resultCallback, errorCallback, customData, extraHeaders, LOPServerSettings.Get());
+        LOPHttp.MakeApiCall("/match/createMatchmakingTicket", request, resultCallback, errorCallback, customData, extraHeaders, LOPServerSettings.Get("LOPServerSettings_Matchmaking"));
     }
 
     /// <summary>
@@ -17,6 +17,6 @@ public class LOPWebAPI
     /// </summary>
     public static void CancelMatchmakingTicket(CancelMatchmakingTicketRequest request, Action<CancelMatchmakingTicketResult> resultCallback, Action<LOPHttpError> errorCallback, object customData = null, Dictionary<string, string> extraHeaders = null)
     {
-        LOPHttp.MakeApiCall("/match/cancelMatchmakingTicket", request, resultCallback, errorCallback, customData, extraHeaders, LOPServerSettings.Get());
+        LOPHttp.MakeApiCall("/match/cancelMatchmakingTicket", request, resultCallback, errorCallback, customData, extraHeaders, LOPServerSettings.Get("LOPServerSettings_Matchmaking"));
     }
 }
