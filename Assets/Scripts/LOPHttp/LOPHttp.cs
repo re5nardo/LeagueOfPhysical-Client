@@ -75,8 +75,8 @@ public class LOPHttp : MonoSingleton<LOPHttp>
             }
         }
 
-        Instance.httpTransport.Put(reqContainer.FullUrl, reqContainer.Payload, reqContainer.RequestHeaders,
-            result =>
+        LOPHttpTransport.Put(reqContainer.FullUrl, reqContainer.Payload, reqContainer.RequestHeaders,
+            (string result) =>
             {
                 Instance.OnResponse(result, reqContainer);
             },
