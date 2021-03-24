@@ -10,8 +10,17 @@ using System.IO.Compression;
 /// <summary>
 /// This is a wrapper for Http So we can better separate the functionaity of Http Requests delegated to WWW or HttpWebRequest
 /// </summary>
-public partial class LOPHttp : MonoSingleton<LOPHttp>
+public class LOPHttp : MonoSingleton<LOPHttp>
 {
+    private LOPHttpTransport httpTransport = null;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        httpTransport = Instance.gameObject.AddComponent<LOPHttpTransport>();
+    }
+
     public void Start()
     {
         DontDestroyOnLoad(this);
@@ -51,8 +60,8 @@ public partial class LOPHttp : MonoSingleton<LOPHttp>
         reqContainer.RequestHeaders["Content-Type"] = "application/json";
         reqContainer.RequestHeaders["Accept-Encoding"] = "gzip";
 
-        //  압축하는게 나을지 체크? (용량이 작으면 압축을 굳이 안하는게 나을수도 있음. 오히려 용량이 더 커질수도...)
-        if (true /*Settings.CompressApiData*/)
+        bool compress = reqContainer.Payload.Length > 1024;
+        if (compress)
         {
             reqContainer.RequestHeaders["Content-Encoding"] = "gzip";
 
@@ -66,7 +75,16 @@ public partial class LOPHttp : MonoSingleton<LOPHttp>
             }
         }
 
-        Instance.Put(reqContainer);
+        Instance.httpTransport.Put(reqContainer.FullUrl, reqContainer.Payload, reqContainer.RequestHeaders,
+            result =>
+            {
+                Instance.OnResponse(result, reqContainer);
+            },
+            error =>
+            {
+                Instance.OnError(error, reqContainer);
+            }
+        );
     }
 
     public static string GetFullUrl(string apiCall, Dictionary<string, string> getParams, LOPServerSettings apiSettings)
