@@ -4,4 +4,5 @@ using UnityEngine;
 
 public class CancelMatchmakingTicketRequest : LOPHttpRequestBase
 {
+    public string userId;
 }
