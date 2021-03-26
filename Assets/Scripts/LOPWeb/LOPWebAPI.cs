@@ -8,24 +8,24 @@ public class LOPWebAPI
     /// <summary>
     /// Create a matchmaking ticket as a client.
     /// </summary>
-    public static void CreateMatchmakingTicket(CreateMatchmakingTicketRequest request, Action<CreateMatchmakingTicketResult> resultCallback, Action<LOPHttpError> errorCallback, object customData = null, Dictionary<string, string> extraHeaders = null)
+    public static void CreateMatchmakingTicket(CreateMatchmakingTicketRequest request, Action<CreateMatchmakingTicketResult> resultCallback, Action<string> errorCallback, Dictionary<string, string> extraHeaders = null)
     {
-        LOPHttp.MakeApiCall(UnityWebRequest.kHttpVerbPOST, "/match/createMatchmakingTicket", request, resultCallback, errorCallback, customData, extraHeaders, LOPServerSettings.Get("LOPServerSettings_Matchmaking"));
+        GameFramework.Http.MakeApiCall(UnityWebRequest.kHttpVerbPOST, "/match/createMatchmakingTicket", request, resultCallback, errorCallback, extraHeaders, GameFramework.ServerSettings.Get("ServerSettings_Matchmaking"));
     }
 
     /// <summary>
     /// Cancel a matchmaking ticket.
     /// </summary>
-    public static void CancelMatchmakingTicket(CancelMatchmakingTicketRequest request, Action<CancelMatchmakingTicketResult> resultCallback, Action<LOPHttpError> errorCallback, object customData = null, Dictionary<string, string> extraHeaders = null)
+    public static void CancelMatchmakingTicket(CancelMatchmakingTicketRequest request, Action<CancelMatchmakingTicketResult> resultCallback, Action<string> errorCallback, Dictionary<string, string> extraHeaders = null)
     {
-        LOPHttp.MakeApiCall(UnityWebRequest.kHttpVerbPOST, "/match/cancelMatchmakingTicket", request, resultCallback, errorCallback, customData, extraHeaders, LOPServerSettings.Get("LOPServerSettings_Matchmaking"));
+        GameFramework.Http.MakeApiCall(UnityWebRequest.kHttpVerbPOST, "/match/cancelMatchmakingTicket", request, resultCallback, errorCallback, extraHeaders, GameFramework.ServerSettings.Get("ServerSettings_Matchmaking"));
     }
 
     /// <summary>
     /// Get a user's matchState.
     /// </summary>
-    public static void GetUserMatchState(Action<GetUserMatchStateResult> resultCallback, Action<LOPHttpError> errorCallback, object customData = null, Dictionary<string, string> extraHeaders = null)
+    public static void GetUserMatchState(Action<GetUserMatchStateResult> resultCallback, Action<string> errorCallback, Dictionary<string, string> extraHeaders = null)
     {
-        LOPHttp.MakeApiCall(UnityWebRequest.kHttpVerbGET, $"/users/matchState/{PhotonNetwork.player.UserId}", null, resultCallback, errorCallback, customData, extraHeaders, LOPServerSettings.Get("LOPServerSettings_Lobby"));
+        GameFramework.Http.MakeApiCall(UnityWebRequest.kHttpVerbGET, $"/users/matchState/{PhotonNetwork.player.UserId}", null, resultCallback, errorCallback, extraHeaders, GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
     }
 }

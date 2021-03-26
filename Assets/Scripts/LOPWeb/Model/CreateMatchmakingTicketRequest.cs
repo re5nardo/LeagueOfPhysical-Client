@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GameFramework;
 
-public class CreateMatchmakingTicketRequest : LOPHttpRequestBase
+public class CreateMatchmakingTicketRequest : HttpRequestBase
 {
     public string userId;
     public string gameType;

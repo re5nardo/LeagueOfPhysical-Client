@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using GameFramework;
 
-public class GetUserMatchStateResult : LOPHttpResultBase
+public class GetUserMatchStateResult : HttpResultBase
 {
     public UserMatchState userMatchState;
 }
