@@ -10,8 +10,8 @@ public class LOPServerSettings : ScriptableObjectWrapper<LOPServerSettings>
     public string host;
     public int port;
 
-    public string GetFullUrl(string apiCall, Dictionary<string, string> getParams)
+    public string GetFullUrl(string apiCall, Dictionary<string, string> queryString)
     {
-        return LOPHttp.GetFullUrl(apiCall, getParams, this);
+        return LOPHttp.GetFullUrl(apiCall, queryString, this);
     }
 }
