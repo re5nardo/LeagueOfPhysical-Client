@@ -5,27 +5,18 @@ using UnityEngine.Networking;
 
 public class LOPWebAPI
 {
-    /// <summary>
-    /// Create a matchmaking ticket as a client.
-    /// </summary>
     public static void CreateMatchmakingTicket(CreateMatchmakingTicketRequest request, Action<CreateMatchmakingTicketResult> resultCallback, Action<string> errorCallback, Dictionary<string, string> extraHeaders = null)
     {
-        GameFramework.Http.MakeApiCall(UnityWebRequest.kHttpVerbPOST, "/match/createMatchmakingTicket", request, resultCallback, errorCallback, extraHeaders, GameFramework.ServerSettings.Get("ServerSettings_Matchmaking"));
+        GameFramework.Http.MakeApiCall(UnityWebRequest.kHttpVerbPUT, "/match/matchmakingTicket", request, resultCallback, errorCallback, extraHeaders, GameFramework.ServerSettings.Get("ServerSettings_Matchmaking"));
     }
 
-    /// <summary>
-    /// Cancel a matchmaking ticket.
-    /// </summary>
-    public static void CancelMatchmakingTicket(CancelMatchmakingTicketRequest request, Action<CancelMatchmakingTicketResult> resultCallback, Action<string> errorCallback, Dictionary<string, string> extraHeaders = null)
+    public static void CancelMatchmakingTicket(string userId, Action<CancelMatchmakingTicketResult> resultCallback, Action<string> errorCallback, Dictionary<string, string> extraHeaders = null)
     {
-        GameFramework.Http.MakeApiCall(UnityWebRequest.kHttpVerbPOST, "/match/cancelMatchmakingTicket", request, resultCallback, errorCallback, extraHeaders, GameFramework.ServerSettings.Get("ServerSettings_Matchmaking"));
+        GameFramework.Http.MakeApiCall(UnityWebRequest.kHttpVerbDELETE, $"/match/matchmakingTicket/{userId}", null, resultCallback, errorCallback, extraHeaders, GameFramework.ServerSettings.Get("ServerSettings_Matchmaking"));
     }
 
-    /// <summary>
-    /// Get a user's matchState.
-    /// </summary>
-    public static void GetUserMatchState(Action<GetUserMatchStateResult> resultCallback, Action<string> errorCallback, Dictionary<string, string> extraHeaders = null)
+    public static void GetUserMatchState(string userId, Action<GetUserMatchStateResult> resultCallback, Action<string> errorCallback, Dictionary<string, string> extraHeaders = null)
     {
-        GameFramework.Http.MakeApiCall(UnityWebRequest.kHttpVerbGET, $"/users/matchState/{PhotonNetwork.player.UserId}", null, resultCallback, errorCallback, extraHeaders, GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
+        GameFramework.Http.MakeApiCall(UnityWebRequest.kHttpVerbGET, $"/users/matchState/{userId}", null, resultCallback, errorCallback, extraHeaders, GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
     }
 }
