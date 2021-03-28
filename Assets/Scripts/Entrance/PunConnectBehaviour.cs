@@ -30,4 +30,12 @@ public class PunConnectBehaviour : PunBehaviour
     {
         onJoinedLobby?.Invoke();
     }
+
+    private void OnDestroy()
+    {
+        onFailedToConnectToPhoton = null;
+        onConnectionFail = null;
+        onConnectedToMaster = null;
+        onJoinedLobby = null;
+    }
 }

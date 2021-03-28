@@ -7,48 +7,38 @@ public class CheckLocationComponent : EntranceComponent
 {
     public override void OnStart()
     {
-        //StartCoroutine(Body());
-
-        SceneManager.LoadScene("Lobby");
-        IsSuccess = true;
-    }
-
-    //private IEnumerator Body()
-    //{
-    //    CheckMatchState();
-
-    //    IsSuccess = true;
-    //}
-
-    private void CheckMatchState()
-    {
-        if (IsInvoking("CheckMatchState"))
-        {
-            CancelInvoke("CheckMatchState");
-        }
-
-        MatchStateHelper.GetMatchState(
+        LOPWebAPI.GetUserMatchState(PhotonNetwork.AuthValues.UserId,
             result =>
             {
-                switch ((string)result["state"])
+                if (result.code != 200)
                 {
-                    //case "Matching":
-                    //    MatchStateManager.CancelMatchRequest();
-                    //    Invoke("CheckMatchState", 1f);
-                    //    break;
-                    case "Matched":
-                        Debug.Log((string)result["gameId"]);
-                        RoomConnector.TryToEnterRoom((string)result["gameId"]);
+                    Debug.LogError("Match 상태를 받아오는데 실패하였습니다.");
+                    return;
+                }
+
+                switch(result.userMatchState.state)
+                {
+                    case "inWaitingRoom":
+                        logger?.Invoke("로비에 접속중입니다.");
+                        SceneManager.LoadScene("Lobby");
+                        IsSuccess = true;
                         break;
+
+                    case "inGameRoom":
+                        RoomConnector.TryToEnterRoom(result.userMatchState.stateValue);
+                        IsSuccess = true;
+                        break;
+
                     default:
                         logger?.Invoke("로비에 접속중입니다.");
                         SceneManager.LoadScene("Lobby");
+                        IsSuccess = true;
                         break;
                 }
             },
             error =>
             {
-                Debug.LogError(error);
+                Debug.LogError("Match 상태를 받아오는데 실패하였습니다.");
             }
         );
     }

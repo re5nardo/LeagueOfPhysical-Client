@@ -1,9 +1,14 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
+using GameFramework;
 
 public class Lobby : MonoBehaviour
 {
-    [SerializeField] private Text text = null;
+    public static readonly SimplePubSubService<string, object> Default = new SimplePubSubService<string, object>();
+
+    private void OnDestroy()
+    {
+        Default.Clear();
+    }
 
     #region Event Handler
     public void OnRoomBtnClicked()
@@ -13,48 +18,12 @@ public class Lobby : MonoBehaviour
 
     public void OnRequestMatchBtnClicked()
     {
-        MatchStateManager.Instance.RequestMatch();
-
-        Invoke("CheckMatchState", 0.5f);
+        Default.Publish("OnRequestMatchmakingButtonClicked", null);
     }
 
-    public void OnCancelMatchRequestBtnClicked()
+    public void OnCancelMatchBtnClicked()
     {
-        MatchStateManager.Instance.CancelMatchRequest();
-
-        CheckMatchState();
+        Default.Publish("OnCancelMatchmakingButtonClicked", null);
     }
     #endregion
-
-    private void CheckMatchState()
-    {
-        if (IsInvoking("CheckMatchState"))
-        {
-            CancelInvoke("CheckMatchState");
-        }
-
-        MatchStateManager.Instance.GetMatchState(
-            result =>
-            {
-                switch ((string)result["state"])
-                {
-                    case "Matching":
-                        text.text = "Matching중입니다.";
-                        Invoke("CheckMatchState", 1f);
-                        break;
-                    case "Matched":
-                        text.text = "Room에 입장합니다.";
-                        RoomConnector.TryToEnterRoom((string)result["gameId"]);
-                        break;
-                    default:
-                        text.text = "";
-                        break;
-                }
-            },
-            error =>
-            {
-                Debug.LogError(error);
-            }
-        );
-    }
 }
