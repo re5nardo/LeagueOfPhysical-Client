@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
-using GameFramework;
+using UniRx;
 
 public class Lobby : MonoBehaviour
 {
-    public static readonly SimplePubSubService<string, object> Default = new SimplePubSubService<string, object>();
+    public static readonly MessageBroker Default = new MessageBroker();
 
     private void OnDestroy()
     {
-        Default.Clear();
+        Default.Dispose();
     }
 
     #region Event Handler
@@ -18,12 +18,12 @@ public class Lobby : MonoBehaviour
 
     public void OnRequestMatchBtnClicked()
     {
-        Default.Publish("OnRequestMatchmakingButtonClicked", null);
+        Default.Publish("OnRequestMatchmakingButtonClicked");
     }
 
     public void OnCancelMatchBtnClicked()
     {
-        Default.Publish("OnCancelMatchmakingButtonClicked", null);
+        Default.Publish("OnCancelMatchmakingButtonClicked");
     }
     #endregion
 }

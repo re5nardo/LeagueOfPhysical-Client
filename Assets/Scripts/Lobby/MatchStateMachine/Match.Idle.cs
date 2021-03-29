@@ -3,23 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameFramework.FSM;
 using System;
+using UniRx;
 
 namespace Match
 {
     public class Idle : MonoStateBase
     {
-        public override void Enter()
+        private void Awake()
         {
-            base.Enter();
-
-            Lobby.Default.AddSubscriber("OnRequestMatchmakingButtonClicked", OnRequestMatchmakingButtonClicked);
-        }
-
-        public override void Exit()
-        {
-            base.Exit();
-
-            Lobby.Default.RemoveSubscriber("OnRequestMatchmakingButtonClicked", OnRequestMatchmakingButtonClicked);
+            Lobby.Default.Receive<string>().Where(msg => msg == "OnRequestMatchmakingButtonClicked" && IsValid).Subscribe(OnRequestMatchmakingButtonClicked).AddTo(this);
         }
 
         public override IState GetNext<I>(I input)
@@ -39,7 +31,7 @@ namespace Match
             throw new Exception($"Invalid transition: {GetType().Name} with {matchStateInput}");
         }
 
-        private void OnRequestMatchmakingButtonClicked(object obj)
+        private void OnRequestMatchmakingButtonClicked(string message)
         {
             FSM.MoveNext(MatchStateInput.RequestMatchmaking);
         }

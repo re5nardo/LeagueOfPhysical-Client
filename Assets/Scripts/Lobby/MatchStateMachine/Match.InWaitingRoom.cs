@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameFramework.FSM;
 using System;
+using UniRx;
 
 namespace Match
 {
@@ -11,11 +12,9 @@ namespace Match
         private const int CHECK_INTERVAL = 2;   //  sec
         private DateTime lastCheckTime;
 
-        public override void Enter()
+        private void Awake()
         {
-            base.Enter();
-
-            Lobby.Default.AddSubscriber("OnCancelMatchmakingButtonClicked", OnCancelMatchmakingButtonClicked);
+            Lobby.Default.Receive<string>().Where(msg => msg == "OnCancelMatchmakingButtonClicked" && IsValid).Subscribe(OnCancelMatchmakingButtonClicked).AddTo(this);
         }
 
         public override void Execute()
@@ -29,14 +28,7 @@ namespace Match
                 lastCheckTime = DateTime.UtcNow;
             }
         }
-
-        public override void Exit()
-        {
-            base.Exit();
-
-            Lobby.Default.RemoveSubscriber("OnCancelMatchmakingButtonClicked", OnCancelMatchmakingButtonClicked);
-        }
-
+    
         private void CheckMatchState()
         {
             LOPWebAPI.GetUserMatchState(PhotonNetwork.AuthValues.UserId,
@@ -87,7 +79,7 @@ namespace Match
             throw new Exception($"Invalid transition: {GetType().Name} with {matchStateInput}");
         }
 
-        private void OnCancelMatchmakingButtonClicked(object obj)
+        private void OnCancelMatchmakingButtonClicked(string message)
         {
             GetNext(MatchStateInput.CancelMatchmaking);
         }
