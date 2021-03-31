@@ -21,7 +21,7 @@ public class ManagedCanvasManager : MonoSingleton<ManagedCanvasManager>
 
         result.Sort((x, y) =>
         {
-            return x.SortOrder.CompareTo(y.SortOrder);
+            return x.SortingOrder.CompareTo(y.SortingOrder);
         });
 
         return result;
