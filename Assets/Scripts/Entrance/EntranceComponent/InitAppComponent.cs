@@ -4,17 +4,15 @@ using UnityEngine;
 
 public class InitAppComponent : EntranceComponent
 {
-    public override void OnStart()
+    protected override void OnUpdate()
     {
-        StartCoroutine(Body());
+        base.OnUpdate();
+
+        IsSuccess = LOP.Application.IsInitialized;
     }
 
-    private IEnumerator Body()
+    public override void OnStart()
     {
-        logger?.Invoke("Application 초기화중입니다.");
-
-        yield return new WaitUntil(() => LOP.Application.IsInitialized);
-
-        IsSuccess = true;
+        Entrance.Instance.stateText.text = "Application 초기화중입니다.";
     }
 }

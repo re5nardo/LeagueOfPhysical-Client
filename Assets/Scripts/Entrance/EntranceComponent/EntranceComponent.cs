@@ -1,16 +1,15 @@
 ﻿using System.Collections;
 using UnityEngine;
-using System;
 
 public abstract class EntranceComponent : MonoBehaviour, IEnumerator
 {
     public object Current { get; protected set; }
     protected bool IsSuccess { get; set; }
 
-    protected Action<string> logger;
-
     public bool MoveNext()
     {
+        OnUpdate();
+
         return !IsSuccess;
     }
 
@@ -20,14 +19,14 @@ public abstract class EntranceComponent : MonoBehaviour, IEnumerator
         IsSuccess = false;
     }
 
-    public EntranceComponent Do(Action<string> logger = null)
+    public EntranceComponent Do()
     {
-        this.logger = logger;
-
         OnStart();
 
         return this;
     }
 
     public abstract void OnStart();
+    protected virtual void OnUpdate() { }
+
 }

@@ -7,19 +7,20 @@ public class CheckLocationComponent : EntranceComponent
 {
     public override void OnStart()
     {
+        Entrance.Instance.stateText.text = "매치 상태를 확인중입니다.";
+
         LOPWebAPI.GetUserMatchState(PhotonNetwork.AuthValues.UserId,
             result =>
             {
                 if (result.code != 200)
                 {
-                    Debug.LogError("Match 상태를 받아오는데 실패하였습니다.");
+                    Entrance.Instance.stateText.text = "Match 상태를 받아오는데 실패하였습니다.";
                     return;
                 }
 
                 switch(result.userMatchState.state)
                 {
                     case "inWaitingRoom":
-                        logger?.Invoke("로비에 접속중입니다.");
                         SceneManager.LoadScene("Lobby");
                         IsSuccess = true;
                         break;
@@ -30,7 +31,6 @@ public class CheckLocationComponent : EntranceComponent
                         break;
 
                     default:
-                        logger?.Invoke("로비에 접속중입니다.");
                         SceneManager.LoadScene("Lobby");
                         IsSuccess = true;
                         break;
@@ -38,7 +38,7 @@ public class CheckLocationComponent : EntranceComponent
             },
             error =>
             {
-                Debug.LogError("Match 상태를 받아오는데 실패하였습니다.");
+                Entrance.Instance.stateText.text = "Match 상태를 받아오는데 실패하였습니다.";
             }
         );
     }

@@ -13,7 +13,7 @@ public class LoginComponent : EntranceComponent
 
     public override void OnStart()
     {
-        logger?.Invoke("Login중입니다");
+        Entrance.Instance.stateText.text = "Login중입니다.";
 
         Login();
     }

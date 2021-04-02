@@ -9,8 +9,8 @@ public class PunConnectComponent : EntranceComponent
     private void Awake()
     {
         punConnectBehaviour.onConnectedToMaster += () => ConnectToLobby();
-        punConnectBehaviour.onFailedToConnectToPhoton += cause => logger(cause.ToString());
-        punConnectBehaviour.onConnectionFail += cause => logger(cause.ToString());
+        punConnectBehaviour.onFailedToConnectToPhoton += cause => Entrance.Instance.stateText.text = cause.ToString();
+        punConnectBehaviour.onConnectionFail += cause => Entrance.Instance.stateText.text = cause.ToString();
         punConnectBehaviour.onJoinedLobby += () => IsSuccess = true;
     }
 
@@ -21,14 +21,14 @@ public class PunConnectComponent : EntranceComponent
 
     private void ConnectToMasterServer()
     {
-        logger?.Invoke("PUN 마스터 서버에 접속중입니다.");
+        Entrance.Instance.stateText.text = "PUN 마스터 서버에 접속중입니다.";
 
         PhotonNetwork.ConnectUsingSettings("v1.0");
     }
 
     private void ConnectToLobby()
     {
-        logger?.Invoke("PUN 로비에 접속중입니다.");
+        Entrance.Instance.stateText.text = "PUN 로비에 접속중입니다.";
 
         PhotonNetwork.JoinLobby();
     }
