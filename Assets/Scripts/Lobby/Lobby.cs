@@ -3,11 +3,11 @@ using UniRx;
 
 public class Lobby : MonoBehaviour
 {
-    public static readonly MessageBroker Default = new MessageBroker();
+    public static readonly MessageBroker MessageBroker = new MessageBroker();
 
     private void OnDestroy()
     {
-        Default.Dispose();
+        MessageBroker.Dispose();
     }
 
     #region Event Handler
@@ -18,12 +18,12 @@ public class Lobby : MonoBehaviour
 
     public void OnRequestMatchBtnClicked()
     {
-        Default.Publish("OnRequestMatchmakingButtonClicked");
+        MessageBroker.Publish("OnRequestMatchmakingButtonClicked");
     }
 
     public void OnCancelMatchBtnClicked()
     {
-        Default.Publish("OnCancelMatchmakingButtonClicked");
+        MessageBroker.Publish("OnCancelMatchmakingButtonClicked");
     }
     #endregion
 }

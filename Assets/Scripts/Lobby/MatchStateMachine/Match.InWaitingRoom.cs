@@ -14,7 +14,7 @@ namespace Match
 
         private void Awake()
         {
-            Lobby.Default.Receive<string>().Where(msg => msg == "OnCancelMatchmakingButtonClicked" && IsValid).Subscribe(OnCancelMatchmakingButtonClicked).AddTo(this);
+            Lobby.MessageBroker.Receive<string>().Where(msg => msg == "OnCancelMatchmakingButtonClicked" && IsValid).Subscribe(OnCancelMatchmakingButtonClicked).AddTo(this);
         }
 
         public override void Execute()
@@ -81,7 +81,7 @@ namespace Match
 
         private void OnCancelMatchmakingButtonClicked(string message)
         {
-            GetNext(MatchStateInput.CancelMatchmaking);
+            FSM.MoveNext(MatchStateInput.CancelMatchmaking);
         }
     }
 }
