@@ -14,7 +14,7 @@ namespace Match
 
         private void Awake()
         {
-            Lobby.MessageBroker.Receive<string>().Where(msg => msg == "OnCancelMatchingButtonClicked" && IsValid).Subscribe(OnCancelMatchmakingButtonClicked).AddTo(this);
+            Lobby.MessageBroker.Receive<string>().Where(msg => msg == "OnCancelMatchingButtonClicked" && IsCurrent).Subscribe(OnCancelMatchmakingButtonClicked).AddTo(this);
         }
 
         public override void Enter()
@@ -48,7 +48,7 @@ namespace Match
             LOPWebAPI.GetUserMatchState(PhotonNetwork.AuthValues.UserId,
             result =>
             {
-                if (!IsValid) return;
+                if (!IsCurrent) return;
 
                 if (result.code != 200)
                 {

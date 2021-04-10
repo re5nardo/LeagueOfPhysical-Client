@@ -15,7 +15,7 @@ namespace Match
             LOPWebAPI.CancelMatchmakingTicket(PhotonNetwork.AuthValues.UserId,
                 result =>
                 {
-                    if (!IsValid) return;
+                    if (!IsCurrent) return;
 
                     if (result.code != 200)
                     {

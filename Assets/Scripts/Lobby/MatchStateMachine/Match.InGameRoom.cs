@@ -11,6 +11,13 @@ namespace Match
         private const int CHECK_INTERVAL = 2;   //  sec
         private DateTime lastCheckTime;
 
+        public override void Enter()
+        {
+            base.Enter();
+
+            GameLoadingView.Show();
+        }
+
         public override void Execute()
         {
             base.Execute();
@@ -23,12 +30,19 @@ namespace Match
             }
         }
 
+        public override void Exit()
+        {
+            base.Exit();
+
+            GameLoadingView.Hide();
+        }
+
         private void CheckMatchState()
         {
             LOPWebAPI.GetUserMatchState(PhotonNetwork.AuthValues.UserId,
             result =>
             {
-                if (!IsValid) return;
+                if (!IsCurrent) return;
 
                 if (result.code != 200)
                 {

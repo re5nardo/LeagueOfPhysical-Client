@@ -21,7 +21,7 @@ namespace Match
             },
             result =>
             {
-                if (!IsValid) return;
+                if (!IsCurrent) return;
 
                 if (result.code != 200)
                 {
