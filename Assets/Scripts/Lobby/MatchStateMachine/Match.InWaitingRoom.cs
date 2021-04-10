@@ -14,7 +14,14 @@ namespace Match
 
         private void Awake()
         {
-            Lobby.MessageBroker.Receive<string>().Where(msg => msg == "OnCancelMatchmakingButtonClicked" && IsValid).Subscribe(OnCancelMatchmakingButtonClicked).AddTo(this);
+            Lobby.MessageBroker.Receive<string>().Where(msg => msg == "OnCancelMatchingButtonClicked" && IsValid).Subscribe(OnCancelMatchmakingButtonClicked).AddTo(this);
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+
+            MatchingWaitingView.Show();
         }
 
         public override void Execute()
