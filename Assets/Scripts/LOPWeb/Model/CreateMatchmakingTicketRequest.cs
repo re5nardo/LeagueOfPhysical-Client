@@ -6,7 +6,7 @@ using GameFramework;
 public class CreateMatchmakingTicketRequest : HttpRequestBase
 {
     public string userId;
-    public string gameType;
     public string matchType;
-    public int rating;
+    public string subGameId;
+    public string mapId;
 }

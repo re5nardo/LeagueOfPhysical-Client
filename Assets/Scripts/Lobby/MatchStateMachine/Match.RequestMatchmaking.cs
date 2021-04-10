@@ -15,9 +15,9 @@ namespace Match
             LOPWebAPI.CreateMatchmakingTicket(new CreateMatchmakingTicketRequest
             {
                 userId = PhotonNetwork.AuthValues.UserId,
-                gameType = "testGame",
-                matchType = "rank",
-                rating = 1500,
+                matchType = MatchType.Rank.ToString(),
+                subGameId = "Dodgeball",
+                mapId = "Dodgeball",
             },
             result =>
             {
