@@ -35,7 +35,14 @@ namespace Match
                 lastCheckTime = DateTime.UtcNow;
             }
         }
-    
+
+        public override void Exit()
+        {
+            base.Exit();
+
+            MatchingWaitingView.Hide();
+        }
+
         private void CheckMatchState()
         {
             LOPWebAPI.GetUserMatchState(PhotonNetwork.AuthValues.UserId,

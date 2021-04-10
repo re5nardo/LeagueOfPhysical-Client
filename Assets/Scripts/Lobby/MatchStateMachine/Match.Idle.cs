@@ -14,13 +14,6 @@ namespace Match
             Lobby.MessageBroker.Receive<string>().Where(msg => msg == "OnRequestMatchingButtonClicked" && IsValid).Subscribe(OnRequestMatchmakingButtonClicked).AddTo(this);
         }
 
-        public override void Enter()
-        {
-            base.Enter();
-
-            MatchingWaitingView.Hide();
-        }
-
         public override IState GetNext<I>(I input)
         {
             if (!input.TryParse(out MatchStateInput matchStateInput))
