@@ -14,3 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: RankGame
   description: RankGame
+  matchSetting:
+    matchType: 1
+    subGameId: Random
+    mapId: Random

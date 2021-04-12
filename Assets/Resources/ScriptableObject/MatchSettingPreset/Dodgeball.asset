@@ -14,3 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Dodgeball
   description: Dodgeball
+  matchSetting:
+    matchType: 0
+    subGameId: Dodgeball
+    mapId: Dodgeball

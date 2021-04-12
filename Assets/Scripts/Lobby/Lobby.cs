@@ -9,11 +9,4 @@ public class Lobby : MonoBehaviour
     {
         MessageBroker.Dispose();
     }
-
-    #region Event Handler
-    public void OnRequestMatchBtnClicked()
-    {
-        MessageBroker.Publish("OnRequestMatchingButtonClicked");
-    }
-    #endregion
 }

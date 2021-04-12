@@ -11,7 +11,7 @@ namespace Match
     {
         private void Awake()
         {
-            Lobby.MessageBroker.Receive<string>().Where(msg => msg == "OnRequestMatchingButtonClicked" && IsCurrent).Subscribe(OnRequestMatchmakingButtonClicked).AddTo(this);
+            Lobby.MessageBroker.Receive<string>().Where(msg => msg == "OnMatchPlayButtonClicked" && IsCurrent).Subscribe(OnMatchPlayButtonClicked).AddTo(this);
         }
 
         public override IState GetNext<I>(I input)
@@ -31,7 +31,7 @@ namespace Match
             throw new Exception($"Invalid transition: {GetType().Name} with {matchStateInput}");
         }
 
-        private void OnRequestMatchmakingButtonClicked(string message)
+        private void OnMatchPlayButtonClicked(string message)
         {
             FSM.MoveNext(MatchStateInput.RequestMatchmaking);
         }
