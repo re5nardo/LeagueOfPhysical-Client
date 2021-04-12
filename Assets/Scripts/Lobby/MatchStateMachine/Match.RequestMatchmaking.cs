@@ -12,12 +12,14 @@ namespace Match
         {
             base.Enter();
 
+            var matchSelectData = SceneDataContainer.Get<MatchSelectData>();
+
             LOPWebAPI.CreateMatchmakingTicket(new CreateMatchmakingTicketRequest
             {
                 userId = PhotonNetwork.AuthValues.UserId,
-                matchType = MatchType.Rank.ToString(),
-                subGameId = "Dodgeball",
-                mapId = "Dodgeball",
+                matchType = matchSelectData.currentMatchSetting.Value.matchType.ToString(),
+                subGameId = matchSelectData.currentMatchSetting.Value.subGameId,
+                mapId = matchSelectData.currentMatchSetting.Value.mapId,
             },
             result =>
             {

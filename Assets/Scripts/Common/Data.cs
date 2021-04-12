@@ -119,7 +119,9 @@ public enum CanvasLayer
 {
     Contents    = 1 << 0,
     Popup       = 1 << 1,
-    System      = 1 << 2,
+    ToastPopup  = 1 << 5,
+    Loading     = 1 << 6,
+    System      = 1 << 7,
 }
 
 [Serializable]
@@ -133,11 +135,13 @@ public enum MatchType
 public struct MatchSetting
 {
     public MatchType matchType;
-    public string subGameName;
+    public string subGameId;
+    public string mapId;
 
-    public MatchSetting(MatchType matchType, string subGameName)
+    public MatchSetting(MatchType matchType, string subGameId, string mapId)
     {
         this.matchType = matchType;
-        this.subGameName = subGameName;
+        this.subGameId = subGameId;
+        this.mapId = mapId;
     }
 }
