@@ -39,7 +39,14 @@ namespace LOP
             //            yield return new WaitUntil(() => CatalogData.Instance.IsCached());
             //            yield return new WaitUntil(() => UserProfileData.Instance.IsCached());
 
+            UnityEngine.Application.quitting += OnQuitting;
+
             IsInitialized = true;
+        }
+
+        private static void OnQuitting()
+        {
+            LOPWebAPI.LeaveLobby(new LeaveLobbyRequest { userId = PhotonNetwork.AuthValues.UserId });
         }
     }
 }

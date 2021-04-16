@@ -20,19 +20,24 @@ public class CheckLocationComponent : EntranceComponent
 
                 switch(result.userMatchState.state)
                 {
-                    case "inWaitingRoom":
-                        SceneManager.LoadScene("Lobby");
-                        IsSuccess = true;
-                        break;
-
                     case "inGameRoom":
                         RoomConnector.TryToEnterRoom(result.userMatchState.stateValue);
                         IsSuccess = true;
                         break;
 
+                    case "inWaitingRoom":
                     default:
-                        SceneManager.LoadScene("Lobby");
-                        IsSuccess = true;
+                        LOPWebAPI.JoinLobby(new JoinLobbyRequest
+                        {
+                            userId = PhotonNetwork.AuthValues.UserId
+                        }, joinLobbyResult =>
+                        {
+                            SceneManager.LoadScene("Lobby");
+                            IsSuccess = true;
+                        }, error =>
+                        {
+                            Entrance.Instance.stateText.text = "Lobby 접속에 실패하였습니다.";
+                        });
                         break;
                 }
             },
