@@ -36,6 +36,7 @@ namespace LOP
             roomProtocolDispatcher[typeof(SC_SyncTick)] = SC_SyncTickHandler.Handle;
             roomProtocolDispatcher[typeof(SC_EmotionExpression)] = SC_EmotionExpressionHandler.Handle;
             roomProtocolDispatcher[typeof(SC_Synchronization)] = SC_SynchronizationHandler.Handle;
+            roomProtocolDispatcher[typeof(SC_GameEnd)] = SC_GameEndHandler.Handle;
 
             tickUpdater.Initialize(1 / 30f, true, Room.Instance.Latency, OnTick, OnTickEnd);
             GameUI.Initialize();
