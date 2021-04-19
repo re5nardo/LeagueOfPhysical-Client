@@ -15,7 +15,7 @@ public class SubGameEndState : MonoStateBase
     //            break;
 
     //        case "MatchEndState":
-    //            FSM.MoveNext(GameStateInput.MatchEndState);
+    //            FSM.MoveNext(GameStateInput.GameEndState);
     //            break;
     //    }
     //}
@@ -33,8 +33,8 @@ public class SubGameEndState : MonoStateBase
             case GameStateInput.SubGameSelectionState:
                 return gameObject.GetOrAddComponent<SubGameSelectionState>();
 
-            case GameStateInput.MatchEndState:
-                return gameObject.GetOrAddComponent<MatchEndState>();
+            case GameStateInput.GameEndState:
+                return gameObject.GetOrAddComponent<GameEndState>();
         }
 
         throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");

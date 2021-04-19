@@ -22,7 +22,7 @@ public class SubGameClearState : MonoStateBase
     //{
     //    switch (msg.gameState)
     //    {
-    //        case "MatchEndState":
+    //        case "GameEndState":
     //            FSM.MoveNext(GameStateInput.MatchEndState);
     //            break;
     //    }
@@ -39,8 +39,8 @@ public class SubGameClearState : MonoStateBase
         switch (gameStateInput)
         {
             case GameStateInput.StateDone:
-            case GameStateInput.MatchEndState:
-                return gameObject.GetOrAddComponent<MatchEndState>();
+            case GameStateInput.GameEndState:
+                return gameObject.GetOrAddComponent<GameEndState>();
         }
 
         throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");
