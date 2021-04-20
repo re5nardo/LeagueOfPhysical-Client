@@ -25,7 +25,7 @@ namespace Match
             {
                 if (!IsCurrent) return;
 
-                if (result.code != 200)
+                if (result.code != ResponseCode.SUCCESS)
                 {
                     Debug.LogError("Match 상태를 받아오는데 실패하였습니다. 타이틀로 돌아갑니다.");
                     return;

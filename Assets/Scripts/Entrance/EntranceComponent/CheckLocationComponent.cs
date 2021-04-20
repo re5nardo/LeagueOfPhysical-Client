@@ -12,7 +12,7 @@ public class CheckLocationComponent : EntranceComponent
         LOPWebAPI.GetUserMatchState(PhotonNetwork.AuthValues.UserId,
             result =>
             {
-                if (result.code != 200)
+                if (result.code != ResponseCode.SUCCESS)
                 {
                     Entrance.Instance.stateText.text = "Match 상태를 받아오는데 실패하였습니다.";
                     return;
