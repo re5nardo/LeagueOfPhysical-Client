@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using GameFramework.FSM;
 using System;
 
@@ -52,6 +51,8 @@ public class GamePrepareState : MonoStateBase
 
         //  Send packet
         //  ...
+
+        FSM.MoveNext(GameStateInput.StateDone);
 
         yield break;
     }

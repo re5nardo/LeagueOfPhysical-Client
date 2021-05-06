@@ -55,7 +55,12 @@ public class LoginComponent : EntranceComponent
     {
 #if UNITY_STANDALONE && !UNITY_EDITOR
         var request = new LoginWithCustomIDRequest { CustomId = "Server1", CreateAccount = true };
-        PlayFabClientAPI.LoginWithCustomID(request, RequestPhotonToken, errorCallback);
+        PlayFabClientAPI.LoginWithCustomID(request, RequestPhotonToken, error =>
+        {
+            Debug.LogWarning("Something went wrong with your first API call.  :(");
+            Debug.LogError("Here's some debug information:");
+            Debug.LogError(error.GenerateErrorReport());
+        });
 #endif
     }
 
@@ -70,7 +75,12 @@ public class LoginComponent : EntranceComponent
             OS = SystemInfo.operatingSystem,
             TitleId = PlayFabSettings.TitleId
         };
-        PlayFabClientAPI.LoginWithAndroidDeviceID(request, RequestPhotonToken, errorCallback);
+        PlayFabClientAPI.LoginWithAndroidDeviceID(request, RequestPhotonToken, error =>
+        {
+            Debug.LogWarning("Something went wrong with your first API call.  :(");
+            Debug.LogError("Here's some debug information:");
+            Debug.LogError(error.GenerateErrorReport());
+        });
 #endif
     }
 
