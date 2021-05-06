@@ -10,6 +10,8 @@ public class EntityBasicView : MonoViewComponentBase
 	private Animator m_AnimatorModel = null;
 	private List<Renderer> m_listModelRenderer = new List<Renderer>();
 
+    public Transform ModelTransform => m_trModel;
+
     public override void OnAttached(IEntity entity)
     {
         base.OnAttached(entity);
@@ -47,12 +49,18 @@ public class EntityBasicView : MonoViewComponentBase
 
     private void OnPositionChanged(ICommand command)
     {
-        Position = Entity.Position;
+        if (m_trModel != null)
+        {
+            m_trModel.position = Entity.Position;
+        }
     }
 
     private void OnRotationChanged(ICommand command)
     {
-        Rotation = Entity.Rotation;
+        if (m_trModel != null)
+        {
+            m_trModel.rotation = Quaternion.Euler(Entity.Rotation);
+        }
     }
 
     private void OnAnimatorSetTrigger(ICommand command)
@@ -120,20 +128,6 @@ public class EntityBasicView : MonoViewComponentBase
 		m_listModelRenderer.Clear();
 	}
 
-	public Transform ModelTransform { get { return m_trModel; } }
-	
-	public Vector3 Position
-	{
-		get { return m_trModel.position; }
-		set { m_trModel.position = value; }
-	}
-
-	public Vector3 Rotation
-	{
-		get { return m_trModel.rotation.eulerAngles; }
-		set { m_trModel.rotation = Quaternion.Euler(value); }
-	}
-	
 	#region Animator
 	public void Animator_SetFloat(string name, float value)
 	{

@@ -14,8 +14,6 @@ namespace Entity
 
 		private GameItemBasicData gameItemBasicData = null;
 
-		private EntityBasicView entityBasicView = null;
-
         private BehaviorController behaviorController = null;
         private StateController stateController = null;
 

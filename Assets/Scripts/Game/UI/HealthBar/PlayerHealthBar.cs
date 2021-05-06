@@ -39,8 +39,7 @@ public class PlayerHealthBar : HealthBarBase
             //            m_sliderExp.value = character.GetCurrentExpPercent() / 100.0f;
 
             //  Position
-            EntityBasicView entityBasicView = character.GetComponent<EntityBasicView>();
-            var center = Util.UGUI.ConvertScreenToLocalPoint(RectTransformParent, Camera.main.WorldToScreenPoint(entityBasicView.Position));
+            var center = Util.UGUI.ConvertScreenToLocalPoint(RectTransformParent, Camera.main.WorldToScreenPoint(character.Position));
             tfMine.localPosition = new Vector3(center.x, center.y + 50, center.z);
         }
     }

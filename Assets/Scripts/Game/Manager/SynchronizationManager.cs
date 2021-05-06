@@ -57,13 +57,13 @@ public class SynchronizationManager : MonoSingleton<SynchronizationManager>
     {
         var entity = Entities.Get(moveSnap.entityId);
 
-        entity?.GetComponent<Behavior.Move>()?.OnReceiveSynchronization(moveSnap);
+        entity?.GetEntityComponent<Behavior.Move>()?.OnReceiveSynchronization(moveSnap);
     }
 
     private void Handle(BehaviorSnap behaviorSnap)
     {
         var entity = Entities.Get(behaviorSnap.entityId);
-        if (entity != null && entity.GetComponent<BehaviorController>().IsBehaviorRunning(behaviorSnap.behaviorMasterId, out var behavior))
+        if (entity != null && entity.GetEntityComponent<BehaviorController>().IsBehaviorRunning(behaviorSnap.behaviorMasterId, out var behavior))
         {
             behavior?.OnReceiveSynchronization(behaviorSnap);
         }

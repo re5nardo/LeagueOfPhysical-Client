@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
+using Entity;
 
 public class TransformFinalController : MonoBehaviour
 {
-    private EntityBasicView entityBasicView = null;
-    private EntityBasicView EntityBasicView => entityBasicView ?? (entityBasicView = GetComponent<EntityBasicView>());
+    private MonoEntityBase monoEntityBase = null;
+    private MonoEntityBase MonoEntityBase => monoEntityBase ?? (monoEntityBase = GetComponent<MonoEntityBase>());
     
     private EntityTransformSynchronization transformSynchronization = null;
     private EntityTransformSynchronization TransformSynchronization => transformSynchronization ?? (transformSynchronization = GetComponent<EntityTransformSynchronization>());
-    
-    private Vector3 lastPosition;
-    private EntityTransformSnap lastSnap = null;
 
     private void LateUpdate()
     {
@@ -38,33 +36,15 @@ public class TransformFinalController : MonoBehaviour
                 return;
             }
 
-            EntityBasicView.Position = Vector3.Lerp(before.position, next.position, t);
-            EntityBasicView.Rotation = Quaternion.Lerp(Quaternion.Euler(before.rotation), Quaternion.Euler(next.rotation), t).eulerAngles;
+            MonoEntityBase.Position = Vector3.Lerp(before.position, next.position, t);
+            MonoEntityBase.Rotation = Quaternion.Lerp(Quaternion.Euler(before.rotation), Quaternion.Euler(next.rotation), t).eulerAngles;
         }
         else
         {
             float elapsed = Game.Current.GameTime - before.GameTime;
 
-            EntityBasicView.Rotation = Util.Math.RotateClamp(before.rotation, before.angularVelocity, elapsed, before.destRotation);
-
-            if (lastSnap == null || lastSnap == before)
-            {
-                EntityBasicView.Position = before.position + before.velocity.ToVector3() * elapsed;
-            }
-            else
-            {
-                //  새로운 패킷이면 smoothing 작업을 해준다. (다음 프레임 예상 값과 현재 값의 중간 값)
-                float nextElapsed = Game.Current.GameTime + Time.deltaTime - before.GameTime;
-
-                Vector3 expectedPosition = before.position + before.velocity.ToVector3() * nextElapsed;
-
-                EntityBasicView.Position = Vector3.Lerp(lastPosition, expectedPosition, 0.5f);
-            }
+            MonoEntityBase.Rotation = Util.Math.RotateClamp(before.rotation, before.angularVelocity, elapsed, before.destRotation);
+            MonoEntityBase.Position = before.position + before.velocity.ToVector3() * elapsed;
         }
-
-        lastPosition = EntityBasicView.Position;
-        lastSnap = before;
     }
 }
-
-//  MoveClamp 필요..?

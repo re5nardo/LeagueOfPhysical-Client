@@ -9,7 +9,7 @@ public class BehaviorController : MonoComponentBase
     {
         Vector3 vec3Direction = vec3Destination - Entity.Position;
 
-        Move oldMove = Entity.GetComponent<Move>();
+        Move oldMove = Entity.GetEntityComponent<Move>();
         if (oldMove != null)
         {
             oldMove.SetDestination(vec3Destination);
@@ -29,7 +29,7 @@ public class BehaviorController : MonoComponentBase
     {
         Vector3 vec3Direction = vec3Destination - Entity.Position;
 
-        Move oldMove = Entity.GetComponent<Move>();
+        Move oldMove = Entity.GetEntityComponent<Move>();
         if (oldMove != null)
         {
             oldMove.SetDestination(vec3Destination);
@@ -44,7 +44,7 @@ public class BehaviorController : MonoComponentBase
             move.StartBehavior();
         }
 
-        Rotation oldRotation = Entity.GetComponent<Rotation>();
+        Rotation oldRotation = Entity.GetEntityComponent<Rotation>();
         if (oldRotation != null)
         {
             oldRotation.SetDirection(vec3Direction);
@@ -62,14 +62,14 @@ public class BehaviorController : MonoComponentBase
 
     public void Die()
     {
-        var behaviors = Entity.GetComponents<BehaviorBase>();
+        var behaviors = Entity.GetEntityComponents<BehaviorBase>();
         foreach (var behavior in behaviors)
         {
             if (behavior.IsPlaying())
                 behavior.StopBehavior();
         }
 
-        var states = Entity.GetComponents<StateBase>();
+        var states = Entity.GetEntityComponents<StateBase>();
         foreach (var state in states)
         {
             if (state.IsPlaying())
@@ -89,7 +89,7 @@ public class BehaviorController : MonoComponentBase
 
     public void StopBehavior(int nBehaviorMasterID)
     {
-        var behaviors = Entity.GetComponents<BehaviorBase>();
+        var behaviors = Entity.GetEntityComponents<BehaviorBase>();
 
         behaviors?.ForEach(behavior =>
         {
@@ -102,7 +102,7 @@ public class BehaviorController : MonoComponentBase
 
     public bool IsBehaviorRunning(int masterId, out BehaviorBase behavior)
     {
-        var target = Entity.GetComponents<BehaviorBase>()?.Find(bh => bh.GetBehaviorMasterID() == masterId);
+        var target = Entity.GetEntityComponents<BehaviorBase>()?.Find(bh => bh.GetBehaviorMasterID() == masterId);
         if (target != null)
         {
             behavior = target;

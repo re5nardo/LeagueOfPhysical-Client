@@ -26,7 +26,7 @@ public class EntityTransformSynchronization : MonoComponentBase, ISynchronizable
     {
         base.OnAttached(entity);
 
-        MonoEntitySynchronization monoEntitySynchronization = Entity.GetComponent<MonoEntitySynchronization>();
+        MonoEntitySynchronization monoEntitySynchronization = Entity.GetEntityComponent<MonoEntitySynchronization>();
         monoEntitySynchronization?.Add(this);
     }
 
@@ -34,7 +34,7 @@ public class EntityTransformSynchronization : MonoComponentBase, ISynchronizable
     {
         base.OnDetached();
 
-        MonoEntitySynchronization monoEntitySynchronization = Entity.GetComponent<MonoEntitySynchronization>();
+        MonoEntitySynchronization monoEntitySynchronization = Entity.GetEntityComponent<MonoEntitySynchronization>();
         monoEntitySynchronization?.Remove(this);
     }
 
