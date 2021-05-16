@@ -98,7 +98,7 @@ public class EntityManager : GameFramework.EntityManager
 				info.m_GameTime = entityAppear.m_fGameTime;
 			}
 
-            (entity as MonoEntityBase).gameObject.AddComponent<TransformFinalController>();
+            (entity as MonoEntityBase).gameObject.AddComponent<TransformController>();
 		}
 	}
 
