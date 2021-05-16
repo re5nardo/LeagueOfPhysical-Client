@@ -19,4 +19,12 @@ public static class Extension
     {
         return Enum.TryParse(source.ToString(), out result);
     }
+
+    public static Vector3 Forward(this Vector3 source)
+    {
+        float x = Mathf.Sin(Mathf.Deg2Rad * source.y);
+        float z = Mathf.Cos(Mathf.Deg2Rad * source.y);
+
+        return new Vector3(x, 0, z);
+    }
 }
