@@ -6,7 +6,7 @@ using System;
 
 public class EntityTransformSynchronization : MonoComponentBase, ISynchronizable
 {
-    private const int MAX_BUFFER_COUNT = 5;
+    private const int MAX_BUFFER_COUNT = 10;
 
     #region ISynchronizable
     public ISynchronizable Parent { get; set; } = null;
@@ -65,7 +65,9 @@ public class EntityTransformSynchronization : MonoComponentBase, ISynchronizable
 
     public void OnReceiveSynchronization(ISnap snap)
     {
-        entityTransformSnaps.Add(snap as EntityTransformSnap);
+        EntityTransformSnap entityTransformSnap = snap as EntityTransformSnap;
+
+        entityTransformSnaps.Add(entityTransformSnap);
 
         if (entityTransformSnaps.Count > MAX_BUFFER_COUNT)
         {
