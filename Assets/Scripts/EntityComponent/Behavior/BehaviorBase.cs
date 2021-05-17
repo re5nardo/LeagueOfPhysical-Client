@@ -22,9 +22,7 @@ namespace Behavior
         private bool isPlaying = false;
 
         #region ISynchronizable
-        public ISynchronizable Parent { get; set; } = null;
         public bool Enable { get; set; } = true;
-        public bool EnableInHierarchy => Parent == null ? Enable : Parent.EnableInHierarchy && Enable;
         public bool HasCoreChange => LastSendSnap == null ? true : !LastSendSnap.EqualsCore(CurrentSnap.Set(this));
         public bool IsDirty => isDirty || LastSendSnap == null ? true : !LastSendSnap.EqualsValue(CurrentSnap.Set(this));
         #endregion
@@ -79,15 +77,24 @@ namespace Behavior
 			base.OnAttached(entity);
 
 			Entity = entity as MonoEntityBase;
-		}
+
+            TickPubSubService.AddSubscriber("TickEnd", OnTickEnd);
+        }
 
 		public override void OnDetached()
 		{
 			base.OnDetached();
 
-			Entity = null;
+            TickPubSubService.RemoveSubscriber("TickEnd", OnTickEnd);
+
+            Entity = null;
 		}
         #endregion
+
+        private void OnTickEnd(int tick)
+        {
+            UpdateSynchronizable();
+        }
 
         public virtual void SetData(int nBehaviorMasterID, params object[] param)
         {
@@ -198,7 +205,6 @@ namespace Behavior
 
         public void UpdateSynchronizable()
         {
-            throw new NotImplementedException();
         }
 
         public virtual void SendSynchronization()

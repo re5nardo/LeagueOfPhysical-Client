@@ -20,11 +20,7 @@ public class SynchronizationManager : MonoSingleton<SynchronizationManager>
             if (snap == null)
                 continue;
 
-            if (snap is MonoEntitySnap)
-            {
-                Handle(snap as MonoEntitySnap);
-            }
-            else if (snap is EntityTransformSnap)
+            if (snap is EntityTransformSnap)
             {
                 Handle(snap as EntityTransformSnap);
             }
@@ -37,13 +33,6 @@ public class SynchronizationManager : MonoSingleton<SynchronizationManager>
                 Handle(snap as BehaviorSnap);
             }
         }
-    }
-
-    private void Handle(MonoEntitySnap monoEntitySnap)
-    {
-        var entity = Entities.Get<Entity.MonoEntityBase>(monoEntitySnap.entityId);
-
-        entity?.GetComponent<MonoEntitySynchronization>().OnReceiveSynchronization(monoEntitySnap);
     }
 
     private void Handle(EntityTransformSnap entityTransformSnap)

@@ -9,9 +9,7 @@ public class EntityTransformSynchronization : MonoComponentBase, ISynchronizable
     private const int MAX_BUFFER_COUNT = 10;
 
     #region ISynchronizable
-    public ISynchronizable Parent { get; set; } = null;
     public bool Enable { get; set; } = true;
-    public bool EnableInHierarchy => Parent == null ? Enable : Parent.EnableInHierarchy && Enable;
     public bool HasCoreChange => LastSendSnap == null ? true : !LastSendSnap.EqualsCore(CurrentSnap.Set(this));
     public bool IsDirty => isDirty || LastSendSnap == null ? true : !LastSendSnap.EqualsValue(CurrentSnap.Set(this));
     #endregion
@@ -26,16 +24,19 @@ public class EntityTransformSynchronization : MonoComponentBase, ISynchronizable
     {
         base.OnAttached(entity);
 
-        MonoEntitySynchronization monoEntitySynchronization = Entity.GetEntityComponent<MonoEntitySynchronization>();
-        monoEntitySynchronization?.Add(this);
+        TickPubSubService.AddSubscriber("TickEnd", OnTickEnd);
     }
 
     public override void OnDetached()
     {
         base.OnDetached();
 
-        MonoEntitySynchronization monoEntitySynchronization = Entity.GetEntityComponent<MonoEntitySynchronization>();
-        monoEntitySynchronization?.Remove(this);
+        TickPubSubService.RemoveSubscriber("TickEnd", OnTickEnd);
+    }
+
+    private void OnTickEnd(int tick)
+    {
+        UpdateSynchronizable();
     }
 
     private void Reconcile(ISnap snap)
@@ -55,7 +56,6 @@ public class EntityTransformSynchronization : MonoComponentBase, ISynchronizable
 
     public void UpdateSynchronizable()
     {
-        throw new NotImplementedException();
     }
 
     public void SendSynchronization()
