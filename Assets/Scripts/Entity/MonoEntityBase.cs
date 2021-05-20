@@ -57,6 +57,7 @@ namespace Entity
         public abstract float MovementSpeed { get; }
 
         public Transform ModelTransform => entityBasicView.ModelTransform;
+        public Rigidbody ModelRigidbody => entityBasicView.ModelRigidbody;
 
         public Vector3 Forward { get { return (Quaternion.Euler(Rotation) * Vector3.forward).normalized; } }
         #endregion

@@ -98,8 +98,11 @@ public class EntityManager : GameFramework.EntityManager
 				info.m_GameTime = entityAppear.m_fGameTime;
 			}
 
-            (entity as MonoEntityBase).gameObject.AddComponent<TransformController>();
-		}
+            if (Entities.MyEntityID != entitySnapInfo.m_nEntityID)
+            {
+                (entity as MonoEntityBase).gameObject.AddComponent<TransformController>();
+            }
+        }
 	}
 
 	private void OnSC_EntityDisAppear(IMessage msg)

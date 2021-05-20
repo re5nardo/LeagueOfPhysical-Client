@@ -7,10 +7,12 @@ public class EntityBasicView : MonoViewComponentBase
 {
 	private GameObject m_goModel = null;
 	private Transform m_trModel = null;
-	private Animator m_AnimatorModel = null;
+    private Rigidbody m_RigidbodyModel = null;
+    private Animator m_AnimatorModel = null;
 	private List<Renderer> m_listModelRenderer = new List<Renderer>();
 
     public Transform ModelTransform => m_trModel;
+    public Rigidbody ModelRigidbody => m_RigidbodyModel;
 
     public override void OnAttached(IEntity entity)
     {
@@ -19,10 +21,15 @@ public class EntityBasicView : MonoViewComponentBase
         AddCommandHandler(typeof(ModelChanged), OnModelChanged);
         AddCommandHandler(typeof(PositionChanged), OnPositionChanged);
         AddCommandHandler(typeof(RotationChanged), OnRotationChanged);
+        AddCommandHandler(typeof(VelocityChanged), OnVelocityChanged);
+        AddCommandHandler(typeof(AngularVelocityChanged), OnAngularVelocityChanged);
         AddCommandHandler(typeof(AnimatorSetTrigger), OnAnimatorSetTrigger);
         AddCommandHandler(typeof(AnimatorSetFloat), OnAnimatorSetFloat);
         AddCommandHandler(typeof(AnimatorSetBool), OnAnimatorSetBool);
         AddCommandHandler(typeof(Destroying), OnDestroying);
+
+        TickPubSubService.AddSubscriber("BeforePhysicsSimulation", OnBeforePhysicsSimulation);
+        TickPubSubService.AddSubscriber("AfterPhysicsSimulation", OnAfterPhysicsSimulation);
     }
 
     public override void OnDetached()
@@ -32,10 +39,15 @@ public class EntityBasicView : MonoViewComponentBase
         RemoveCommandHandler(typeof(ModelChanged), OnModelChanged);
         RemoveCommandHandler(typeof(PositionChanged), OnPositionChanged);
         RemoveCommandHandler(typeof(RotationChanged), OnRotationChanged);
+        RemoveCommandHandler(typeof(VelocityChanged), OnVelocityChanged);
+        RemoveCommandHandler(typeof(AngularVelocityChanged), OnAngularVelocityChanged);
         RemoveCommandHandler(typeof(AnimatorSetTrigger), OnAnimatorSetTrigger);
         RemoveCommandHandler(typeof(AnimatorSetFloat), OnAnimatorSetFloat);
         RemoveCommandHandler(typeof(AnimatorSetBool), OnAnimatorSetBool);
         RemoveCommandHandler(typeof(Destroying), OnDestroying);
+
+        TickPubSubService.RemoveSubscriber("BeforePhysicsSimulation", OnBeforePhysicsSimulation);
+        TickPubSubService.RemoveSubscriber("AfterPhysicsSimulation", OnAfterPhysicsSimulation);
     }
 
     #region Command Handlers
@@ -49,17 +61,33 @@ public class EntityBasicView : MonoViewComponentBase
 
     private void OnPositionChanged(ICommand command)
     {
-        if (m_trModel != null)
+        if (m_RigidbodyModel != null)
         {
-            m_trModel.position = Entity.Position;
+            m_RigidbodyModel.position = Entity.Position;
         }
     }
 
     private void OnRotationChanged(ICommand command)
     {
-        if (m_trModel != null)
+        if (m_RigidbodyModel != null)
         {
-            m_trModel.rotation = Quaternion.Euler(Entity.Rotation);
+            m_RigidbodyModel.rotation = Quaternion.Euler(Entity.Rotation);
+        }
+    }
+
+    private void OnVelocityChanged(ICommand command)
+    {
+        if (m_RigidbodyModel != null)
+        {
+            m_RigidbodyModel.velocity = Entity.Velocity;
+        }
+    }
+
+    private void OnAngularVelocityChanged(ICommand command)
+    {
+        if (m_RigidbodyModel != null)
+        {
+            m_RigidbodyModel.angularVelocity = Entity.AngularVelocity;
         }
     }
 
@@ -106,7 +134,8 @@ public class EntityBasicView : MonoViewComponentBase
 		m_goModel.transform.parent = null;
 		m_trModel = m_goModel.transform;
 
-		m_AnimatorModel = m_goModel.GetComponent<Animator>();
+        m_RigidbodyModel = m_goModel.GetComponent<Rigidbody>();
+        m_AnimatorModel = m_goModel.GetComponent<Animator>();
 
 		m_goModel.GetComponentsInChildren(true, m_listModelRenderer);
 	}
@@ -123,7 +152,8 @@ public class EntityBasicView : MonoViewComponentBase
 
 		m_goModel = null;
 		m_trModel = null;
-		m_AnimatorModel = null;
+        m_RigidbodyModel = null;
+        m_AnimatorModel = null;
 
 		m_listModelRenderer.Clear();
 	}
@@ -152,5 +182,39 @@ public class EntityBasicView : MonoViewComponentBase
             m_AnimatorModel.SetTrigger(name);
         }
 	}
-	#endregion
+    #endregion
+
+    #region PhysicsSimulation
+    public virtual void OnBeforePhysicsSimulation(int tick)
+    {
+    }
+
+    public virtual void OnAfterPhysicsSimulation(int tick)
+    {
+        if (m_RigidbodyModel == null)
+        {
+            return;
+        }
+
+        if (Entity.Position != m_RigidbodyModel.position)
+        {
+            Entity.Position = m_RigidbodyModel.position;
+        }
+
+        if (Entity.Rotation != m_RigidbodyModel.rotation.eulerAngles)
+        {
+            Entity.Rotation = m_RigidbodyModel.rotation.eulerAngles;
+        }
+
+        if (Entity.Velocity != m_RigidbodyModel.velocity)
+        {
+            Entity.Velocity = m_RigidbodyModel.velocity;
+        }
+
+        if (Entity.AngularVelocity != m_RigidbodyModel.angularVelocity)
+        {
+            Entity.AngularVelocity = m_RigidbodyModel.angularVelocity;
+        }
+    }
+    #endregion
 }

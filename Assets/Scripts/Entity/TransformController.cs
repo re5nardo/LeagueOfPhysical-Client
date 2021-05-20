@@ -13,7 +13,7 @@ public class TransformController : MonoBehaviour
     private EntityTransformSynchronization TransformSynchronization => transformSynchronization ?? (transformSynchronization = GetComponent<EntityTransformSynchronization>());
 
     private float syncTime;
-    private float offset = 0.05f;
+    private float offset = 0.04f;
 
     private void Awake()
     {
@@ -53,33 +53,20 @@ public class TransformController : MonoBehaviour
 
             MonoEntityBase.Position = Vector3.Lerp(before.position, next.position, t);
             MonoEntityBase.Rotation = Quaternion.Lerp(Quaternion.Euler(before.rotation), Quaternion.Euler(next.rotation), t).eulerAngles;
+            MonoEntityBase.Velocity = Vector3.Lerp(before.velocity, next.velocity, t);
+            MonoEntityBase.AngularVelocity = Vector3.Lerp(before.angularVelocity, next.angularVelocity, t);
         }
         else if (before != null)
         {
+            var angle = Vector3.Angle(MonoEntityBase.Velocity, before.velocity);
+            var factor = Mathf.Lerp(1, 0.5f, angle / 180);
+
             float elapsed = syncTime - before.GameTime;
 
             MonoEntityBase.Rotation = Util.Math.RotateClamp(before.rotation, before.angularVelocity, elapsed, before.destRotation);
-            MonoEntityBase.Position = before.position + before.velocity.ToVector3() * elapsed;
-        }
-    }
-
-    public void SetRotation(Vector3 rotation)
-    {
-        StopCoroutine("SetRotationRoutine");
-        StartCoroutine("SetRotationRoutine", rotation);
-    }
-
-    private IEnumerator SetRotationRoutine(Vector3 rotation)
-    {
-        while (MonoEntityBase.Rotation != rotation)
-        {
-            var angle = Vector3.SignedAngle(MonoEntityBase.Rotation.Forward(), rotation.Forward(), Vector3.up);
-
-            var angularVelocity = new Vector3(0, (angle > 0 ? 1 : -1) * 360 * 3, 0);
-
-            MonoEntityBase.Rotation = Util.Math.RotateClamp(MonoEntityBase.Rotation, angularVelocity, Time.deltaTime, rotation);
-
-            yield return null;
+            MonoEntityBase.Position = before.position + before.velocity.ToVector3() * elapsed * factor;
+            MonoEntityBase.Velocity = before.velocity;
+            MonoEntityBase.AngularVelocity = before.angularVelocity;
         }
     }
 }

@@ -23,6 +23,21 @@ public class BehaviorController : MonoComponentBase
 
             move.StartBehavior();
         }
+
+        Rotation oldRotation = Entity.GetEntityComponent<Rotation>();
+        if (oldRotation != null)
+        {
+            oldRotation.SetDirection(vec3Direction);
+        }
+        else
+        {
+            Rotation rotation = BehaviorFactory.Instance.CreateBehavior(gameObject, Define.MasterData.BehaviorID.ROTATION) as Rotation;
+            Entity.AttachComponent(rotation);
+            rotation.SetData(Define.MasterData.BehaviorID.ROTATION, vec3Direction);
+            rotation.onBehaviorEnd += BehaviorHelper.BehaviorDestroyer;
+
+            rotation.StartBehavior();
+        }
     }
 
     public void MoveNRotation(Vector3 vec3Destination)

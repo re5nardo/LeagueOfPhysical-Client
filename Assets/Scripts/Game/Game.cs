@@ -69,10 +69,17 @@ namespace LOP
             TickPubSubService.Publish("EarlyTick", tick);
             TickPubSubService.Publish("Tick", tick);
             TickPubSubService.Publish("LateTick", tick);
+
+            TickPubSubService.Publish("BeforePhysicsSimulation", tick);
+
+            Physics.Simulate(TickInterval);
+
+            TickPubSubService.Publish("AfterPhysicsSimulation", tick);
         }
 
         private void OnTickEnd(int tick)
         {
+            TickPubSubService.Publish("EarlyTickEnd", tick);
             TickPubSubService.Publish("TickEnd", tick);
             TickPubSubService.Publish("LateTickEnd", tick);
         }

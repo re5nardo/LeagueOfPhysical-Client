@@ -38,6 +38,8 @@ public class GamePrepareState : MonoStateBase
         switch (gameStateInput)
         {
             case GameStateInput.StateDone:
+                return gameObject.GetOrAddComponent<SubGamePrepareState>();
+                
             case GameStateInput.SubGameProgressState:
                 return gameObject.GetOrAddComponent<SubGameProgressState>();
         }

@@ -56,5 +56,7 @@ public class SubGamePrepareState : MonoStateBase
 
         //  Send packet
         //  ...
+
+        FSM.MoveNext(GameStateInput.StateDone);
     }
 }

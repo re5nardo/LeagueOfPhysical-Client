@@ -11,21 +11,28 @@ using Entity;
 public class FPM_Manager : MonoSingleton<FPM_Manager>
 {
     private long sequence = 0;
-    private int lastProcessTick = -1;
+    private PlayerMoveInput playerMoveInput = null;
 
     protected override void Awake()
     {
         base.Awake();
 
-        MessageBroker.Default.Receive<PlayerMoveInput>().Subscribe(ProcessInput).AddTo(this);
+        MessageBroker.Default.Receive<PlayerMoveInput>().Subscribe(OnPlayerMoveInput).AddTo(this);
+
+        TickPubSubService.AddSubscriber("EarlyTick", OnEarlyTick);
     }
 
-    public void ProcessInput(PlayerMoveInput playerMoveInput)
+    protected override void OnDestroy()
     {
-        if (lastProcessTick == Game.Current.CurrentTick)
-        {
+        base.OnDestroy();
+
+        TickPubSubService.RemoveSubscriber("EarlyTick", OnEarlyTick);
+    }
+
+    private void OnEarlyTick(int tick)
+    {
+        if (playerMoveInput == null)
             return;
-        }
 
         playerMoveInput.tick = Game.Current.CurrentTick;
         playerMoveInput.sequence = sequence++;
@@ -40,31 +47,28 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         RoomNetwork.Instance.Send(notifyMoveInputData, PhotonNetwork.masterClient.ID, bInstant: true);
 
         //  클라이언트 선처리 (서버에 도달했을 때 예측해서)
+        var Entity = Entities.Get(playerMoveInput.entityID);
+
         if (playerMoveInput.inputType == PlayerMoveInput.InputType.Hold)
         {
-            //StartCoroutine(AddPlayerMoveInput(playerMoveInput, LOP.Room.Instance.Latency));
+            //if (CanMove())
+            {
+                var behaviorController = Entity.GetEntityComponent<BehaviorController>();
+                behaviorController.Move(Entity.Position + playerMoveInput.inputData.ToVector3().normalized * Game.Current.TickInterval * 5 * (Entity as Character).MovementSpeed);
+            }
         }
         else if (playerMoveInput.inputType == PlayerMoveInput.InputType.Release)
         {
-            //  Stop move behavior
-            //  ...
+            var behaviorController = Entity.GetEntityComponent<BehaviorController>();
+            behaviorController.StopBehavior(Define.MasterData.BehaviorID.MOVE);
         }
 
-        lastProcessTick = Game.Current.CurrentTick;
+        playerMoveInput = null;
     }
-    
-    private IEnumerator AddPlayerMoveInput(PlayerMoveInput playerMoveInput, float delay)
-    {
-        if (delay > 0)
-        {
-            yield return new WaitForSeconds(delay);
-        }
 
-        //if (CanMove())
-        {
-            Character character = Entities.Get<Character>(playerMoveInput.entityID);
-            var behaviorController = character.GetComponent<BehaviorController>();
-            behaviorController.Move(character.Position + playerMoveInput.inputData.ToVector3().normalized * Game.Current.TickInterval * 5 * character.MovementSpeed);
-        }
+    public void OnPlayerMoveInput(PlayerMoveInput playerMoveInput)
+    {
+        //  가장 마지막 인풋만 처리한다. (유입되는 모든 인풋을 처리하면 update 인터벌과 tick 인터벌의 차이로 인해 인풋이 밀리는 결과 초래 - update가 1초 tick이 2초마다 수행되면 2배만큼 인풋이 늦게 처리됨)
+        this.playerMoveInput = playerMoveInput;
     }
 }

@@ -23,7 +23,7 @@ public class EntityBehaviorStartHandler
         }
         else
         {
-            entity.GetEntityComponent<BehaviorController>()?.StartBehavior(entityBehaviorStart.behaviorMasterID, entityBehaviorStart.param);
+            //entity.GetEntityComponent<BehaviorController>()?.StartBehavior(entityBehaviorStart.behaviorMasterID, entityBehaviorStart.param);
         }
     }
 }

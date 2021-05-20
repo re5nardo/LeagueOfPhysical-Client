@@ -19,19 +19,10 @@ public class PlayerInputController : MonoBehaviour
 
     private RoomProtocolDispatcher roomProtocolDispatcher = null;
     private Character Entity = null;
-    private Queue<PlayerMoveInput> playerMoveInputs = new Queue<PlayerMoveInput>();
     private SkillInputData skillInputData = null;
 
     private void Update()
     {
-        //  Move
-        if (playerMoveInputs.Count > 0)
-        {
-            PlayerMoveInput playerMoveInput = playerMoveInputs.Dequeue();
-
-            MessageBroker.Default.Publish(playerMoveInput);
-        }
-
         //  Skill
         if (skillInputData != null)
         {
@@ -148,7 +139,9 @@ public class PlayerInputController : MonoBehaviour
 		if (!Entities.MyCharacter.IsAlive)
 			return;
 
-        playerMoveInputs.Enqueue(new PlayerMoveInput(inputType: PlayerMoveInput.InputType.Press));
+        var playerMoveInput = new PlayerMoveInput(inputType: PlayerMoveInput.InputType.Press);
+
+        MessageBroker.Default.Publish(playerMoveInput);
     }
 
 	private void OnMoveControllerRelease(Vector2 screenPosition)
@@ -156,25 +149,30 @@ public class PlayerInputController : MonoBehaviour
         if (!Entities.MyCharacter.IsAlive)
             return;
 
-        playerMoveInputs.Enqueue(new PlayerMoveInput(inputType: PlayerMoveInput.InputType.Release));
+        var playerMoveInput = new PlayerMoveInput(inputType: PlayerMoveInput.InputType.Release);
+
+        MessageBroker.Default.Publish(playerMoveInput);
     }
 
 	private void OnMoveControllerHold(Vector2 holdPosition)
 	{
 		if (!Entities.MyCharacter.IsAlive)
-			return;
+            return;
 
-		Vector2 pressedPosition = moveController.GetPressedPosition();
+        Vector2 pressedPosition = moveController.GetPressedPosition();
 
 		if (holdPosition == pressedPosition)
-			return;
-		
-		float y = Util.Math.FindDegree(holdPosition - pressedPosition) + LOP.Game.Current.GameUI.CameraController.GetRotation_Y();
+            return;
+
+        float y = Util.Math.FindDegree(holdPosition - pressedPosition) + LOP.Game.Current.GameUI.CameraController.GetRotation_Y();
 
 		float x = Mathf.Sin(Mathf.Deg2Rad * y);
 		float z = Mathf.Cos(Mathf.Deg2Rad * y);
 
-        playerMoveInputs.Enqueue(new PlayerMoveInput(inputData: new Vector3(x, 0, z).normalized, inputType: PlayerMoveInput.InputType.Hold));
+        var playerMoveInput = new PlayerMoveInput(inputData: new Vector3(x, 0, z).normalized, inputType: PlayerMoveInput.InputType.Hold);
+
+        MessageBroker.Default.Publish(playerMoveInput);
+
     }
 
 	private void OnBasicAttackControllerRelease(Vector2 vec2ScreenPosition)

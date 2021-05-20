@@ -10,7 +10,15 @@ namespace EntityCommand
 	{
 	}
 
-	public class ModelTriggerEnter : ICommand
+    public class VelocityChanged : ICommand
+    {
+    }
+
+    public class AngularVelocityChanged : ICommand
+    {
+    }
+
+    public class ModelTriggerEnter : ICommand
 	{
 		public int targetEntityID;
 
