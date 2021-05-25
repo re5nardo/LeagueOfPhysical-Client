@@ -13,6 +13,16 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
     private long sequence = 0;
     private PlayerMoveInput playerMoveInput = null;
 
+    private List<TickNSequence> clientTickNSequence = new List<TickNSequence>();
+    private List<TickNSequence> serverTickNSequence = new List<TickNSequence>();
+    private List<TransformHistory> transformHistories = new List<TransformHistory>();
+    private List<EntityTransformSnap> entityTransformSnaps = new List<EntityTransformSnap>();
+
+    private Vector3 earlyTickPosition;
+    private Vector3 earlyTickRotation;
+
+    private RoomProtocolDispatcher roomProtocolDispatcher = null;
+
     protected override void Awake()
     {
         base.Awake();
@@ -20,6 +30,11 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         MessageBroker.Default.Receive<PlayerMoveInput>().Subscribe(OnPlayerMoveInput).AddTo(this);
 
         TickPubSubService.AddSubscriber("EarlyTick", OnEarlyTick);
+        TickPubSubService.AddSubscriber("LateTickEnd", OnLateTickEnd);
+
+        roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
+        roomProtocolDispatcher[typeof(SC_ProcessMoveInputData)] = OnSC_ProcessMoveInputData;
+        roomProtocolDispatcher[typeof(SC_Synchronization)] = OnSC_Synchronization;
     }
 
     protected override void OnDestroy()
@@ -27,13 +42,86 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         base.OnDestroy();
 
         TickPubSubService.RemoveSubscriber("EarlyTick", OnEarlyTick);
+        TickPubSubService.RemoveSubscriber("LateTickEnd", OnLateTickEnd);
+    }
+
+    private void OnPlayerMoveInput(PlayerMoveInput playerMoveInput)
+    {
+        //  가장 마지막 인풋만 처리한다. (유입되는 모든 인풋을 처리하면 update 인터벌과 tick 인터벌의 차이로 인해 인풋이 밀리는 결과 초래 - update가 1초 tick이 2초마다 수행되면 2배만큼 인풋이 늦게 처리됨)
+        this.playerMoveInput = playerMoveInput;
+    }
+
+    private void OnSC_ProcessMoveInputData(IMessage msg)
+    {
+        SC_ProcessMoveInputData processMoveInputData = msg as SC_ProcessMoveInputData;
+
+        serverTickNSequence.Add(new TickNSequence(processMoveInputData.tick, processMoveInputData.sequence));
+        if (serverTickNSequence.Count > 100)
+        {
+            serverTickNSequence.RemoveRange(0, serverTickNSequence.Count - 100);
+        }
+    }
+
+    private void OnSC_Synchronization(IMessage msg)
+    {
+        SC_Synchronization synchronization = msg as SC_Synchronization;
+
+        synchronization.snaps?.ForEach(snap =>
+        {
+            if (snap is EntityTransformSnap entityTransformSnap)
+            {
+                if (entityTransformSnap.entityId == Entities.MyEntityID)
+                {
+                    entityTransformSnaps.Add(entityTransformSnap);
+                }
+            }
+        });
     }
 
     private void OnEarlyTick(int tick)
     {
-        if (playerMoveInput == null)
-            return;
+        Reconcile();    //  여기 타이밍 맞나??
 
+        if (Entities.MyCharacter != null)
+        {
+            earlyTickPosition = Entities.MyCharacter.Position;
+            earlyTickRotation = Entities.MyCharacter.Rotation;
+        }
+
+        ProcessPlayerMoveInput();
+    }
+
+    private void OnLateTickEnd(int tick)
+    {
+        if (Entities.MyCharacter == null)
+        {
+            return;
+        }
+
+        var positionChange = Entities.MyCharacter.Position - earlyTickPosition;
+        var rotationChange = Entities.MyCharacter.Rotation - earlyTickRotation;
+
+        transformHistories.Add(new TransformHistory(Game.Current.CurrentTick, Entities.MyCharacter.Position, Entities.MyCharacter.Rotation, positionChange, rotationChange));
+        if (transformHistories.Count > 100)
+        {
+            transformHistories.RemoveRange(0, transformHistories.Count - 100);
+        }
+    }
+
+    private void ProcessPlayerMoveInput()
+    {
+        if (playerMoveInput == null)
+        {
+            return;
+        }
+
+        clientTickNSequence.Add(new TickNSequence(Game.Current.CurrentTick, sequence));
+        if (clientTickNSequence.Count > 100)
+        {
+            clientTickNSequence.RemoveRange(0, clientTickNSequence.Count - 100);
+        }
+
+        //  우선 서버에 전송
         playerMoveInput.tick = Game.Current.CurrentTick;
         playerMoveInput.sequence = sequence++;
         playerMoveInput.entityID = Entities.MyCharacter.EntityID;
@@ -43,32 +131,66 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         CS_NotifyMoveInputData notifyMoveInputData = new CS_NotifyMoveInputData();
         notifyMoveInputData.m_PlayerMoveInput = playerMoveInput;
 
-        //  Send to server (우선 서버에 전송)
         RoomNetwork.Instance.Send(notifyMoveInputData, PhotonNetwork.masterClient.ID, bInstant: true);
 
-        //  클라이언트 선처리 (서버에 도달했을 때 예측해서)
-        var Entity = Entities.Get(playerMoveInput.entityID);
+        //  클라에서 인풋 선 처리 (서버에 도달했을 때 예측해서)
+        Predict();
+
+        playerMoveInput = null;
+    }
+
+    private void Predict()
+    {
+        var entity = Entities.Get(playerMoveInput.entityID);
 
         if (playerMoveInput.inputType == PlayerMoveInput.InputType.Hold)
         {
             //if (CanMove())
             {
-                var behaviorController = Entity.GetEntityComponent<BehaviorController>();
-                behaviorController.Move(Entity.Position + playerMoveInput.inputData.ToVector3().normalized * Game.Current.TickInterval * 5 * (Entity as Character).MovementSpeed);
+                var behaviorController = entity.GetEntityComponent<BehaviorController>();
+                behaviorController.Move(entity.Position + playerMoveInput.inputData.ToVector3().normalized * Game.Current.TickInterval * 5 * (entity as Character).MovementSpeed);
             }
         }
         else if (playerMoveInput.inputType == PlayerMoveInput.InputType.Release)
         {
-            var behaviorController = Entity.GetEntityComponent<BehaviorController>();
+            var behaviorController = entity.GetEntityComponent<BehaviorController>();
             behaviorController.StopBehavior(Define.MasterData.BehaviorID.MOVE);
         }
-
-        playerMoveInput = null;
     }
 
-    public void OnPlayerMoveInput(PlayerMoveInput playerMoveInput)
+    private void Reconcile()
     {
-        //  가장 마지막 인풋만 처리한다. (유입되는 모든 인풋을 처리하면 update 인터벌과 tick 인터벌의 차이로 인해 인풋이 밀리는 결과 초래 - update가 1초 tick이 2초마다 수행되면 2배만큼 인풋이 늦게 처리됨)
-        this.playerMoveInput = playerMoveInput;
+        var iteration = new List<EntityTransformSnap>(entityTransformSnaps);
+        foreach (var entityTransformSnap in iteration)  //  to do..? 가장 마지막 것만 처리하면 되나??
+        {
+            if (!serverTickNSequence.Exists(x => x.tick <= entityTransformSnap.Tick))
+            {
+                Debug.LogWarning("target is null!");    //  이 case는 왜 발생..? 이 case가 발생한 경우 hiccup 현상이 나타나는거 같은디..??
+                entityTransformSnaps.Remove(entityTransformSnap);
+                continue;
+            }
+
+            var target = serverTickNSequence.FindLast(x => x.tick <= entityTransformSnap.Tick);
+            int offset = entityTransformSnap.Tick - target.tick;
+
+            var clientTarget = clientTickNSequence.Find(x => x.sequence == target.sequence);
+            int clientTargetTick = clientTarget.tick + offset;
+
+            var historiesToApply = transformHistories.FindAll(x => x.tick > clientTargetTick);
+
+            Vector3 sumOfPosition = Vector3.zero;
+            Vector3 sumOfRotation = Vector3.zero;
+
+            historiesToApply?.ForEach(history =>
+            {
+                sumOfPosition += history.positionChange;
+                sumOfRotation += history.rotationChange;
+            });
+
+            Entities.MyCharacter.Position = entityTransformSnap.position + sumOfPosition;
+            Entities.MyCharacter.Rotation = entityTransformSnap.rotation + sumOfRotation;
+
+            entityTransformSnaps.Remove(entityTransformSnap);
+        }
     }
 }

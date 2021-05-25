@@ -16,6 +16,15 @@ public class EntityBehaviorStartHandler
             return;
         }
 
+        //  로컬 유저의 move, rotation은 로컬에서 (선처리) 플레이가 되기 때문에 서버의 내용은 무시한다.
+        if (entity.EntityID == Entities.MyEntityID)
+        {
+            if (entityBehaviorStart.behaviorMasterID == Define.MasterData.BehaviorID.MOVE || entityBehaviorStart.behaviorMasterID == Define.MasterData.BehaviorID.ROTATION)
+            {
+                return;
+            }
+        }
+
         var behaviorController = entity.GetEntityComponent<BehaviorController>();
         if (behaviorController.IsBehaviorRunning(entityBehaviorStart.behaviorMasterID, out var behavior))
         {
@@ -23,7 +32,7 @@ public class EntityBehaviorStartHandler
         }
         else
         {
-            //entity.GetEntityComponent<BehaviorController>()?.StartBehavior(entityBehaviorStart.behaviorMasterID, entityBehaviorStart.param);
+            entity.GetEntityComponent<BehaviorController>()?.StartBehavior(entityBehaviorStart.behaviorMasterID, entityBehaviorStart.param);
         }
     }
 }

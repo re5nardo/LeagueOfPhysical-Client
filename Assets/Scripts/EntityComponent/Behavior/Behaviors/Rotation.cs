@@ -14,6 +14,11 @@ namespace Behavior
         #region BehaviorBase
         protected override bool OnBehaviorUpdate()
         {
+            if (Entity.EntityID != Entities.MyEntityID)
+            {
+                return true;
+            }
+
             float toRotate = Vector3.SignedAngle(Entity.Forward, m_vec3Direction, Vector3.up);
             if (toRotate == 0)
             {
