@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using GameFramework;
 
 public class CameraController : MonoBehaviour
 {
@@ -32,6 +33,8 @@ public class CameraController : MonoBehaviour
     private Transform m_trTarget = null;
     private bool m_bFollow = false;
 	private Vector3 m_vec3Offset;
+
+    private int lastUpdateTick;
 
     //  For SmoothDamp
     private float smoothTime = 0.3f;
@@ -142,7 +145,12 @@ public class CameraController : MonoBehaviour
         {
             Vector3 targetPosition = m_trTarget.position + m_vec3Offset;
 
-            m_trCameraController.position = Vector3.SmoothDamp(m_trCameraController.position, targetPosition, ref velocity, smoothTime);
+            if (lastUpdateTick != Game.Current.CurrentTick)
+            {
+                m_trCameraController.position = Vector3.SmoothDamp(m_trCameraController.position, targetPosition, ref velocity, smoothTime);
+            }
+
+            lastUpdateTick = Game.Current.CurrentTick;
         }
     }
 #endregion

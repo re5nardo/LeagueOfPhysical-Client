@@ -5,6 +5,7 @@ using Entity;
 using System;
 using UnityEngine.UI;
 using TMPro;
+using GameFramework;
 
 public class PlayerHealthBar : HealthBarBase
 {
@@ -16,6 +17,8 @@ public class PlayerHealthBar : HealthBarBase
 
     private WeakReference targetEntity = null;
     private Transform tfMine = null;
+
+    private int lastUpdateTick;
 
     private RectTransform rectTransformParent = null;
     private RectTransform RectTransformParent { get { return rectTransformParent ?? (rectTransformParent = transform.parent?.GetComponent<RectTransform>()); } }
@@ -39,8 +42,13 @@ public class PlayerHealthBar : HealthBarBase
             //            m_sliderExp.value = character.GetCurrentExpPercent() / 100.0f;
 
             //  Position
-            var center = Util.UGUI.ConvertScreenToLocalPoint(RectTransformParent, Camera.main.WorldToScreenPoint(character.Position));
-            tfMine.localPosition = new Vector3(center.x, center.y + 50, center.z);
+            if (lastUpdateTick != Game.Current.CurrentTick)
+            {
+                var center = Util.UGUI.ConvertScreenToLocalPoint(RectTransformParent, Camera.main.WorldToScreenPoint(character.Position));
+                tfMine.localPosition = new Vector3(center.x, center.y + 50, center.z);
+            }
+
+            lastUpdateTick = Game.Current.CurrentTick;
         }
     }
 	
