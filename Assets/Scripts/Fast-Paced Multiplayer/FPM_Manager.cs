@@ -160,37 +160,45 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
 
     private void Reconcile()
     {
-        var iteration = new List<EntityTransformSnap>(entityTransformSnaps);
-        foreach (var entityTransformSnap in iteration)  //  to do..? 가장 마지막 것만 처리하면 되나??
+        if (entityTransformSnaps.Count == 0)
         {
-            if (!serverTickNSequence.Exists(x => x.tick <= entityTransformSnap.Tick))
-            {
-                Debug.LogWarning("target is null!");    //  이 case는 왜 발생..? 이 case가 발생한 경우 hiccup 현상이 나타나는거 같은디..??
-                entityTransformSnaps.Remove(entityTransformSnap);
-                continue;
-            }
-
-            var target = serverTickNSequence.FindLast(x => x.tick <= entityTransformSnap.Tick);
-            int offset = entityTransformSnap.Tick - target.tick;
-
-            var clientTarget = clientTickNSequence.Find(x => x.sequence == target.sequence);
-            int clientTargetTick = clientTarget.tick + offset;
-
-            var historiesToApply = transformHistories.FindAll(x => x.tick > clientTargetTick);
-
-            Vector3 sumOfPosition = Vector3.zero;
-            Vector3 sumOfRotation = Vector3.zero;
-
-            historiesToApply?.ForEach(history =>
-            {
-                sumOfPosition += history.positionChange;
-                sumOfRotation += history.rotationChange;
-            });
-
-            Entities.MyCharacter.Position = entityTransformSnap.position + sumOfPosition;
-            Entities.MyCharacter.Rotation = entityTransformSnap.rotation + sumOfRotation;
-
-            entityTransformSnaps.Remove(entityTransformSnap);
+            return;
         }
+
+        //  서버에서 받은 마지막 snap을 사용하여 reconcile 한다.
+        var entityTransformSnap = entityTransformSnaps[entityTransformSnaps.Count - 1];
+        entityTransformSnaps.Clear();
+
+        if (!serverTickNSequence.Exists(x => x.tick <= entityTransformSnap.Tick))
+        {
+            return;
+        }
+
+        var target = serverTickNSequence.FindLast(x => x.tick <= entityTransformSnap.Tick);
+        int offset = entityTransformSnap.Tick - target.tick;
+
+        var clientTarget = clientTickNSequence.Find(x => x.sequence == target.sequence);
+        int clientTargetTick = clientTarget.tick + offset;
+
+        if (clientTickNSequence.Exists(x => x.sequence > target.sequence))
+        {
+            var clientTargetNext = clientTickNSequence.Find(x => x.sequence > target.sequence);
+
+            clientTargetTick = Mathf.Min(clientTargetTick, clientTargetNext.tick - 1);
+        }
+
+        var historiesToApply = transformHistories.FindAll(x => x.tick > clientTargetTick);
+
+        Vector3 sumOfPosition = Vector3.zero;
+        Vector3 sumOfRotation = Vector3.zero;
+
+        historiesToApply?.ForEach(history =>
+        {
+            sumOfPosition += history.positionChange;
+            sumOfRotation += history.rotationChange;
+        });
+
+        Entities.MyCharacter.Position = Vector3.Lerp(Entities.MyCharacter.Position, entityTransformSnap.position + sumOfPosition, 0.5f);
+        Entities.MyCharacter.Rotation = entityTransformSnap.rotation + sumOfRotation;
     }
 }
