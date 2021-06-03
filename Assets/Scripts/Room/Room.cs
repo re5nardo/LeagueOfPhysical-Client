@@ -9,7 +9,7 @@ namespace LOP
     {
         [SerializeField] private Game game = null;
 
-        public float Latency { get; private set; } = 0.03f;     //  sec
+        public float Latency { get; private set; } = 0.04f;     //  sec     실제 ping data 활용해야 함
 
         private RoomPunBehaviour roomPunBehaviour = null;
 
