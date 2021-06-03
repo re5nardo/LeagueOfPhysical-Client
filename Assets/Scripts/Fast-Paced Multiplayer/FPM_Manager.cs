@@ -198,6 +198,7 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
             sumOfRotation += history.rotationChange;
         });
 
+        //  조금 더 고도화를 해야 할 것 같은데...
         Entities.MyCharacter.Position = Vector3.Lerp(Entities.MyCharacter.Position, entityTransformSnap.position + sumOfPosition, 0.5f);
         Entities.MyCharacter.Rotation = entityTransformSnap.rotation + sumOfRotation;
     }

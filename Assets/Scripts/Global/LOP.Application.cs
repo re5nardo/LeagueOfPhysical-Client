@@ -19,7 +19,7 @@ namespace LOP
         {
             //  Target FrameRate
 #if UNITY_EDITOR
-            UnityEngine.Application.targetFrameRate = 30;
+            UnityEngine.Application.targetFrameRate = 60;
 #endif
             //  PhotonType Register
             PhotonTypeRegister.Register();
