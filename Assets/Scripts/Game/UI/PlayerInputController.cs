@@ -17,6 +17,8 @@ public class PlayerInputController : MonoBehaviour
 	[SerializeField] private CoolTimeSkillButton activeSkill2Btn = null;
 	[SerializeField] private CoolTimeSkillButton ultimateSkillBtn = null;
 
+    [SerializeField] private TextureButton jumpBtn = null;
+
     private RoomProtocolDispatcher roomProtocolDispatcher = null;
     private Character Entity = null;
     private SkillInputData skillInputData = null;
@@ -85,6 +87,8 @@ public class PlayerInputController : MonoBehaviour
 		activeSkill2Btn.onClicked += OnSkillBtnClicked;
 		ultimateSkillBtn.onClicked += OnSkillBtnClicked;
 
+        jumpBtn.button.onClick.AddListener(OnJumpBtnClicked);
+
         roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
         roomProtocolDispatcher[typeof(SC_EntitySkillInfo)] = OnSC_EntitySkillInfo;
 	}
@@ -104,7 +108,9 @@ public class PlayerInputController : MonoBehaviour
         activeSkill1Btn.onClicked -= OnSkillBtnClicked;
 		activeSkill2Btn.onClicked -= OnSkillBtnClicked;
 		ultimateSkillBtn.onClicked -= OnSkillBtnClicked;
-	}
+
+        jumpBtn.button.onClick.RemoveListener(OnJumpBtnClicked);
+    }
 
 	#region Message Handler
 	private void OnSC_EntitySkillInfo(IMessage msg)
@@ -184,7 +190,7 @@ public class PlayerInputController : MonoBehaviour
 
         if (vec2FinalDir.magnitude < 40)
         {
-            skillInputData = new SkillInputData(Entities.MyEntityID, Entity.BasicAttackSkillID, Vector3.zero, Game.Current.GameTime);
+            skillInputData = new SkillInputData(Game.Current.CurrentTick, Entities.MyEntityID, Entity.BasicAttackSkillID, Vector3.zero);
         }
     }
 
@@ -208,7 +214,7 @@ public class PlayerInputController : MonoBehaviour
             dir = Vector3.zero;
         }
 		
-		skillInputData = new SkillInputData(Entities.MyEntityID, Entity.BasicAttackSkillID, dir.normalized, Game.Current.GameTime);
+		skillInputData = new SkillInputData(Game.Current.CurrentTick, Entities.MyEntityID, Entity.BasicAttackSkillID, dir.normalized);
 	}
 
 	private void OnItemSlot1BtnClicked()
@@ -224,9 +230,16 @@ public class PlayerInputController : MonoBehaviour
 	private void OnSkillBtnClicked(int skillID)
 	{
 		CS_NotifySkillInputData notifySkillInputData = new CS_NotifySkillInputData();
-		notifySkillInputData.m_SkillInputData = new SkillInputData(Entities.MyEntityID, skillID, default, Game.Current.GameTime);
+		notifySkillInputData.m_SkillInputData = new SkillInputData(Game.Current.CurrentTick, Entities.MyEntityID, skillID, default);
 
 		RoomNetwork.Instance.Send(notifySkillInputData, PhotonNetwork.masterClient.ID, bInstant: true);
 	}
-	#endregion
+
+    private void OnJumpBtnClicked()
+    {
+        var jumpInputData = new JumpInputData();
+
+        MessageBroker.Default.Publish(jumpInputData);
+    }
+    #endregion
 }

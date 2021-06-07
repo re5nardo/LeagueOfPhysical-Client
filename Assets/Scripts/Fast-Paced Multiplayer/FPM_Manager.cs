@@ -12,6 +12,7 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
 {
     private long sequence = 0;
     private PlayerMoveInput playerMoveInput = null;
+    private JumpInputData jumpInputData = null;
 
     private List<TickNSequence> clientTickNSequence = new List<TickNSequence>();
     private List<TickNSequence> serverTickNSequence = new List<TickNSequence>();
@@ -28,12 +29,13 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         base.Awake();
 
         MessageBroker.Default.Receive<PlayerMoveInput>().Subscribe(OnPlayerMoveInput).AddTo(this);
+        MessageBroker.Default.Receive<JumpInputData>().Subscribe(OnJumpInputData).AddTo(this);
 
         TickPubSubService.AddSubscriber("EarlyTick", OnEarlyTick);
         TickPubSubService.AddSubscriber("LateTickEnd", OnLateTickEnd);
 
         roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
-        roomProtocolDispatcher[typeof(SC_ProcessMoveInputData)] = OnSC_ProcessMoveInputData;
+        roomProtocolDispatcher[typeof(SC_ProcessInputData)] = OnSC_ProcessInputData;
         roomProtocolDispatcher[typeof(SC_Synchronization)] = OnSC_Synchronization;
     }
 
@@ -51,11 +53,17 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         this.playerMoveInput = playerMoveInput;
     }
 
-    private void OnSC_ProcessMoveInputData(IMessage msg)
+    private void OnJumpInputData(JumpInputData jumpInputData)
     {
-        SC_ProcessMoveInputData processMoveInputData = msg as SC_ProcessMoveInputData;
+        //  가장 마지막 인풋만 처리한다.
+        this.jumpInputData = jumpInputData;
+    }
 
-        serverTickNSequence.Add(new TickNSequence(processMoveInputData.tick, processMoveInputData.sequence));
+    private void OnSC_ProcessInputData(IMessage msg)
+    {
+        SC_ProcessInputData processInputData = msg as SC_ProcessInputData;
+
+        serverTickNSequence.Add(new TickNSequence(processInputData.tick, processInputData.sequence));
         if (serverTickNSequence.Count > 100)
         {
             serverTickNSequence.RemoveRange(0, serverTickNSequence.Count - 100);
@@ -88,6 +96,7 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
             earlyTickRotation = Entities.MyCharacter.Rotation;
         }
 
+        ProcessJumpInputData();
         ProcessPlayerMoveInput();
     }
 
@@ -134,12 +143,41 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         RoomNetwork.Instance.Send(notifyMoveInputData, PhotonNetwork.masterClient.ID, bInstant: true);
 
         //  클라에서 인풋 선 처리 (서버에 도달했을 때 예측해서)
-        Predict();
+        PredictMove();
 
         playerMoveInput = null;
     }
 
-    private void Predict()
+    private void ProcessJumpInputData()
+    {
+        if (jumpInputData == null)
+        {
+            return;
+        }
+
+        clientTickNSequence.Add(new TickNSequence(Game.Current.CurrentTick, sequence));
+        if (clientTickNSequence.Count > 100)
+        {
+            clientTickNSequence.RemoveRange(0, clientTickNSequence.Count - 100);
+        }
+
+        //  우선 서버에 전송
+        jumpInputData.tick = Game.Current.CurrentTick;
+        jumpInputData.sequence = sequence++;
+        jumpInputData.entityID = Entities.MyEntityID;
+
+        CS_NotifyJumpInputData notifyJumpInputData = new CS_NotifyJumpInputData();
+        notifyJumpInputData.jumpInputData = jumpInputData;
+
+        RoomNetwork.Instance.Send(notifyJumpInputData, PhotonNetwork.masterClient.ID, bInstant: true);
+
+        //  클라에서 인풋 선 처리 (서버에 도달했을 때 예측해서)
+        PredictJump();
+  
+        jumpInputData = null;
+    }
+
+    private void PredictMove()
     {
         var entity = Entities.Get(playerMoveInput.entityID);
 
@@ -158,6 +196,13 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         }
     }
 
+    private void PredictJump()
+    {
+        var entity = Entities.Get<MonoEntityBase>(jumpInputData.entityID);
+
+        entity.ModelRigidbody.AddForce(Vector3.up * 1000, ForceMode.Impulse);
+    }
+
     private void Reconcile()
     {
         if (entityTransformSnaps.Count == 0)
@@ -171,11 +216,24 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
 
         if (!serverTickNSequence.Exists(x => x.tick <= entityTransformSnap.Tick))
         {
+            Debug.LogError("serverTickNSequence does not exist!");
             return;
         }
 
-        var target = serverTickNSequence.FindLast(x => x.tick <= entityTransformSnap.Tick);
+        var targets = serverTickNSequence.FindAll(x => x.tick <= entityTransformSnap.Tick);
+        targets.Sort((x, y) =>
+        {
+            return x.sequence.CompareTo(y.sequence);
+        });
+
+        var target = targets[targets.Count - 1];
         int offset = entityTransformSnap.Tick - target.tick;
+
+        if (!clientTickNSequence.Exists(x => x.sequence == target.sequence))
+        {
+            Debug.LogError("clientTickNSequence does not exist!");
+            return;
+        }
 
         var clientTarget = clientTickNSequence.Find(x => x.sequence == target.sequence);
         int clientTargetTick = clientTarget.tick + offset;
@@ -199,7 +257,11 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         });
 
         //  조금 더 고도화를 해야 할 것 같은데...
-        Entities.MyCharacter.Position = Vector3.Lerp(Entities.MyCharacter.Position, entityTransformSnap.position + sumOfPosition, 0.5f);
+        Entities.MyCharacter.Position = Vector3.Lerp(Entities.MyCharacter.Position, entityTransformSnap.position + sumOfPosition, 0.25f);    //  이 부분때문에 서로 밀 때 서버와 클라 위치가 많이 달라보이나?
+        //Entities.MyCharacter.Position = entityTransformSnap.position + sumOfPosition;
         Entities.MyCharacter.Rotation = entityTransformSnap.rotation + sumOfRotation;
     }
 }
+
+//  최종적으로 클라 서버 위치 동일하게 맞추는것 보장해야 하는데 위 0.25 어떻게??
+//  Reconcile setting해놓고 값 일치할때까지 함수 호출되는 식으로 (스타트 코루틴처럼)
