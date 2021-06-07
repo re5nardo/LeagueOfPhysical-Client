@@ -13,7 +13,7 @@ public class TransformController : MonoBehaviour
     private EntityTransformSynchronization TransformSynchronization => transformSynchronization ?? (transformSynchronization = GetComponent<EntityTransformSynchronization>());
 
     private float syncTime;
-    private float offset = 0.06f;
+    private float offset = 0.08f;
 
     private void Awake()
     {
@@ -63,7 +63,7 @@ public class TransformController : MonoBehaviour
 
             float elapsed = syncTime - before.GameTime;
 
-            MonoEntityBase.Position = before.position + before.velocity.ToVector3() * elapsed * factor;
+            MonoEntityBase.Position = before.position + before.velocity.ToVector3() * elapsed * 1;
             MonoEntityBase.Rotation = Util.Math.RotateClamp(before.rotation, before.angularVelocity, elapsed, before.destRotation);
             //MonoEntityBase.Velocity = before.velocity;
             //MonoEntityBase.AngularVelocity = before.angularVelocity;
