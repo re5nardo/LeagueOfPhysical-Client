@@ -27,7 +27,8 @@ public class CustomSerializationCode
 	public const byte CS_NotifyMoveInputData = 130;
 	public const byte CS_NotifyPlayerLookAtPosition = 131;
 	public const byte CS_NotifySkillInputData = 132;
-	public const byte CS_RequestEmotionExpression = 134;
+    public const byte CS_NotifyJumpInputData = 133;
+    public const byte CS_RequestEmotionExpression = 134;
 	public const byte CS_Ping = 135;
 	public const byte CS_FirstStatusSelection = 136;
 	public const byte CS_AbilitySelection = 137;
@@ -57,7 +58,8 @@ public class PhotonEvent
 	public const byte CS_NotifyMoveInputData = 100;
 	public const byte CS_NotifyPlayerLookAtPosition = 101;
 	public const byte CS_NotifySkillInputData = 102;
-	public const byte CS_RequestEmotionExpression = 104;
+    public const byte CS_NotifyJumpInputData = 103;
+    public const byte CS_RequestEmotionExpression = 104;
 	public const byte CS_Ping = 105;
 	public const byte CS_FirstStatusSelection = 106;
 	public const byte CS_AbilitySelection = 107;
@@ -142,18 +144,37 @@ public class GameItemSnapInfo : EntitySnapInfo
 [Serializable]
 public class SkillInputData
 {
-	public int m_nEntityID = -1;
-	public int m_nSkillID = -1;
-	public SerializableVector3 m_InputData = default;
-	public float m_fGameTime = -1;
+    public int tick = -1;
+    public int entityID = -1;
+	public int skillID = -1;
+	public SerializableVector3 inputData = default;
 
-	public SkillInputData(int nEntityID, int nSkillID, SerializableVector3 inputData, float fGameTime)
+	public SkillInputData(int tick, int entityID, int skillID, SerializableVector3 inputData)
 	{
-		m_nEntityID = nEntityID;
-		m_nSkillID = nSkillID;
-		m_InputData = inputData;
-		m_fGameTime = fGameTime;
+		this.tick = tick;
+		this.entityID = entityID;
+		this.skillID = skillID;
+		this.inputData = inputData;
 	}
+}
+
+[Serializable]
+public class JumpInputData
+{
+    public int tick = -1;
+    public long sequence = -1;
+    public int entityID = -1;
+
+    public JumpInputData()
+    {
+    }
+
+    public JumpInputData(int tick, long sequence, int entityID)
+    {
+        this.tick = tick;
+        this.sequence = sequence;
+        this.entityID = entityID;
+    }
 }
 
 [Serializable]
@@ -533,6 +554,18 @@ public class CS_NotifySkillInputData : IPhotonEventMessage
 	{
 		return PhotonEvent.CS_NotifySkillInputData;
 	}
+}
+
+[Serializable]
+public class CS_NotifyJumpInputData : IPhotonEventMessage
+{
+    public int senderID { get; set; }
+    public JumpInputData jumpInputData;
+
+    public byte GetEventID()
+    {
+        return PhotonEvent.CS_NotifyJumpInputData;
+    }
 }
 
 [Serializable]
