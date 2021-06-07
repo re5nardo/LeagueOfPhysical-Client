@@ -9,7 +9,7 @@ using GameFramework;
 public class CustomSerializationCode
 {
 	public const byte SC_EnterRoom = 3;
-    public const byte SC_ProcessMoveInputData = 4;
+    public const byte SC_ProcessInputData = 4;
     public const byte SC_EntitySkillInfo = 5;
 	public const byte SC_EmotionExpression = 7;
 	public const byte SC_EntityAppear = 14;
@@ -40,7 +40,7 @@ public class CustomSerializationCode
 public class PhotonEvent
 {
 	public const byte SC_EnterRoom = 0;
-    public const byte SC_ProcessMoveInputData = 1;
+    public const byte SC_ProcessInputData = 1;
     public const byte SC_EntitySkillInfo = 2;
 	public const byte SC_EmotionExpression = 4;
 	public const byte SC_EntityAppear = 11;
@@ -318,7 +318,7 @@ public class SC_EnterRoom : IPhotonEventMessage
 }
 
 [Serializable]
-public class SC_ProcessMoveInputData : IPhotonEventMessage
+public class SC_ProcessInputData : IPhotonEventMessage
 {
     public int senderID { get; set; }
     public int tick;
@@ -326,7 +326,7 @@ public class SC_ProcessMoveInputData : IPhotonEventMessage
 
     public byte GetEventID()
     {
-        return PhotonEvent.SC_ProcessMoveInputData;
+        return PhotonEvent.SC_ProcessInputData;
     }
 }
 
