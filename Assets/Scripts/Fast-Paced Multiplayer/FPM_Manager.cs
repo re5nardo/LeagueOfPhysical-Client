@@ -22,6 +22,8 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
     private Vector3 earlyTickPosition;
     private Vector3 earlyTickRotation;
 
+    private Vector3? reconcilePosition;
+
     private RoomProtocolDispatcher roomProtocolDispatcher = null;
 
     protected override void Awake()
@@ -207,6 +209,11 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
     {
         if (entityTransformSnaps.Count == 0)
         {
+            if (reconcilePosition.HasValue)
+            {
+                Entities.MyCharacter.Position = Vector3.Lerp(Entities.MyCharacter.Position, reconcilePosition.Value, 0.1f);
+            }
+
             return;
         }
 
@@ -242,7 +249,7 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         {
             var clientTargetNext = clientTickNSequence.Find(x => x.sequence > target.sequence);
 
-            clientTargetTick = Mathf.Min(clientTargetTick, clientTargetNext.tick - 1);
+            //clientTargetTick = Mathf.Min(clientTargetTick, clientTargetNext.tick - 1);
         }
 
         var historiesToApply = transformHistories.FindAll(x => x.tick > clientTargetTick);
@@ -257,9 +264,11 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         });
 
         //  조금 더 고도화를 해야 할 것 같은데...
-        Entities.MyCharacter.Position = Vector3.Lerp(Entities.MyCharacter.Position, entityTransformSnap.position + sumOfPosition, 0.25f);    //  이 부분때문에 서로 밀 때 서버와 클라 위치가 많이 달라보이나?
+        Entities.MyCharacter.Position = Vector3.Lerp(Entities.MyCharacter.Position, entityTransformSnap.position + sumOfPosition, 0.1f);    //  이 부분때문에 서로 밀 때 서버와 클라 위치가 많이 달라보이나?
         //Entities.MyCharacter.Position = entityTransformSnap.position + sumOfPosition;
         Entities.MyCharacter.Rotation = entityTransformSnap.rotation + sumOfRotation;
+
+        reconcilePosition = entityTransformSnap.position + sumOfPosition;
     }
 }
 
