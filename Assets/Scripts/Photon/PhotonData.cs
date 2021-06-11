@@ -322,6 +322,7 @@ public class SC_ProcessInputData : IPhotonEventMessage
 {
     public int senderID { get; set; }
     public int tick;
+    public string type;
     public long sequence;
 
     public byte GetEventID()
