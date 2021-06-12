@@ -39,9 +39,7 @@ public class FPM_Move : MonoBehaviour
         //  우선 서버에 전송
         playerMoveInput.tick = Game.Current.CurrentTick;
         playerMoveInput.sequence = sequence++;
-        playerMoveInput.entityID = Entities.MyCharacter.EntityID;
-        playerMoveInput.position = Entities.MyCharacter.Position;
-        playerMoveInput.rotation = Entities.MyCharacter.Rotation;
+        playerMoveInput.entityID = Entities.MyEntityID;
 
         CS_NotifyMoveInputData notifyMoveInputData = new CS_NotifyMoveInputData();
         notifyMoveInputData.m_PlayerMoveInput = playerMoveInput;
