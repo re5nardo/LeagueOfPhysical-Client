@@ -81,35 +81,38 @@ public class FPM_Jump : MonoBehaviour
 
     public void Reconcile(EntityTransformSnap entityTransformSnap, ref Vector3 sumOfPosition)
     {
-        if (!serverTickNSequences.Exists(x => x.tick <= entityTransformSnap.Tick))
+        int clientTargetTick = 0;
+
+        if (serverTickNSequences.Exists(x => x.tick <= entityTransformSnap.Tick))
         {
-            //Debug.LogError("serverJumpTickNSequences does not exist!");   //  외부에 의해 변경된 pos 값이 무시되는거 아닌가 이러면??
-            return;
+            var targets = serverTickNSequences.FindAll(x => x.tick <= entityTransformSnap.Tick);
+            targets.Sort((x, y) =>
+            {
+                return x.sequence.CompareTo(y.sequence);
+            });
+
+            var target = targets[targets.Count - 1];
+            int offset = entityTransformSnap.Tick - target.tick;
+
+            if (!clientTickNSequences.Exists(x => x.sequence == target.sequence))
+            {
+                Debug.LogError("clientTickNSequences does not exist!");
+                return;
+            }
+
+            var clientTarget = clientTickNSequences.Find(x => x.sequence == target.sequence);
+            clientTargetTick = clientTarget.tick + offset;
+
+            if (clientTickNSequences.Exists(x => x.sequence == target.sequence + 1))
+            {
+                var clientTargetNext = clientTickNSequences.Find(x => x.sequence == target.sequence + 1);
+
+                clientTargetTick = Mathf.Min(clientTargetTick, clientTargetNext.tick - 1);
+            }
         }
-
-        var targets = serverTickNSequences.FindAll(x => x.tick <= entityTransformSnap.Tick);
-        targets.Sort((x, y) =>
+        else
         {
-            return x.sequence.CompareTo(y.sequence);
-        });
-
-        var target = targets[targets.Count - 1];
-        int offset = entityTransformSnap.Tick - target.tick;
-
-        if (!clientTickNSequences.Exists(x => x.sequence == target.sequence))
-        {
-            Debug.LogError("clientJumpTickNSequences does not exist!");
-            return;
-        }
-
-        var clientTarget = clientTickNSequences.Find(x => x.sequence == target.sequence);
-        int clientTargetTick = clientTarget.tick + offset;
-
-        if (clientTickNSequences.Exists(x => x.sequence == target.sequence + 1))
-        {
-            var clientTargetNext = clientTickNSequences.Find(x => x.sequence == target.sequence + 1);
-
-            clientTargetTick = Mathf.Min(clientTargetTick, clientTargetNext.tick - 1);
+            clientTargetTick = entityTransformSnap.Tick;
         }
 
         var historiesToApply = FPM_Manager.Instance.TransformHistories.FindAll(x => x.tick > clientTargetTick);

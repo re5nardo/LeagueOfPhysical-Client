@@ -96,10 +96,10 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
     {
         if (entityTransformSnaps.Count == 0)
         {
-            //if (reconcilePosition.HasValue)
-            //{
-            //    Entities.MyCharacter.Position = Vector3.Lerp(Entities.MyCharacter.Position, reconcilePosition.Value, 0.1f); //  target + histories 해주고 lerp 해줘야..
-            //}
+            if (reconcilePosition.HasValue)
+            {
+                Entities.MyCharacter.Position = Vector3.Lerp(Entities.MyCharacter.Position, reconcilePosition.Value, 0.1f); //  reconcilePosition + histories 해주고 lerp 해줘야..?
+            }
 
             return;
         }
@@ -123,5 +123,3 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
     }
 }
 
-//  최종적으로 클라 서버 위치 동일하게 맞추는것 보장해야 하는데 위 0.25 어떻게??
-//  Reconcile setting해놓고 값 일치할때까지 함수 호출되는 식으로 (스타트 코루틴처럼)
