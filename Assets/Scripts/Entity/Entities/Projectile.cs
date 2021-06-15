@@ -12,7 +12,9 @@ namespace Entity
 		}
 		#endregion
 
-		private ProjectileBasicData projectileBasicData = null;
+        private EntityTransformSynchronization entityTransformSynchronization = null;
+
+        private ProjectileBasicData projectileBasicData = null;
 
         private BehaviorController behaviorController = null;
         private StateController stateController = null;
@@ -35,6 +37,8 @@ namespace Entity
 		protected override void InitComponents()
 		{
 			base.InitComponents();
+
+            entityTransformSynchronization = AttachComponent(gameObject.AddComponent<EntityTransformSynchronization>());
 
             projectileBasicData = AttachComponent(gameObject.AddComponent<ProjectileBasicData>());
 

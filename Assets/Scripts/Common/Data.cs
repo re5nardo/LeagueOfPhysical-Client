@@ -83,6 +83,7 @@ public enum EntityType
     Character = 1,
     Projectile = 2,
 	GameItem = 3,
+    MapObject = 4,
 }
 
 [Serializable][Flags]

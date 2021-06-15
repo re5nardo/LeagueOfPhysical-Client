@@ -30,7 +30,6 @@ namespace Entity
 
         protected virtual void InitComponents()
         {
-            AttachComponent(gameObject.AddComponent<EntityTransformSynchronization>());
         }
 
         public virtual void Initialize(params object[] param)
