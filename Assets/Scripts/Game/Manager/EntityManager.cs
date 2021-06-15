@@ -46,8 +46,8 @@ public class EntityManager : GameFramework.EntityManager
     #region MonoBehaviour
     private void Awake()
     {
-        m_PositionGrid = new Grid();
-        m_PositionGrid.SetGrid(10);
+        positionGrid = new Grid();
+        positionGrid.SetGrid(10);
 
         roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
         roomProtocolDispatcher[typeof(SC_EntityAppear)] = OnSC_EntityAppear;
@@ -69,7 +69,7 @@ public class EntityManager : GameFramework.EntityManager
 
 		foreach (EntitySnapInfo entitySnapInfo in entityAppear.m_listEntitySnapInfo)
 		{
-			if(m_dicEntity.ContainsKey(entitySnapInfo.m_nEntityID))
+			if(dicEntity.ContainsKey(entitySnapInfo.m_nEntityID))
 			{
 				Debug.LogError("[OnSC_EntityAppear] Entity already exists! EntityID : " + entitySnapInfo.m_nEntityID);
                 continue;
@@ -111,7 +111,7 @@ public class EntityManager : GameFramework.EntityManager
 
 		foreach (int nEntityID in entityDisAppear.m_listEntityID)
 		{
-			if (!m_dicEntity.ContainsKey(nEntityID))
+			if (!dicEntity.ContainsKey(nEntityID))
 			{
 				Debug.LogError("[OnSC_EntityDisAppear] Entity doesn't exist! EntityID : " + nEntityID);
                 continue;
