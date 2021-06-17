@@ -130,15 +130,20 @@ public class EntityBasicView : MonoViewComponentBase
 
     protected virtual void SetModel(string strModel)
 	{
-		m_goModel = ResourcePool.Instance.GetResource(strModel);
-		m_goModel.transform.parent = null;
-		m_trModel = m_goModel.transform;
+        SetModel(ResourcePool.Instance.GetResource(strModel));
+    }
+
+    public virtual void SetModel(GameObject model)
+    {
+        m_goModel = model;
+        m_goModel.transform.parent = null;
+        m_trModel = m_goModel.transform;
 
         m_RigidbodyModel = m_goModel.GetComponent<Rigidbody>();
         m_AnimatorModel = m_goModel.GetComponent<Animator>();
 
-		m_goModel.GetComponentsInChildren(true, m_listModelRenderer);
-	}
+        m_goModel.GetComponentsInChildren(true, m_listModelRenderer);
+    }
 
 	protected virtual void ClearModel()
 	{

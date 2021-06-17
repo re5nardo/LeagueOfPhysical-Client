@@ -35,6 +35,13 @@ public class PlayerInputController : MonoBehaviour
 
             skillInputData = null;
         }
+
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            OnJumpBtnClicked();
+        }
+#endif
     }
    
 	public void SetCharacterID(int characterID)

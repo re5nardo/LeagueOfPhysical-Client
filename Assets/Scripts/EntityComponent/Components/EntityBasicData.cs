@@ -6,7 +6,8 @@ using Entity;
 
 public class EntityBasicData : MonoComponentBase
 {
-	protected string m_strModel = "";
+    protected string modelId = "";
+    public string ModelId => modelId;
 
     new protected MonoEntityBase Entity = null;
 
@@ -14,9 +15,9 @@ public class EntityBasicData : MonoComponentBase
 	{
 		base.Initialize(param);
 
-		m_strModel = (string)param[0];
+        modelId = (string)param[0];
 
-		Entity.SendCommandToViews(new ModelChanged(m_strModel));
+		Entity.SendCommandToViews(new ModelChanged(modelId));
 	}
 
     public override void OnAttached(IEntity entity)
