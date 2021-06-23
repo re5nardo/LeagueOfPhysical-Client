@@ -62,8 +62,22 @@ public class EntityManager : GameFramework.EntityManager
     }
 #endregion
 
-	#region Message Handler
-	private void OnSC_EntityAppear(IMessage msg)
+    public override void RegisterEntity(IEntity entity)
+    {
+        base.RegisterEntity(entity);
+
+        GamePubSubService.Publish(GameMessageKey.EntityRegister, new object[] { entity.EntityID });
+    }
+
+    public override void UnregisterEntity(int nEntityID)
+    {
+        base.UnregisterEntity(nEntityID);
+
+        GamePubSubService.Publish(GameMessageKey.EntityUnregister, new object[] { nEntityID });
+    }
+
+    #region Message Handler
+    private void OnSC_EntityAppear(IMessage msg)
 	{
 		SC_EntityAppear entityAppear = msg as SC_EntityAppear;
 
