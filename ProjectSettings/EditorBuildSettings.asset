@@ -18,8 +18,14 @@ EditorBuildSettings:
     path: Assets/Scenes/Maps/RiftOfSummoner.unity
     guid: 6fedb6227a64e484491a9df56b203f9d
   - enabled: 1
+    path: Assets/Scenes/Maps/Space.unity
+    guid: c427fd61f437e9843a288fd08264836e
+  - enabled: 1
     path: Assets/Scenes/SubGame/Dodgeball.unity
     guid: 0a5a3e218bc7f7f4391e85747d62daa7
+  - enabled: 1
+    path: Assets/Scenes/SubGame/JumpWang.unity
+    guid: 95f886fc6c1039c45bd0ff6f26e7e7fc
   - enabled: 1
     path: Assets/Scenes/SubGame/ObserverAvoid.unity
     guid: 00e59fcc3346b0d4fb5905970131599d

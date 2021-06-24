@@ -48,9 +48,11 @@ public class SubGamePrepareState : MonoStateBase
 
     private IEnumerator Procedure()
     {
-        GameBlackboard.keyValues["sceneName"] = "RememberGame";
+        //  서버로 부터 받아야 됨..
+        LOP.Game.Current.GameManager.subGameId = "JumpWang";
+        LOP.Game.Current.GameManager.mapName = "Space";
 
-        yield return SceneManager.LoadSceneAsync(GameBlackboard.keyValues["sceneName"], LoadSceneMode.Additive);
+        yield return SceneManager.LoadSceneAsync(LOP.Game.Current.GameManager.SubGameData.sceneName, LoadSceneMode.Additive);
 
         yield return SubGameBase.Current.Initialize();
 

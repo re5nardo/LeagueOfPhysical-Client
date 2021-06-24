@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using GameFramework;
 using Entity;
 
@@ -16,6 +15,7 @@ namespace LOP
         public GameUI GameUI => gameUI;
         public MyInfo MyInfo => myInfo;
         public GameEventManager GameEventManager => gameEventManager;
+        public GameManager GameManager => gameManager;
 
         private RoomProtocolDispatcher roomProtocolDispatcher = null;
         private GameEventManager gameEventManager = null;
@@ -61,7 +61,9 @@ namespace LOP
 
         protected override void OnBeforeRun()
         {
-            InvokeRepeating("NotifyPlayerLookAtPosition", 0f, 0.1f);
+            //InvokeRepeating("NotifyPlayerLookAtPosition", 0f, 0.1f);
+
+            GameManager.StartGame();
         }
 
         private void OnTick(int tick)
