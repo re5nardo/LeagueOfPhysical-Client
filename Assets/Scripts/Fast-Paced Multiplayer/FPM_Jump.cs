@@ -56,7 +56,11 @@ public class FPM_Jump : MonoBehaviour
     {
         var entity = Entities.Get<MonoEntityBase>(jumpInputData.entityID);
 
-        entity.ModelRigidbody.AddForce(Vector3.up * 1000, ForceMode.Impulse);
+        //if (CanJump())
+        {
+            var behaviorController = entity.GetEntityComponent<BehaviorController>();
+            behaviorController.Jump();
+        }
     }
 
     private void OnJumpInputData(JumpInputData jumpInputData)
