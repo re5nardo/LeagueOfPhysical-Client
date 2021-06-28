@@ -99,12 +99,12 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         {
             if (reconcilePosition.HasValue)
             {
-                Entities.MyCharacter.Position = Vector3.Lerp(Entities.MyCharacter.Position, reconcilePosition.Value, 0.1f); //  reconcilePosition + histories 해주고 lerp 해줘야..?
+                Entities.MyCharacter.Position = Vector3.Lerp(Entities.MyCharacter.Position, reconcilePosition.Value, 0.25f); //  reconcilePosition + histories 해주고 lerp 해줘야..?
             }
 
             if (reconcileRotation.HasValue)
             {
-                Entities.MyCharacter.Rotation = Quaternion.Lerp(Quaternion.Euler(Entities.MyCharacter.Rotation), Quaternion.Euler(reconcileRotation.Value), 0.1f).eulerAngles;
+                Entities.MyCharacter.Rotation = Quaternion.Lerp(Quaternion.Euler(Entities.MyCharacter.Rotation), Quaternion.Euler(reconcileRotation.Value), 0.25f).eulerAngles;
             }
 
             return;
@@ -121,8 +121,11 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         fpm_Jump.Reconcile(entityTransformSnap, ref sumOfPosition);
 
         //  조금 더 고도화를 해야 할 것 같은데...
-        Entities.MyCharacter.Position = Vector3.Lerp(Entities.MyCharacter.Position, entityTransformSnap.position + sumOfPosition, 0.1f);    //  이 부분때문에 서로 밀 때 서버와 클라 위치가 많이 달라보이나?
-        Entities.MyCharacter.Rotation = Quaternion.Lerp(Quaternion.Euler(Entities.MyCharacter.Rotation), Quaternion.Euler(entityTransformSnap.rotation + sumOfRotation), 0.1f).eulerAngles;
+        Entities.MyCharacter.Position = Vector3.Lerp(Entities.MyCharacter.Position, entityTransformSnap.position + sumOfPosition, 0.25f);    //  이 부분때문에 서로 밀 때 서버와 클라 위치가 많이 달라보이나?
+        Entities.MyCharacter.Rotation = Quaternion.Lerp(Quaternion.Euler(Entities.MyCharacter.Rotation), Quaternion.Euler(entityTransformSnap.rotation + sumOfRotation), 0.25f).eulerAngles;
+
+        Entities.MyCharacter.Velocity = entityTransformSnap.velocity;
+        Entities.MyCharacter.AngularVelocity = entityTransformSnap.angularVelocity;
 
         reconcilePosition = entityTransformSnap.position + sumOfPosition;
         reconcileRotation = entityTransformSnap.rotation + sumOfRotation;
