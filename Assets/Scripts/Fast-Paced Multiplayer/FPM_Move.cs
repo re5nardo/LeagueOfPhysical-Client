@@ -30,24 +30,27 @@ public class FPM_Move : MonoBehaviour
             return;
         }
 
-        clientTickNSequences.Add(new TickNSequence(Game.Current.CurrentTick, sequence));
-        if (clientTickNSequences.Count > 100)
+        if (CanMove())
         {
-            clientTickNSequences.RemoveRange(0, clientTickNSequences.Count - 100);
+            clientTickNSequences.Add(new TickNSequence(Game.Current.CurrentTick, sequence));
+            if (clientTickNSequences.Count > 100)
+            {
+                clientTickNSequences.RemoveRange(0, clientTickNSequences.Count - 100);
+            }
+
+            //  우선 서버에 전송
+            playerMoveInput.tick = Game.Current.CurrentTick;
+            playerMoveInput.sequence = sequence++;
+            playerMoveInput.entityID = Entities.MyEntityID;
+
+            CS_NotifyMoveInputData notifyMoveInputData = new CS_NotifyMoveInputData();
+            notifyMoveInputData.m_PlayerMoveInput = playerMoveInput;
+
+            RoomNetwork.Instance.Send(notifyMoveInputData, PhotonNetwork.masterClient.ID, bInstant: true);
+
+            //  클라에서 인풋 선 처리 (서버에 도달했을 때 예측해서)
+            Predict();
         }
-
-        //  우선 서버에 전송
-        playerMoveInput.tick = Game.Current.CurrentTick;
-        playerMoveInput.sequence = sequence++;
-        playerMoveInput.entityID = Entities.MyEntityID;
-
-        CS_NotifyMoveInputData notifyMoveInputData = new CS_NotifyMoveInputData();
-        notifyMoveInputData.m_PlayerMoveInput = playerMoveInput;
-
-        RoomNetwork.Instance.Send(notifyMoveInputData, PhotonNetwork.masterClient.ID, bInstant: true);
-
-        //  클라에서 인풋 선 처리 (서버에 도달했을 때 예측해서)
-        Predict();
 
         playerMoveInput = null;
     }
@@ -133,5 +136,10 @@ public class FPM_Move : MonoBehaviour
             sumOfPosition += history.positionChange.XZ();
             sumOfRotation += history.rotationChange;
         }
+    }
+
+    private bool CanMove()
+    {
+        return true;
     }
 }

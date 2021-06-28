@@ -30,24 +30,27 @@ public class FPM_Jump : MonoBehaviour
             return;
         }
 
-        clientTickNSequences.Add(new TickNSequence(Game.Current.CurrentTick, sequence));
-        if (clientTickNSequences.Count > 100)
+        if (CanJump())
         {
-            clientTickNSequences.RemoveRange(0, clientTickNSequences.Count - 100);
+            clientTickNSequences.Add(new TickNSequence(Game.Current.CurrentTick, sequence));
+            if (clientTickNSequences.Count > 100)
+            {
+                clientTickNSequences.RemoveRange(0, clientTickNSequences.Count - 100);
+            }
+
+            //  우선 서버에 전송
+            jumpInputData.tick = Game.Current.CurrentTick;
+            jumpInputData.sequence = sequence++;
+            jumpInputData.entityID = Entities.MyEntityID;
+
+            CS_NotifyJumpInputData notifyJumpInputData = new CS_NotifyJumpInputData();
+            notifyJumpInputData.jumpInputData = jumpInputData;
+
+            RoomNetwork.Instance.Send(notifyJumpInputData, PhotonNetwork.masterClient.ID, bInstant: true);
+
+            //  클라에서 인풋 선 처리 (서버에 도달했을 때 예측해서)
+            Predict();
         }
-
-        //  우선 서버에 전송
-        jumpInputData.tick = Game.Current.CurrentTick;
-        jumpInputData.sequence = sequence++;
-        jumpInputData.entityID = Entities.MyEntityID;
-
-        CS_NotifyJumpInputData notifyJumpInputData = new CS_NotifyJumpInputData();
-        notifyJumpInputData.jumpInputData = jumpInputData;
-
-        RoomNetwork.Instance.Send(notifyJumpInputData, PhotonNetwork.masterClient.ID, bInstant: true);
-
-        //  클라에서 인풋 선 처리 (서버에 도달했을 때 예측해서)
-        Predict();
 
         jumpInputData = null;
     }
@@ -56,11 +59,8 @@ public class FPM_Jump : MonoBehaviour
     {
         var entity = Entities.Get<MonoEntityBase>(jumpInputData.entityID);
 
-        //if (CanJump())
-        {
-            var behaviorController = entity.GetEntityComponent<BehaviorController>();
-            behaviorController.Jump();
-        }
+        var behaviorController = entity.GetEntityComponent<BehaviorController>();
+        behaviorController.Jump();
     }
 
     private void OnJumpInputData(JumpInputData jumpInputData)
@@ -124,5 +124,10 @@ public class FPM_Jump : MonoBehaviour
         {
             sumOfPosition += new Vector3(0, history.positionChange.y, 0);
         }
+    }
+
+    private bool CanJump()
+    {
+        return Entities.MyCharacter.IsGrounded;
     }
 }
