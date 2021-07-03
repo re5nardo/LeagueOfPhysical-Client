@@ -60,8 +60,9 @@ namespace Entity
 		}
 		#endregion
 
-		#region Interface For Convenience
-		public override float MovementSpeed { get { return gameItemBasicData.MovementSpeed; } }
+        #region Interface For Convenience
+        public override float MovementSpeed => gameItemBasicData.MovementSpeed;
+        public override float FactoredMovementSpeed => gameItemBasicData.MovementSpeed * SubGameBase.Current.SubGameEnvironment.MoveSpeedFactor;
 
 		public int CurrentHP
 		{

@@ -73,6 +73,7 @@ namespace Entity
 
         #region Interface For Convenience
         public abstract float MovementSpeed { get; }
+        public abstract float FactoredMovementSpeed { get; }
 
         public Transform ModelTransform => entityBasicView.ModelTransform;
         public Rigidbody ModelRigidbody => entityBasicView.ModelRigidbody;

@@ -97,8 +97,9 @@ namespace Entity
 		public bool IsAlive { get { return characterStatusData.CurrentHP > 0; } }
 
 		public bool IsSelectableFirstStatus { get { return characterStatusData.SelectableFirstStatusCount > 0; } }
-	
-		public override float MovementSpeed { get { return characterStatusData.MovementSpeed; } }
+
+        public override float MovementSpeed => characterStatusData.MovementSpeed;
+        public override float FactoredMovementSpeed => characterStatusData.MovementSpeed * SubGameBase.Current.SubGameEnvironment.MoveSpeedFactor;
 
         public int BasicAttackSkillID { get { return characterSkillData.BasicAttackSkillID;  } }
 		#endregion
