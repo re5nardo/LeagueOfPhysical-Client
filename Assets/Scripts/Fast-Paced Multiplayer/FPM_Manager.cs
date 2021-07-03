@@ -18,9 +18,11 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
 
     private Vector3 earlyTickPosition;
     private Vector3 earlyTickRotation;
+    private Vector3 earlyTickVelocity;
 
     private Vector3? reconcilePosition;
     private Vector3? reconcileRotation;
+    private Vector3? reconcileVelocity;
 
     private RoomProtocolDispatcher roomProtocolDispatcher = null;
 
@@ -64,12 +66,11 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
 
     private void OnEarlyTick(int tick)
     {
-        Reconcile();    //  여기 타이밍 맞나??
-
         if (Entities.MyCharacter != null)
         {
             earlyTickPosition = Entities.MyCharacter.Position;
             earlyTickRotation = Entities.MyCharacter.Rotation;
+            earlyTickVelocity = Entities.MyCharacter.Velocity;
         }
 
         fpm_Jump.ProcessJumpInputData();
@@ -78,19 +79,20 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
 
     private void OnLateTickEnd(int tick)
     {
-        if (Entities.MyCharacter == null)
+        if (Entities.MyCharacter != null)
         {
-            return;
+            var positionChange = Entities.MyCharacter.Position - earlyTickPosition;
+            var rotationChange = Entities.MyCharacter.Rotation - earlyTickRotation;
+            var velocityChange = Entities.MyCharacter.Velocity - earlyTickVelocity;
+
+            transformHistories.Add(new TransformHistory(Game.Current.CurrentTick, Entities.MyCharacter.Position, Entities.MyCharacter.Rotation, Entities.MyCharacter.Velocity, positionChange, rotationChange, velocityChange));
+            if (transformHistories.Count > 100)
+            {
+                transformHistories.RemoveRange(0, transformHistories.Count - 100);
+            }
         }
 
-        var positionChange = Entities.MyCharacter.Position - earlyTickPosition;
-        var rotationChange = Entities.MyCharacter.Rotation - earlyTickRotation;
-
-        transformHistories.Add(new TransformHistory(Game.Current.CurrentTick, Entities.MyCharacter.Position, Entities.MyCharacter.Rotation, positionChange, rotationChange));
-        if (transformHistories.Count > 100)
-        {
-            transformHistories.RemoveRange(0, transformHistories.Count - 100);
-        }
+        Reconcile();
     }
 
     private void Reconcile()
@@ -107,6 +109,13 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
                 Entities.MyCharacter.Rotation = Quaternion.Lerp(Quaternion.Euler(Entities.MyCharacter.Rotation), Quaternion.Euler(reconcileRotation.Value), 0.25f).eulerAngles;
             }
 
+            if (reconcileVelocity.HasValue)
+            {
+                Entities.MyCharacter.Velocity = Vector3.Lerp(Entities.MyCharacter.Velocity, reconcileVelocity.Value, 0.25f);
+            }
+
+            //  reconcilePosition, reconcileRotation = null 처리..?
+
             return;
         }
 
@@ -116,18 +125,19 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
 
         Vector3 sumOfPosition = Vector3.zero;
         Vector3 sumOfRotation = Vector3.zero;
+        Vector3 sumOfVelocity = Vector3.zero;
 
-        fpm_Move.Reconcile(entityTransformSnap, ref sumOfPosition, ref sumOfRotation);
+        fpm_Move.Reconcile(entityTransformSnap, ref sumOfPosition, ref sumOfRotation, ref sumOfVelocity);
         fpm_Jump.Reconcile(entityTransformSnap, ref sumOfPosition);
 
         //  조금 더 고도화를 해야 할 것 같은데...
-        Entities.MyCharacter.Position = Vector3.Lerp(Entities.MyCharacter.Position, entityTransformSnap.position + sumOfPosition, 0.25f);    //  이 부분때문에 서로 밀 때 서버와 클라 위치가 많이 달라보이나?
+        Entities.MyCharacter.Position = Vector3.Lerp(Entities.MyCharacter.Position, entityTransformSnap.position + sumOfPosition, 0.25f);
         Entities.MyCharacter.Rotation = Quaternion.Lerp(Quaternion.Euler(Entities.MyCharacter.Rotation), Quaternion.Euler(entityTransformSnap.rotation + sumOfRotation), 0.25f).eulerAngles;
-
-        Entities.MyCharacter.Velocity = entityTransformSnap.velocity;
-        Entities.MyCharacter.AngularVelocity = entityTransformSnap.angularVelocity;
+        //Entities.MyCharacter.Velocity = Vector3.Lerp(Entities.MyCharacter.Velocity, entityTransformSnap.velocity + sumOfVelocity, 0);
+        //Entities.MyCharacter.AngularVelocity = entityTransformSnap.angularVelocity;
 
         reconcilePosition = entityTransformSnap.position + sumOfPosition;
         reconcileRotation = entityTransformSnap.rotation + sumOfRotation;
+        reconcileVelocity = entityTransformSnap.velocity + sumOfVelocity;
     }
 }

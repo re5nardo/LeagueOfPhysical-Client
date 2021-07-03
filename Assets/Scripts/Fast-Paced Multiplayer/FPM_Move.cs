@@ -64,7 +64,7 @@ public class FPM_Move : MonoBehaviour
             //if (CanMove())
             {
                 var behaviorController = entity.GetEntityComponent<BehaviorController>();
-                behaviorController.Move(entity.Position + playerMoveInput.inputData.ToVector3().normalized * Game.Current.TickInterval * 5 * entity.MovementSpeed);
+                behaviorController.Move(entity.Position + playerMoveInput.inputData.ToVector3().normalized * Game.Current.TickInterval * 5 * entity.FactoredMovementSpeed);
             }
         }
         else if (playerMoveInput.inputType == PlayerMoveInput.InputType.Release)
@@ -94,7 +94,7 @@ public class FPM_Move : MonoBehaviour
         }
     }
 
-    public void Reconcile(EntityTransformSnap entityTransformSnap, ref Vector3 sumOfPosition, ref Vector3 sumOfRotation)
+    public void Reconcile(EntityTransformSnap entityTransformSnap, ref Vector3 sumOfPosition, ref Vector3 sumOfRotation, ref Vector3 sumOfVelocity)
     {
         int clientTargetTick = 0;
 
@@ -135,6 +135,7 @@ public class FPM_Move : MonoBehaviour
         {
             sumOfPosition += history.positionChange.XZ();
             sumOfRotation += history.rotationChange;
+            sumOfVelocity += history.velocityChange;
         }
     }
 
