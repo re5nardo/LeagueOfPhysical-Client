@@ -115,6 +115,7 @@ namespace Entity
             set
             {
                 velocity = value;
+                SendCommandToViews(new VelocityChanged());
             }
         }
 
@@ -125,6 +126,7 @@ namespace Entity
             set
             {
                 angularVelocity = value;
+                SendCommandToViews(new AngularVelocityChanged());
             }
         }
 
