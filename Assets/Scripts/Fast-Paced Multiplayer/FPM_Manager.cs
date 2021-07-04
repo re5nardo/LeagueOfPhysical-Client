@@ -20,9 +20,12 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
     private Vector3 earlyTickRotation;
     private Vector3 earlyTickVelocity;
 
-    private Vector3? reconcilePosition;
-    private Vector3? reconcileRotation;
-    private Vector3? reconcileVelocity;
+    private Vector3 positionGap;
+    private Vector3 rotationGap;
+    private Vector3 velocityGap;
+
+    private const int RECONCILE_PROCESS = 4;    //  이 틱 기간동안 보정해준다.
+    private int reconcileCount = 0;
 
     private RoomProtocolDispatcher roomProtocolDispatcher = null;
 
@@ -97,47 +100,38 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
 
     private void Reconcile()
     {
-        if (entityTransformSnaps.Count == 0)
+        if (entityTransformSnaps.Count > 0)
         {
-            if (reconcilePosition.HasValue)
-            {
-                Entities.MyCharacter.Position = Vector3.Lerp(Entities.MyCharacter.Position, reconcilePosition.Value, 0.25f); //  reconcilePosition + histories 해주고 lerp 해줘야..?
-            }
+            //  서버에서 받은 마지막 snap을 사용하여 reconcile 한다.
+            var entityTransformSnap = entityTransformSnaps[entityTransformSnaps.Count - 1];
+            entityTransformSnaps.Clear();
 
-            if (reconcileRotation.HasValue)
-            {
-                Entities.MyCharacter.Rotation = Quaternion.Lerp(Quaternion.Euler(Entities.MyCharacter.Rotation), Quaternion.Euler(reconcileRotation.Value), 0.25f).eulerAngles;
-            }
+            Vector3 sumOfPosition = Vector3.zero;
+            Vector3 sumOfRotation = Vector3.zero;
+            Vector3 sumOfVelocity = Vector3.zero;
 
-            if (reconcileVelocity.HasValue)
-            {
-                Entities.MyCharacter.Velocity = Vector3.Lerp(Entities.MyCharacter.Velocity, reconcileVelocity.Value, 0.25f);
-            }
+            fpm_Move.Reconcile(entityTransformSnap, ref sumOfPosition, ref sumOfRotation, ref sumOfVelocity);
+            fpm_Jump.Reconcile(entityTransformSnap, ref sumOfPosition);
 
-            //  reconcilePosition, reconcileRotation = null 처리..?
+            var reconcilePosition = entityTransformSnap.position + sumOfPosition;
+            var reconcileRotation = entityTransformSnap.rotation + sumOfRotation;
+            var reconcileVelocity = entityTransformSnap.velocity + sumOfVelocity;
 
-            return;
+            positionGap = reconcilePosition - Entities.MyCharacter.Position;
+            var reconcileForward = Quaternion.Euler(reconcileRotation) * Vector3.forward;
+            rotationGap = new Vector3(0, Vector3.SignedAngle(Entities.MyCharacter.Forward, reconcileForward, Vector3.up), 0);
+            velocityGap = reconcileVelocity - Entities.MyCharacter.Velocity;
+
+            reconcileCount = RECONCILE_PROCESS;
         }
 
-        //  서버에서 받은 마지막 snap을 사용하여 reconcile 한다.
-        var entityTransformSnap = entityTransformSnaps[entityTransformSnaps.Count - 1];
-        entityTransformSnaps.Clear();
+        if (reconcileCount > 0)
+        {
+            Entities.MyCharacter.Position += (positionGap / RECONCILE_PROCESS);
+            Entities.MyCharacter.Rotation += (rotationGap / RECONCILE_PROCESS);
+            Entities.MyCharacter.Velocity += (velocityGap / RECONCILE_PROCESS);
 
-        Vector3 sumOfPosition = Vector3.zero;
-        Vector3 sumOfRotation = Vector3.zero;
-        Vector3 sumOfVelocity = Vector3.zero;
-
-        fpm_Move.Reconcile(entityTransformSnap, ref sumOfPosition, ref sumOfRotation, ref sumOfVelocity);
-        fpm_Jump.Reconcile(entityTransformSnap, ref sumOfPosition);
-
-        //  조금 더 고도화를 해야 할 것 같은데...
-        Entities.MyCharacter.Position = Vector3.Lerp(Entities.MyCharacter.Position, entityTransformSnap.position + sumOfPosition, 0.25f);
-        Entities.MyCharacter.Rotation = Quaternion.Lerp(Quaternion.Euler(Entities.MyCharacter.Rotation), Quaternion.Euler(entityTransformSnap.rotation + sumOfRotation), 0.25f).eulerAngles;
-        //Entities.MyCharacter.Velocity = Vector3.Lerp(Entities.MyCharacter.Velocity, entityTransformSnap.velocity + sumOfVelocity, 0);
-        //Entities.MyCharacter.AngularVelocity = entityTransformSnap.angularVelocity;
-
-        reconcilePosition = entityTransformSnap.position + sumOfPosition;
-        reconcileRotation = entityTransformSnap.rotation + sumOfRotation;
-        reconcileVelocity = entityTransformSnap.velocity + sumOfVelocity;
+            reconcileCount--;
+        }
     }
 }
