@@ -15,7 +15,7 @@ namespace Behavior
         protected abstract bool OnBehaviorUpdate();			//  False : Finish
         protected virtual void OnBehaviorEnd() { }			//  중간에 Stop 된 경우에도 호출됨
 
-        protected int m_nBehaviorMasterID = -1;
+        protected int behaviorMasterID = -1;
         protected int startTick = -1;
         protected int lastTick = -1;
 
@@ -31,13 +31,7 @@ namespace Behavior
         protected virtual ISnap LastSendSnap { get; set; } = new BehaviorSnap();
         protected virtual ISnap CurrentSnap { get; set; } = new BehaviorSnap();
 
-        protected float DeltaTime
-        {
-            get
-            {
-                return lastTick == -1 ? CurrentUpdateTime : CurrentUpdateTime - LastUpdateTime;
-            }
-        }
+        protected float DeltaTime => Game.Current.CurrentTick == 0 ? 0 : Game.Current.TickInterval;
 
         protected float CurrentUpdateTime
         {
@@ -64,7 +58,7 @@ namespace Behavior
             {
                 if (masterData == null)
                 {
-                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.Behavior>(m_nBehaviorMasterID);
+                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.Behavior>(behaviorMasterID);
                 }
 
                 return masterData;
@@ -96,9 +90,9 @@ namespace Behavior
             UpdateSynchronizable();
         }
 
-        public virtual void SetData(int nBehaviorMasterID, params object[] param)
+        public virtual void SetData(int behaviorMasterID, params object[] param)
         {
-            m_nBehaviorMasterID = nBehaviorMasterID;
+            this.behaviorMasterID = behaviorMasterID;
         }
 
         public void StartBehavior()
@@ -181,7 +175,7 @@ namespace Behavior
 
         public int GetBehaviorMasterID()
         {
-            return m_nBehaviorMasterID;
+            return behaviorMasterID;
         }
 
         private void OnDisable()
