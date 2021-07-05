@@ -110,8 +110,8 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
             Vector3 sumOfRotation = Vector3.zero;
             Vector3 sumOfVelocity = Vector3.zero;
 
-            fpm_Move.Reconcile(entityTransformSnap, ref sumOfPosition, ref sumOfRotation, ref sumOfVelocity);
-            fpm_Jump.Reconcile(entityTransformSnap, ref sumOfPosition);
+            fpm_Move.Reconcile(entityTransformSnap, ref sumOfPosition, ref sumOfRotation, ref sumOfVelocity);   //  rotation은 xz(move에만 변경되므로)
+            fpm_Jump.Reconcile(entityTransformSnap, ref sumOfPosition, ref sumOfVelocity);
 
             var reconcilePosition = entityTransformSnap.position + sumOfPosition;
             var reconcileRotation = entityTransformSnap.rotation + sumOfRotation;

@@ -83,7 +83,7 @@ public class FPM_Jump : MonoBehaviour
         }
     }
 
-    public void Reconcile(EntityTransformSnap entityTransformSnap, ref Vector3 sumOfPosition)
+    public void Reconcile(EntityTransformSnap entityTransformSnap, ref Vector3 sumOfPosition, ref Vector3 sumOfVelocity)
     {
         int clientTargetTick = 0;
 
@@ -123,6 +123,7 @@ public class FPM_Jump : MonoBehaviour
         foreach (var history in historiesToApply)
         {
             sumOfPosition += new Vector3(0, history.positionChange.y, 0);
+            sumOfVelocity += new Vector3(0, history.velocityChange.y, 0);
         }
     }
 

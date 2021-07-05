@@ -135,7 +135,7 @@ public class FPM_Move : MonoBehaviour
         {
             sumOfPosition += history.positionChange.XZ();
             sumOfRotation += history.rotationChange;
-            sumOfVelocity += history.velocityChange;
+            sumOfVelocity += history.velocityChange.XZ();
         }
     }
 
