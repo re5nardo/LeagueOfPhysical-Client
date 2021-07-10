@@ -46,7 +46,7 @@ public class FPM_Jump : MonoBehaviour
             CS_NotifyJumpInputData notifyJumpInputData = new CS_NotifyJumpInputData();
             notifyJumpInputData.jumpInputData = jumpInputData;
 
-            RoomNetwork.Instance.Send(notifyJumpInputData, PhotonNetwork.masterClient.ID, bInstant: true);
+            RoomNetwork.Instance.Send(notifyJumpInputData, PhotonNetwork.masterClient.ID, instant: true);
 
             //  클라에서 인풋 선 처리 (서버에 도달했을 때 예측해서)
             Predict();

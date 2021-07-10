@@ -46,7 +46,7 @@ public class FPM_Move : MonoBehaviour
             CS_NotifyMoveInputData notifyMoveInputData = new CS_NotifyMoveInputData();
             notifyMoveInputData.m_PlayerMoveInput = playerMoveInput;
 
-            RoomNetwork.Instance.Send(notifyMoveInputData, PhotonNetwork.masterClient.ID, bInstant: true);
+            RoomNetwork.Instance.Send(notifyMoveInputData, PhotonNetwork.masterClient.ID, instant: true);
 
             //  클라에서 인풋 선 처리 (서버에 도달했을 때 예측해서)
             Predict();

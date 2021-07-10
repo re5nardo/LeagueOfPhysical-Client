@@ -1,18 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using System;
 using GameFramework;
 
 public class RoomNetworkImpl : MonoBehaviour, INetworkImpl
 {
-	private Action<IMessage, object[]> onMessage__;
-	public Action<IMessage, object[]> onMessage
-	{
-		get { return onMessage__; }
-		set { onMessage__ = value; }
-	}
+    public Action<IMessage> OnMessage { get; set; }
 
 	private void Awake()
 	{
@@ -21,36 +15,39 @@ public class RoomNetworkImpl : MonoBehaviour, INetworkImpl
 
 	private void OnDestroy()
 	{
-		onMessage = null;
+        OnMessage = null;
 
 		PhotonNetwork.OnEventCall -= OnEvent;
 	}
 
-	public void Send(IMessage msg, int nTargetID, bool bReliable = true, bool bInstant = false)
+	public void Send(IMessage msg, int targetId, bool reliable = true, bool instant = false)
 	{
 		IPhotonEventMessage eventMsg = msg as IPhotonEventMessage;
         eventMsg.senderID = PhotonNetwork.player.ID;
 
-		PhotonNetwork.RaiseEvent(eventMsg.GetEventID(), msg, bReliable, new RaiseEventOptions { TargetActors = new int[] { nTargetID } });
+		PhotonNetwork.RaiseEvent(eventMsg.GetEventID(), msg, reliable, new RaiseEventOptions { TargetActors = new int[] { targetId } });
 
-		if (bInstant)
+		if (instant)
 		{
 			PhotonNetwork.SendOutgoingCommands();
 		}
 	}
 
-	public void SendToAll(IMessage msg, bool bReliable = true, bool bInstant = false)
+	public void SendToAll(IMessage msg, bool reliable = true, bool instant = false)
 	{
 	}
 
-	public void SendToNear(IMessage msg, Vector3 vec3Center, float fRadius, bool bReliable = true, bool bInstant = false)
+	public void SendToNear(IMessage msg, Vector3 center, float radius, bool reliable = true, bool instant = false)
 	{
 	}
+    
+    #region PhotonEvent
+    private void OnEvent(byte eventcode, object content, int senderId)
+    {
+        IPhotonEventMessage photonEventMessage = content as IPhotonEventMessage;
+        photonEventMessage.senderID = senderId;
 
-	#region PhotonEvent
-	private void OnEvent(byte eventcode, object content, int senderId)
-	{
-		onMessage?.Invoke(content as IMessage, new object[] { senderId });
-	}
-	#endregion
+        OnMessage?.Invoke(photonEventMessage);
+    }
+    #endregion
 }

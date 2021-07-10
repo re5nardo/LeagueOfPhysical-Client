@@ -31,7 +31,7 @@ public class PlayerInputController : MonoBehaviour
             CS_NotifySkillInputData notifySkillInputData = new CS_NotifySkillInputData();
             notifySkillInputData.m_SkillInputData = skillInputData;
 
-            RoomNetwork.Instance.Send(notifySkillInputData, PhotonNetwork.masterClient.ID, bInstant: true);
+            RoomNetwork.Instance.Send(notifySkillInputData, PhotonNetwork.masterClient.ID, instant: true);
 
             skillInputData = null;
         }
@@ -239,7 +239,7 @@ public class PlayerInputController : MonoBehaviour
 		CS_NotifySkillInputData notifySkillInputData = new CS_NotifySkillInputData();
 		notifySkillInputData.m_SkillInputData = new SkillInputData(Game.Current.CurrentTick, Entities.MyEntityID, skillID, default);
 
-		RoomNetwork.Instance.Send(notifySkillInputData, PhotonNetwork.masterClient.ID, bInstant: true);
+		RoomNetwork.Instance.Send(notifySkillInputData, PhotonNetwork.masterClient.ID, instant: true);
 	}
 
     private void OnJumpBtnClicked()
