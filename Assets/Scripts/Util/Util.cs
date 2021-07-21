@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
-using System.IO;
-using System.IO.Compression;
 
 public partial class Util
 {
@@ -264,63 +262,6 @@ public partial class Util
         }
 
         return true;
-    }
-
-    public static byte[] CommonDataSerialize(object customObject)
-    {
-        var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-        using (var stream = new MemoryStream())
-        {
-            formatter.Serialize(stream, customObject);
-            return stream.ToArray();
-        }
-    }
-
-    public static object CommonDataDeserialize(byte[] serializedCustomObject)
-    {
-        var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-        using (var stream = new MemoryStream(serializedCustomObject))
-        {
-            return formatter.Deserialize(stream);
-        }
-    }
-
-    public static byte[] CommonDataCompressionSerialize(object customObject)
-    {
-        return ZipByteArray(CommonDataSerialize(customObject));
-    }
-
-    public static object CommonDataCompressionDeserialize(byte[] serializedCustomObject)
-    {
-        return CommonDataDeserialize(UnzipByteArray(serializedCustomObject));
-    }
-
-    public static byte[] ZipByteArray(byte[] sourceByteArray)
-    {
-        using (MemoryStream ms = new MemoryStream())
-        {
-            using (GZipStream gs = new GZipStream(ms, CompressionMode.Compress))
-            {
-                gs.Write(sourceByteArray, 0, sourceByteArray.Length);
-            }
-            return ms.ToArray();
-        }
-    }
-
-    public static byte[] UnzipByteArray(byte[] sourceByteArray)
-    {
-        using (MemoryStream resultStream = new MemoryStream())
-        {
-            using (MemoryStream sourceStream = new MemoryStream(sourceByteArray))
-            {
-                using (GZipStream gs = new GZipStream(sourceStream, CompressionMode.Decompress))
-                {
-                    gs.CopyTo(resultStream);
-                }
-            }
-
-            return resultStream.ToArray();
-        }
     }
 
     public static int IndexOf(Type enumType, object value)
