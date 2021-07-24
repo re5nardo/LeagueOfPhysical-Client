@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
+using NetworkModel.Mirror;
 
 public class SC_SyncTickHandler
 {

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NetworkModel.Mirror;
 
 public class GameEventManager : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class GameEventManager : MonoBehaviour
         {
             SC_GameEvents gameEvents = msg as SC_GameEvents;
 
-            gameEvents.gameEvents.ForEach(gameEvent =>
+            gameEvents.listGameEvent.ForEach(gameEvent =>
             {
                 gameEventDispatcher.DispatchGameEvent(gameEvent);
             });

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using GameFramework;
+using NetworkModel.Mirror;
 
 //  Fast-Paced Multiplayer (FPM)
 //  https://www.gabrielgambetta.com/client-server-game-architecture.html
@@ -55,7 +56,7 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
     {
         SC_Synchronization synchronization = msg as SC_Synchronization;
 
-        synchronization.snaps?.ForEach(snap =>
+        synchronization.listSnap?.ForEach(snap =>
         {
             if (snap is EntityTransformSnap entityTransformSnap)
             {

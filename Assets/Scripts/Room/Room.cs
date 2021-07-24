@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Photon;
 using GameFramework;
+using Mirror;
 
 namespace LOP
 {
@@ -19,6 +19,14 @@ namespace LOP
             yield return Initialize();
 
             PhotonNetwork.isMessageQueueRunning = true;
+
+            //UNetTransport.ConnectPort = 7777;
+#if UNITY_EDITOR
+            NetworkManager.singleton.networkAddress = "localhost";
+#else
+            NetworkManager.singleton.networkAddress = "175.197.227.154";
+#endif
+            NetworkManager.singleton.StartClient();
         }
 
         protected override void OnDestroy()

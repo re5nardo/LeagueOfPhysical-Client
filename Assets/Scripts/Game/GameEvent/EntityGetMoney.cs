@@ -12,7 +12,7 @@ namespace GameEvent
         public int Seq { get; }
         public int Tick { get; set; }
         public int entityID;
-        public SerializableVector3 position;
+        public Vector3 position;
         public int money;
         public int afterMoney;
     }

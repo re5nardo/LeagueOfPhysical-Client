@@ -4,6 +4,7 @@ using UnityEngine;
 using GameFramework;
 using UniRx;
 using Entity;
+using NetworkModel.Mirror;
 
 public class FPM_Move : MonoBehaviour
 {
@@ -41,12 +42,12 @@ public class FPM_Move : MonoBehaviour
             //  우선 서버에 전송
             playerMoveInput.tick = Game.Current.CurrentTick;
             playerMoveInput.sequence = sequence++;
-            playerMoveInput.entityID = Entities.MyEntityID;
+            playerMoveInput.entityId = Entities.MyEntityID;
 
             CS_NotifyMoveInputData notifyMoveInputData = new CS_NotifyMoveInputData();
-            notifyMoveInputData.m_PlayerMoveInput = playerMoveInput;
+            notifyMoveInputData.playerMoveInput = playerMoveInput;
 
-            RoomNetwork.Instance.Send(notifyMoveInputData, PhotonNetwork.masterClient.ID, instant: true);
+            RoomNetwork.Instance.Send(notifyMoveInputData, 0, instant: true);
 
             //  클라에서 인풋 선 처리 (서버에 도달했을 때 예측해서)
             Predict();
@@ -57,14 +58,14 @@ public class FPM_Move : MonoBehaviour
 
     private void Predict()
     {
-        var entity = Entities.Get<Character>(playerMoveInput.entityID);
+        var entity = Entities.Get<Character>(playerMoveInput.entityId);
 
         if (playerMoveInput.inputType == PlayerMoveInput.InputType.Hold)
         {
             //if (CanMove())
             {
                 var behaviorController = entity.GetEntityComponent<BehaviorController>();
-                behaviorController.Move(entity.Position + playerMoveInput.inputData.ToVector3().normalized * Game.Current.TickInterval * 5 * entity.FactoredMovementSpeed);
+                behaviorController.Move(entity.Position + playerMoveInput.inputData.normalized * Game.Current.TickInterval * 5 * entity.FactoredMovementSpeed);
             }
         }
         else if (playerMoveInput.inputType == PlayerMoveInput.InputType.Release)

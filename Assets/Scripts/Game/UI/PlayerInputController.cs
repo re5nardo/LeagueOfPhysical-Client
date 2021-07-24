@@ -4,6 +4,7 @@ using UnityEngine;
 using Entity;
 using GameFramework;
 using UniRx;
+using NetworkModel.Mirror;
 
 public class PlayerInputController : MonoBehaviour
 {
@@ -29,9 +30,9 @@ public class PlayerInputController : MonoBehaviour
         if (skillInputData != null)
         {
             CS_NotifySkillInputData notifySkillInputData = new CS_NotifySkillInputData();
-            notifySkillInputData.m_SkillInputData = skillInputData;
+            notifySkillInputData.skillInputData = skillInputData;
 
-            RoomNetwork.Instance.Send(notifySkillInputData, PhotonNetwork.masterClient.ID, instant: true);
+            RoomNetwork.Instance.Send(notifySkillInputData, 0/*의미x*/, instant: true);
 
             skillInputData = null;
         }
@@ -124,7 +125,7 @@ public class PlayerInputController : MonoBehaviour
 	{
 		SC_EntitySkillInfo entitySkillInfo = msg as SC_EntitySkillInfo;
 
-		foreach (KeyValuePair<int, float> kv in entitySkillInfo.m_dicSkillInfo)
+		foreach (KeyValuePair<int, float> kv in entitySkillInfo.dicSkillInfo)
 		{
 			MasterData.Skill masterSkill = MasterDataManager.Instance.GetMasterData<MasterData.Skill>(kv.Key);
 
@@ -237,9 +238,9 @@ public class PlayerInputController : MonoBehaviour
 	private void OnSkillBtnClicked(int skillID)
 	{
 		CS_NotifySkillInputData notifySkillInputData = new CS_NotifySkillInputData();
-		notifySkillInputData.m_SkillInputData = new SkillInputData(Game.Current.CurrentTick, Entities.MyEntityID, skillID, default);
+		notifySkillInputData.skillInputData = new SkillInputData(Game.Current.CurrentTick, Entities.MyEntityID, skillID, default);
 
-		RoomNetwork.Instance.Send(notifySkillInputData, PhotonNetwork.masterClient.ID, instant: true);
+		RoomNetwork.Instance.Send(notifySkillInputData, 0, instant: true);
 	}
 
     private void OnJumpBtnClicked()

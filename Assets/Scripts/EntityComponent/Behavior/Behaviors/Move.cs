@@ -69,14 +69,7 @@ namespace Behavior
         {
             base.SetData(nBehaviorMasterID);
 
-            if (param[0] is SerializableVector3)
-            {
-                m_vec3Destination = ((SerializableVector3)param[0]).ToVector3();
-            }
-            else if (param[0] is Vector3)
-            {
-                m_vec3Destination = (Vector3)param[0];
-            }
+            m_vec3Destination = (Vector3)param[0];
 
             remainCount = 3;
         }

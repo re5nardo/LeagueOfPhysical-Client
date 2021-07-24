@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
 using Entity;
+using NetworkModel.Mirror;
 
 namespace LOP
 {
@@ -26,7 +27,7 @@ namespace LOP
         {
             Physics.autoSimulation = false;
 
-            tickUpdater = gameObject.AddComponent<TickUpdater>();
+            tickUpdater = gameObject.AddComponent<LOPTickUpdater>();
             roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
             gameEventManager = gameObject.AddComponent<GameEventManager>();
             gameManager = gameObject.AddComponent<GameManager>();
@@ -88,10 +89,10 @@ namespace LOP
 
         private void NotifyPlayerLookAtPosition()
         {
-            CS_NotifyPlayerLookAtPosition notifyPlayerLookAtPosition = new CS_NotifyPlayerLookAtPosition();
-            notifyPlayerLookAtPosition.m_vec3Position = GameUI.CameraController.GetLookAtPosition();
+            //CS_NotifyPlayerLookAtPosition notifyPlayerLookAtPosition = new CS_NotifyPlayerLookAtPosition();
+            //notifyPlayerLookAtPosition.m_vec3Position = GameUI.CameraController.GetLookAtPosition();
 
-            RoomNetwork.Instance.Send(notifyPlayerLookAtPosition, PhotonNetwork.masterClient.ID);
+            //RoomNetwork.Instance.Send(notifyPlayerLookAtPosition, PhotonNetwork.masterClient.ID);
         }
 
         public void OnMyCharacterCreated(Character character)

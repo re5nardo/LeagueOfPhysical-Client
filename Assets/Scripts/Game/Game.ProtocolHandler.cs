@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
+using NetworkModel.Mirror;
 
 namespace LOP
 {
@@ -12,10 +13,10 @@ namespace LOP
         {
             SC_EnterRoom enterRoom = msg as SC_EnterRoom;
 
-            MyInfo.EntityID = enterRoom.m_nEntityID;
+            MyInfo.EntityID = enterRoom.entityId;
             GameUI.EmotionExpressionSelector.SetData(0, 1, 2, 3);   //  Dummy
 
-            Run(enterRoom.m_nCurrentTick);
+            Run(enterRoom.tick);
         }
         #endregion
     }

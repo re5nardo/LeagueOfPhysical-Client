@@ -5,6 +5,7 @@ using Entity;
 using System;
 using GameFramework;
 using EntityCommand;
+using NetworkModel.Mirror;
 
 public class EntityManager : GameFramework.EntityManager
 {
@@ -81,11 +82,11 @@ public class EntityManager : GameFramework.EntityManager
 	{
 		SC_EntityAppear entityAppear = msg as SC_EntityAppear;
 
-		foreach (EntitySnapInfo entitySnapInfo in entityAppear.m_listEntitySnapInfo)
+		foreach (EntitySnapInfo entitySnapInfo in entityAppear.listEntitySnapInfo)
 		{
-			if(dicEntity.ContainsKey(entitySnapInfo.m_nEntityID))
+			if(dicEntity.ContainsKey(entitySnapInfo.entityId))
 			{
-				Debug.LogError("[OnSC_EntityAppear] Entity already exists! EntityID : " + entitySnapInfo.m_nEntityID);
+				Debug.LogError("[OnSC_EntityAppear] Entity already exists! EntityID : " + entitySnapInfo.entityId);
                 continue;
 			}
 
@@ -94,25 +95,25 @@ public class EntityManager : GameFramework.EntityManager
 			if (entity.EntityID == Entities.MyEntityID)
 			{
                 EntityTransformInfo info = new EntityTransformInfo();
-                info.m_nEntityID = entitySnapInfo.m_nEntityID;
-                info.m_Position = entitySnapInfo.m_Position;
-                info.m_Rotation = entitySnapInfo.m_Rotation;
-                info.m_Velocity = entitySnapInfo.m_Velocity;
-                info.m_GameTime = entityAppear.m_fGameTime;
+                info.tick = entityAppear.tick;
+                info.entityId = entitySnapInfo.entityId;
+                info.position = entitySnapInfo.position;
+                info.rotation = entitySnapInfo.rotation;
+                info.velocity = entitySnapInfo.velocity;
 
                 LOP.Game.Current.OnMyCharacterCreated(entity as Character);
 			}
 			else
 			{
 				EntityTransformInfo info = new EntityTransformInfo();
-				info.m_nEntityID = entitySnapInfo.m_nEntityID;
-				info.m_Position = entitySnapInfo.m_Position;
-				info.m_Rotation = entitySnapInfo.m_Rotation;
-				info.m_Velocity = entitySnapInfo.m_Velocity;
-				info.m_GameTime = entityAppear.m_fGameTime;
-			}
+                info.tick = entityAppear.tick;
+                info.entityId = entitySnapInfo.entityId;
+                info.position = entitySnapInfo.position;
+                info.rotation = entitySnapInfo.rotation;
+                info.velocity = entitySnapInfo.velocity;
+            }
 
-            if (Entities.MyEntityID != entitySnapInfo.m_nEntityID)
+            if (Entities.MyEntityID != entitySnapInfo.entityId)
             {
                 (entity as MonoEntityBase).gameObject.AddComponent<TransformController>();
             }
@@ -123,7 +124,7 @@ public class EntityManager : GameFramework.EntityManager
 	{
 		SC_EntityDisAppear entityDisAppear = msg as SC_EntityDisAppear;
 
-		foreach (int nEntityID in entityDisAppear.m_listEntityID)
+		foreach (int nEntityID in entityDisAppear.listEntityId)
 		{
 			if (!dicEntity.ContainsKey(nEntityID))
 			{
@@ -151,60 +152,60 @@ public class EntityManager : GameFramework.EntityManager
     {
 		IEntity entity = null;
 
-        if (entitySnapInfo.m_EntityType == EntityType.Character)
+        if (entitySnapInfo.entityType == EntityType.Character)
         {
 			CharacterSnapInfo characterSnapInfo = entitySnapInfo as CharacterSnapInfo;
 
 			entity = Character.Builder()
-                .SetEntityID(characterSnapInfo.m_nEntityID)
-                .SetEntityRole(characterSnapInfo.m_EntityRole)
-                .SetMasterDataID(characterSnapInfo.m_nMasterDataID)
-                .SetModelPath(characterSnapInfo.m_strModel)
-                .SetFirstStatus(characterSnapInfo.m_FirstStatus)
-				.SetSecondStatus(characterSnapInfo.m_SecondStatus)
-				.SetPosition(characterSnapInfo.m_Position)
-                .SetRotation(characterSnapInfo.m_Rotation)
-				.SetVelocity(characterSnapInfo.m_Velocity)
-				.SetAngularVelocity(characterSnapInfo.m_AngularVelocity)
-				.SetSelectableFirstStatusCount(characterSnapInfo.m_nSelectableFirstStatusCount)
+                .SetEntityID(characterSnapInfo.entityId)
+                .SetEntityRole(characterSnapInfo.entityRole)
+                .SetMasterDataID(characterSnapInfo.masterDataId)
+                .SetModelPath(characterSnapInfo.model)
+                .SetFirstStatus(characterSnapInfo.firstStatus)
+				.SetSecondStatus(characterSnapInfo.secondStatus)
+				.SetPosition(characterSnapInfo.position)
+                .SetRotation(characterSnapInfo.rotation)
+				.SetVelocity(characterSnapInfo.velocity)
+				.SetAngularVelocity(characterSnapInfo.angularVelocity)
+				.SetSelectableFirstStatusCount(0)
 				.Build();
         }
-        else if (entitySnapInfo.m_EntityType == EntityType.Projectile)
+        else if (entitySnapInfo.entityType == EntityType.Projectile)
         {
 			ProjectileSnapInfo projectileSnapInfo = entitySnapInfo as ProjectileSnapInfo;
 
 			entity = Projectile.Builder()
-                .SetEntityID(projectileSnapInfo.m_nEntityID)
-                .SetEntityRole(projectileSnapInfo.m_EntityRole)
-                .SetMasterDataID(projectileSnapInfo.m_nMasterDataID)
-                .SetModelPath(projectileSnapInfo.m_strModel)
-                .SetPosition(projectileSnapInfo.m_Position)
-                .SetRotation(projectileSnapInfo.m_Rotation)
-				.SetVelocity(projectileSnapInfo.m_Velocity)
-				.SetAngularVelocity(projectileSnapInfo.m_AngularVelocity)
-				.SetMovementSpeed(projectileSnapInfo.m_fMovementSpeed)
+                .SetEntityID(projectileSnapInfo.entityId)
+                .SetEntityRole(projectileSnapInfo.entityRole)
+                .SetMasterDataID(projectileSnapInfo.masterDataId)
+                .SetModelPath(projectileSnapInfo.model)
+                .SetPosition(projectileSnapInfo.position)
+                .SetRotation(projectileSnapInfo.rotation)
+				.SetVelocity(projectileSnapInfo.velocity)
+				.SetAngularVelocity(projectileSnapInfo.angularVelocity)
+				.SetMovementSpeed(projectileSnapInfo.movementSpeed)
 				.Build();
         }
-		else if (entitySnapInfo.m_EntityType == EntityType.GameItem)
+		else if (entitySnapInfo.entityType == EntityType.GameItem)
 		{
 			GameItemSnapInfo gameItemSnapInfo = entitySnapInfo as GameItemSnapInfo;
 
 			entity = GameItem.Builder()
-				.SetEntityID(gameItemSnapInfo.m_nEntityID)
-                .SetEntityRole(gameItemSnapInfo.m_EntityRole)
-                .SetMasterDataID(gameItemSnapInfo.m_nMasterDataID)
-				.SetModelPath(gameItemSnapInfo.m_strModel)
-				.SetPosition(gameItemSnapInfo.m_Position)
-				.SetRotation(gameItemSnapInfo.m_Rotation)
-				.SetVelocity(gameItemSnapInfo.m_Velocity)
-				.SetAngularVelocity(gameItemSnapInfo.m_AngularVelocity)
-				.SetHP(gameItemSnapInfo.m_nHP)
-				.SetMaximumHP(gameItemSnapInfo.m_nMaximumHP)
+				.SetEntityID(gameItemSnapInfo.entityId)
+                .SetEntityRole(gameItemSnapInfo.entityRole)
+                .SetMasterDataID(gameItemSnapInfo.masterDataId)
+				.SetModelPath(gameItemSnapInfo.model)
+				.SetPosition(gameItemSnapInfo.position)
+				.SetRotation(gameItemSnapInfo.rotation)
+				.SetVelocity(gameItemSnapInfo.velocity)
+				.SetAngularVelocity(gameItemSnapInfo.angularVelocity)
+				.SetHP(gameItemSnapInfo.HP)
+				.SetMaximumHP(gameItemSnapInfo.maximumHP)
 				.Build();
 		}
 		else
         {
-            Debug.LogError("entitySnapInfo.m_EntityType is invalid! entitySnapInfo.m_EntityType : " + entitySnapInfo.m_EntityType.ToString());
+            Debug.LogError("entitySnapInfo.m_EntityType is invalid! entitySnapInfo.m_EntityType : " + entitySnapInfo.entityType.ToString());
             return null;
         }
 

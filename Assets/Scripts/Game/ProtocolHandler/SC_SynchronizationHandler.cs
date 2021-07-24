@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
+using NetworkModel.Mirror;
 
 public class SC_SynchronizationHandler
 {
@@ -9,6 +10,6 @@ public class SC_SynchronizationHandler
     {
         SC_Synchronization synchronization = msg as SC_Synchronization;
 
-        SynchronizationManager.Handle(synchronization.snaps);
+        SynchronizationManager.Handle(synchronization.listSnap);
     }
 }

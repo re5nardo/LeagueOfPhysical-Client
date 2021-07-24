@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NetworkModel.Mirror;
 
 public class EmotionExpressionSelector : MonoBehaviour
 {
@@ -30,7 +31,7 @@ public class EmotionExpressionSelector : MonoBehaviour
 
     private void ButtonClickHandler(int emotionExpressionID)
     {
-        RoomNetwork.Instance.Send(new CS_RequestEmotionExpression(emotionExpressionID), PhotonNetwork.masterClient.ID);
+        RoomNetwork.Instance.Send(new CS_RequestEmotionExpression(Entities.MyEntityID, emotionExpressionID), 0);
 
         Hide();
     }

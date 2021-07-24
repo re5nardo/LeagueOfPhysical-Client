@@ -63,7 +63,7 @@ public class TransformController : MonoBehaviour
 
             float elapsed = syncTime - before.GameTime;
 
-            MonoEntityBase.Position = before.position + before.velocity.ToVector3() * elapsed * 1;
+            MonoEntityBase.Position = before.position + before.velocity * elapsed * 1;
             MonoEntityBase.Rotation = Util.Math.RotateClamp(before.rotation, before.angularVelocity, elapsed, before.destRotation);
             //MonoEntityBase.Velocity = before.velocity;
             //MonoEntityBase.AngularVelocity = before.angularVelocity;

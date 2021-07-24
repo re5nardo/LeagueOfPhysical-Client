@@ -4,6 +4,8 @@ using UnityEngine;
 using GameFramework;
 using UniRx;
 using Entity;
+using Mirror;
+using NetworkModel.Mirror;
 
 public class FPM_Jump : MonoBehaviour
 {
@@ -41,12 +43,12 @@ public class FPM_Jump : MonoBehaviour
             //  우선 서버에 전송
             jumpInputData.tick = Game.Current.CurrentTick;
             jumpInputData.sequence = sequence++;
-            jumpInputData.entityID = Entities.MyEntityID;
+            jumpInputData.entityId = Entities.MyEntityID;
 
             CS_NotifyJumpInputData notifyJumpInputData = new CS_NotifyJumpInputData();
             notifyJumpInputData.jumpInputData = jumpInputData;
 
-            RoomNetwork.Instance.Send(notifyJumpInputData, PhotonNetwork.masterClient.ID, instant: true);
+            RoomNetwork.Instance.Send(notifyJumpInputData, 0, instant: true);
 
             //  클라에서 인풋 선 처리 (서버에 도달했을 때 예측해서)
             Predict();
@@ -57,7 +59,7 @@ public class FPM_Jump : MonoBehaviour
 
     private void Predict()
     {
-        var entity = Entities.Get<MonoEntityBase>(jumpInputData.entityID);
+        var entity = Entities.Get<MonoEntityBase>(jumpInputData.entityId);
 
         var behaviorController = entity.GetEntityComponent<BehaviorController>();
         behaviorController.Jump();

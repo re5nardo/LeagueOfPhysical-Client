@@ -2,58 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using GameFramework;
 using UnityEngine.UI;
+using Mirror;
 
 public class PingChecker : MonoBehaviour
 {
     [SerializeField] private Text ping = null;
 
-    private RoomProtocolDispatcher roomProtocolDispatcher = null;
-    private bool response = false;
-    private DateTime lastReqTime = DateTime.Now;
-    private List<double> RTTs = new List<double>();
-
-    private void Start()
+    private void Update()
     {
-        roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
-        roomProtocolDispatcher[typeof(SC_Ping)] = OnSC_Ping;
+        if (!NetworkClient.active) return;
 
-        StartCoroutine(PingCoroutine());
-    }
+        ping.text = $"{Math.Round(NetworkTime.rtt * 1000)}";
 
-    #region Message Handler
-    private void OnSC_Ping(IMessage msg)
-    {
-        response = true;
-
-        double rtt = (DateTime.Now - lastReqTime).TotalMilliseconds;
-
-        RTTs.Add(rtt);
-
-        if (RTTs.Count > 20)
-        {
-            RTTs.RemoveAt(0);
-        }
-    }
-    #endregion
-
-    private IEnumerator PingCoroutine()
-    {
-        while (true)
-        {
-            response = false;
-            lastReqTime = DateTime.Now;
-
-            RoomNetwork.Instance.Send(new CS_Ping(), PhotonNetwork.masterClient.ID, instant: true);
-
-            yield return new WaitUntil(() => response);
-
-            ping.text = string.Format("{0:0}", RTTs[RTTs.Count - 1]);
-
-            ping.color = RTTs[RTTs.Count - 1] > 100 ? Color.red : RTTs[RTTs.Count - 1] > 60 ? Color.yellow : Color.green;
-
-            yield return new WaitForSeconds(1);
-        }
+        ping.color = NetworkTime.rtt > 0.1 ? Color.red : NetworkTime.rtt > 0.06 ? Color.yellow : Color.green;
     }
 }

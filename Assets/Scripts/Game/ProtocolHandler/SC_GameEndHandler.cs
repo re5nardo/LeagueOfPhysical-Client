@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
 using UnityEngine.SceneManagement;
+using NetworkModel.Mirror;
 
 public class SC_GameEndHandler
 {
