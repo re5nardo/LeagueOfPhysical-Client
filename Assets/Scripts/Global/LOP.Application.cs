@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
+using System.Text.RegularExpressions;
 
 namespace LOP
 {
@@ -9,13 +11,15 @@ namespace LOP
         public static bool IsApplicationQuitting => GlobalMonoBehavior.Instance.IsApplicationQuitting;
         public static bool IsInitialized { get; private set; }
 
+        public static string IP { get; private set; }
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void OnBeforeSceneLoadRuntimeMethod()
         {
-            Initialize();
+            GlobalMonoBehavior.StartCoroutine(Initialize());
         }
 
-        private static void Initialize()
+        private static IEnumerator Initialize()
         {
             //  Target FrameRate
 #if UNITY_EDITOR
@@ -41,12 +45,24 @@ namespace LOP
 
             UnityEngine.Application.quitting += OnQuitting;
 
+            yield return GlobalMonoBehavior.StartCoroutine(GetPublicIP());
+
             IsInitialized = true;
         }
 
         private static void OnQuitting()
         {
             LOPWebAPI.LeaveLobby(new LeaveLobbyRequest { userId = PhotonNetwork.AuthValues.UserId });
+        }
+
+        private static IEnumerator GetPublicIP()
+        {
+            using (var www = UnityWebRequest.Get("http://ipinfo.io/ip"))
+            {
+                yield return www.SendWebRequest();
+
+                IP = Regex.Replace(www.downloadHandler.text, @"[^0-9.]", "");
+            }
         }
     }
 }

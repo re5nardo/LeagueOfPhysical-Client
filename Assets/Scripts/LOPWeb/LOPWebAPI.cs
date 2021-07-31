@@ -30,4 +30,9 @@ public class LOPWebAPI
     {
         return Http.Get($"/users/matchState/{userId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
     }
+
+    public static HttpRequestContainer<GetRoomResult> GetRoom(string roomId, Action<GetRoomResult> onResult = null, Action<string> onError = null)
+    {
+        return Http.Get($"/room/{roomId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
+    }
 }

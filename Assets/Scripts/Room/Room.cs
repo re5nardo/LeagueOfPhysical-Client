@@ -7,25 +7,20 @@ namespace LOP
 {
     public class Room : MonoSingleton<Room>
     {
+        public string RoomId { get; private set; }
+        public MatchSetting MatchSetting { get; private set; } = new MatchSetting();
+
         [SerializeField] private Game game = null;
 
         public float Latency { get; private set; } = 0.04f;     //  sec     실제 ping data 활용해야 함
-
-        private RoomPunBehaviour roomPunBehaviour = null;
 
         #region MonoBehaviour
         private IEnumerator Start()
         {
             yield return Initialize();
 
-            PhotonNetwork.isMessageQueueRunning = true;
-
-            //UNetTransport.ConnectPort = 7777;
-#if UNITY_EDITOR
-            NetworkManager.singleton.networkAddress = "localhost";
-#else
-            NetworkManager.singleton.networkAddress = "175.197.227.154";
-#endif
+            NetworkManager.singleton.networkAddress = LOP.Application.IP == RoomConnector.room.ip ? "localhost" : RoomConnector.room.ip;
+            (Transport.activeTransport as kcp2k.KcpTransport).Port = (ushort)RoomConnector.room.port;
             NetworkManager.singleton.StartClient();
         }
 
@@ -39,7 +34,8 @@ namespace LOP
 
         private IEnumerator Initialize()
         {
-            roomPunBehaviour = gameObject.AddComponent<RoomPunBehaviour>();
+            RoomId = RoomConnector.room.roomId;
+            MatchSetting = RoomConnector.room.matchSetting;
 
             yield return game.Initialize();
         }

@@ -8,6 +8,8 @@ public class RoomConnector : PunBehaviour
 {
     private bool tryingToEnterRoom = false;
 
+    public static GetRoomResult room;
+
     private static RoomConnector instance = null;
     private static RoomConnector Instance
     {
@@ -43,6 +45,11 @@ public class RoomConnector : PunBehaviour
         Instance?.InternalTryToEnterRoom(roomName);
     }
 
+    public static void TryToEnterRoomById(string roomId)
+    {
+        Instance?.InternalTryToEnterRoomById(roomId);
+    }
+
     private void InternalTryToEnterRoom(string roomName)
     {
         if (tryingToEnterRoom)
@@ -53,6 +60,33 @@ public class RoomConnector : PunBehaviour
         PhotonNetwork.player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "CharacterID", Random.Range(Define.MasterData.CharacterID.EVELYNN, Define.MasterData.CharacterID.MALPHITE + 1) } });
 
         PhotonNetwork.JoinRoom(roomName);
+    }
+
+    private void InternalTryToEnterRoomById(string roomId)
+    {
+        StartCoroutine(_InternalTryToEnterRoomById(roomId));
+    }
+
+    private IEnumerator _InternalTryToEnterRoomById(string roomId)
+    {
+        if (tryingToEnterRoom)
+            yield break;
+
+        tryingToEnterRoom = true;
+
+        var request = LOPWebAPI.GetRoom(roomId);
+
+        yield return request;
+
+        if (request.isError)
+        {
+            Debug.LogError(request.error);
+            yield break;
+        }
+
+        room = request.response;
+
+        SceneManager.LoadScene("Room");
     }
 
     #region MonoBehaviourPunCallbacks
