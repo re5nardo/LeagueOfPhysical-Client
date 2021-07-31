@@ -19,8 +19,8 @@ namespace LOP
         {
             yield return Initialize();
 
-            NetworkManager.singleton.networkAddress = LOP.Application.IP == RoomConnector.room.ip ? "localhost" : RoomConnector.room.ip;
-            (Transport.activeTransport as kcp2k.KcpTransport).Port = (ushort)RoomConnector.room.port;
+            NetworkManager.singleton.networkAddress = LOP.Application.IP == RoomConnector.Instance.Room.ip ? "localhost" : RoomConnector.Instance.Room.ip;
+            (Transport.activeTransport as kcp2k.KcpTransport).Port = (ushort)RoomConnector.Instance.Room.port;
             NetworkManager.singleton.StartClient();
         }
 
@@ -34,8 +34,8 @@ namespace LOP
 
         private IEnumerator Initialize()
         {
-            RoomId = RoomConnector.room.roomId;
-            MatchSetting = RoomConnector.room.matchSetting;
+            RoomId = RoomConnector.Instance.Room.roomId;
+            MatchSetting = RoomConnector.Instance.Room.matchSetting;
 
             yield return game.Initialize();
         }

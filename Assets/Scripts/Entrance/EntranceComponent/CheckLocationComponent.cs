@@ -21,7 +21,7 @@ public class CheckLocationComponent : EntranceComponent
                 switch(result.userMatchState.state)
                 {
                     case "inGameRoom":
-                        RoomConnector.TryToEnterRoom(result.userMatchState.stateValue);
+                        RoomConnector.Instance.TryToEnterRoomById(result.userMatchState.stateValue);
                         IsSuccess = true;
                         break;
 

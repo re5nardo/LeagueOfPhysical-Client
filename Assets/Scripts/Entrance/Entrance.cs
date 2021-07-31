@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Photon;
 using System.Collections;
 using TMPro;
 using GameFramework;
