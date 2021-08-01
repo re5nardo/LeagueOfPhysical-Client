@@ -16,7 +16,7 @@ namespace Match
 
             LOPWebAPI.CreateMatchmakingTicket(new CreateMatchmakingTicketRequest
             {
-                userId = PhotonNetwork.AuthValues.UserId,
+                userId = LOP.Application.UserId,
                 matchType = matchSelectData.currentMatchSetting.Value.matchType.ToString(),
                 subGameId = matchSelectData.currentMatchSetting.Value.subGameId,
                 mapId = matchSelectData.currentMatchSetting.Value.mapId,

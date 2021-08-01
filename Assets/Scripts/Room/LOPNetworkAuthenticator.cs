@@ -105,7 +105,7 @@ public class LOPNetworkAuthenticator : NetworkAuthenticator
         AuthRequestMessage authRequestMessage = new AuthRequestMessage();
         authRequestMessage.customProperties = new CustomProperties
         {
-            userId = SystemInfo.deviceUniqueIdentifier,
+            userId = LOP.Application.UserId,
             token = "token",
             characterId = Random.Range(Define.MasterData.CharacterID.EVELYNN, Define.MasterData.CharacterID.MALPHITE + 1),
         };

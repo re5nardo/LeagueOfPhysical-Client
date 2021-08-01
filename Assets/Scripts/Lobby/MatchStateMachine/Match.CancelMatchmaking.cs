@@ -12,7 +12,7 @@ namespace Match
         {
             base.Enter();
 
-            LOPWebAPI.CancelMatchmakingTicket(PhotonNetwork.AuthValues.UserId,
+            LOPWebAPI.CancelMatchmakingTicket(LOP.Application.UserId,
                 result =>
                 {
                     if (!IsCurrent) return;

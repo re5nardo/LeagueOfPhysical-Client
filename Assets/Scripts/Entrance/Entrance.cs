@@ -35,9 +35,9 @@ public class Entrance : MonoSingleton<Entrance>
 
         yield return initAppComponent.Do();
 
-        yield return loginComponent.Do();
+        //yield return loginComponent.Do();
 
-        yield return punConnectComponent.Do();
+        //yield return punConnectComponent.Do();
 
         yield return checkLocationComponent.Do();
     }

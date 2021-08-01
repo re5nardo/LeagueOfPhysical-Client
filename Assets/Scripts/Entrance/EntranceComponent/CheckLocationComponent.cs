@@ -9,7 +9,7 @@ public class CheckLocationComponent : EntranceComponent
     {
         Entrance.Instance.stateText.text = "매치 상태를 확인중입니다.";
 
-        LOPWebAPI.GetUserMatchState(PhotonNetwork.AuthValues.UserId,
+        LOPWebAPI.GetUserMatchState(LOP.Application.UserId,
             result =>
             {
                 if (result.code != ResponseCode.SUCCESS)
@@ -29,7 +29,7 @@ public class CheckLocationComponent : EntranceComponent
                     default:
                         LOPWebAPI.JoinLobby(new JoinLobbyRequest
                         {
-                            userId = PhotonNetwork.AuthValues.UserId
+                            userId = LOP.Application.UserId
                         }, joinLobbyResult =>
                         {
                             SceneManager.LoadScene("Lobby");

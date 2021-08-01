@@ -45,7 +45,7 @@ namespace Match
 
         private void CheckMatchState()
         {
-            LOPWebAPI.GetUserMatchState(PhotonNetwork.AuthValues.UserId,
+            LOPWebAPI.GetUserMatchState(LOP.Application.UserId,
             result =>
             {
                 if (!IsCurrent) return;

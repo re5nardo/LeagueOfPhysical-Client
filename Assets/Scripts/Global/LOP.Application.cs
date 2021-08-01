@@ -12,6 +12,7 @@ namespace LOP
         public static bool IsInitialized { get; private set; }
 
         public static string IP { get; private set; }
+        public static string UserId { get; private set; } = SystemInfo.deviceUniqueIdentifier;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void OnBeforeSceneLoadRuntimeMethod()
@@ -52,7 +53,7 @@ namespace LOP
 
         private static void OnQuitting()
         {
-            LOPWebAPI.LeaveLobby(new LeaveLobbyRequest { userId = PhotonNetwork.AuthValues.UserId });
+            LOPWebAPI.LeaveLobby(new LeaveLobbyRequest { userId = LOP.Application.UserId });
         }
 
         private static IEnumerator GetPublicIP()
