@@ -4,7 +4,7 @@ using UnityEngine;
 using GameFramework;
 using UniRx;
 
-public class MatchSelectData : MonoBehaviour, IDataComponent
+public class MatchSelectData : MonoBehaviour
 {
     public ReactiveProperty<MatchSetting> currentMatchSetting = new ReactiveProperty<MatchSetting>();
 
@@ -19,6 +19,4 @@ public class MatchSelectData : MonoBehaviour, IDataComponent
 
         currentMatchSetting.Value = initValue.matchSetting;
     }
-
-    public void OnUpdate(IDataSource source) { }
 }
