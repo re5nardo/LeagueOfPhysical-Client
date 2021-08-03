@@ -26,9 +26,6 @@ namespace LOP
 #if UNITY_EDITOR
             UnityEngine.Application.targetFrameRate = 60;
 #endif
-            //  PhotonType Register
-            PhotonTypeRegister.Register();
-
             MasterDataManager.Instantiate();
 
             //  Debug Console
@@ -37,12 +34,6 @@ namespace LOP
                 UnityEngine.Object.Instantiate(Resources.Load("IngameDebugConsole/IngameDebugConsole"));
                 DebugCommandRegister.Instantiate();
             }
-
-            //            CatalogData.Instance.UpdateData();
-            //            UserProfileData.Instance.UpdateData();
-
-            //            yield return new WaitUntil(() => CatalogData.Instance.IsCached());
-            //            yield return new WaitUntil(() => UserProfileData.Instance.IsCached());
 
             UnityEngine.Application.quitting += OnQuitting;
 

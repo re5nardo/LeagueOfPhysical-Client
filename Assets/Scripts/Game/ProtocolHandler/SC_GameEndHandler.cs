@@ -4,6 +4,7 @@ using UnityEngine;
 using GameFramework;
 using UnityEngine.SceneManagement;
 using NetworkModel.Mirror;
+using Mirror;
 
 public class SC_GameEndHandler
 {
@@ -11,7 +12,7 @@ public class SC_GameEndHandler
     {
         SC_GameEnd gameEnd = msg as SC_GameEnd;
 
-        PhotonNetwork.LeaveRoom();
+        NetworkManager.singleton.StopClient();
 
         SceneManager.LoadScene("Lobby");
     }
