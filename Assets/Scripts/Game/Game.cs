@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GameFramework;
 using Entity;
 using NetworkModel.Mirror;
 
@@ -39,7 +38,7 @@ namespace LOP
             roomProtocolDispatcher[typeof(SC_Synchronization)] = SC_SynchronizationHandler.Handle;
             roomProtocolDispatcher[typeof(SC_GameEnd)] = SC_GameEndHandler.Handle;
 
-            tickUpdater.Initialize(1 / 30f, true, Room.Instance.Latency, OnTick, OnTickEnd);
+            tickUpdater.Initialize(1 / 30f, true, Room.Instance.Latency, OnTick, OnTickEnd, OnUpdateElapsedTime);
             GameUI.Initialize();
 
             EntityManager.Instantiate();
@@ -72,12 +71,6 @@ namespace LOP
             TickPubSubService.Publish("EarlyTick", tick);
             TickPubSubService.Publish("Tick", tick);
             TickPubSubService.Publish("LateTick", tick);
-
-            TickPubSubService.Publish("BeforePhysicsSimulation", tick);
-
-            Physics.Simulate(TickInterval);
-
-            TickPubSubService.Publish("AfterPhysicsSimulation", tick);
         }
 
         private void OnTickEnd(int tick)
@@ -85,6 +78,15 @@ namespace LOP
             TickPubSubService.Publish("EarlyTickEnd", tick);
             TickPubSubService.Publish("TickEnd", tick);
             TickPubSubService.Publish("LateTickEnd", tick);
+        }
+
+        private void OnUpdateElapsedTime(float time)
+        {
+            TickPubSubService.Publish("BeforePhysicsSimulation", CurrentTick);
+
+            Physics.Simulate(time);
+
+            TickPubSubService.Publish("AfterPhysicsSimulation", CurrentTick);
         }
 
         private void NotifyPlayerLookAtPosition()

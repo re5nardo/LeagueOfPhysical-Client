@@ -34,12 +34,6 @@ public class CameraController : MonoBehaviour
     private bool m_bFollow = false;
 	private Vector3 m_vec3Offset;
 
-    private int lastUpdateTick;
-
-    //  For SmoothDamp
-    private float smoothTime = 0.3f;
-    private Vector3 velocity = Vector3.zero;
-
     private float m_fUserRotation_Y_ = 0;
     private float m_fUserRotation_Y
     {
@@ -145,12 +139,7 @@ public class CameraController : MonoBehaviour
         {
             Vector3 targetPosition = m_trTarget.position + m_vec3Offset;
 
-            if (lastUpdateTick != Game.Current.CurrentTick)
-            {
-                m_trCameraController.position = Vector3.SmoothDamp(m_trCameraController.position, targetPosition, ref velocity, smoothTime);
-            }
-
-            lastUpdateTick = Game.Current.CurrentTick;
+            m_trCameraController.position = Vector3.Lerp(m_trCameraController.position, targetPosition, Time.deltaTime);
         }
     }
 #endregion
