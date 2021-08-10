@@ -60,7 +60,7 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
 
     private void Reconcile()
     {
-        if (Entities.MyCharacter != null || lastEntityTransformSnap == null)
+        if (Entities.MyCharacter == null || lastEntityTransformSnap == null)
         {
             return;
         }
