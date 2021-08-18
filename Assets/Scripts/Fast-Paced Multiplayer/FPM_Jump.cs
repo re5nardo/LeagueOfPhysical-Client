@@ -84,6 +84,50 @@ public class FPM_Jump : MonoBehaviour
         }
     }
 
+    public void Reconcile(EntityTransformSnap entityTransformSnap, ref Vector3 sumOfPosition, ref Vector3 sumOfVelocity)
+    {
+        int clientTargetTick = 0;
+
+        if (serverTickNSequences.Exists(x => x.tick <= entityTransformSnap.Tick))
+        {
+            var targets = serverTickNSequences.FindAll(x => x.tick <= entityTransformSnap.Tick);
+            targets.Sort((x, y) =>
+            {
+                return x.sequence.CompareTo(y.sequence);
+            });
+
+            var target = targets[targets.Count - 1];
+            int offset = entityTransformSnap.Tick - target.tick;
+
+            if (!clientTickNSequences.Exists(x => x.sequence == target.sequence))
+            {
+                Debug.LogError("clientTickNSequences does not exist!");
+                return;
+            }
+
+            var clientTarget = clientTickNSequences.Find(x => x.sequence == target.sequence);
+            clientTargetTick = clientTarget.tick + offset;
+
+            if (clientTickNSequences.Exists(x => x.sequence == target.sequence + 1))
+            {
+                var clientTargetNext = clientTickNSequences.Find(x => x.sequence == target.sequence + 1);
+
+                clientTargetTick = Mathf.Min(clientTargetTick, clientTargetNext.tick - 1);
+            }
+        }
+        else
+        {
+            clientTargetTick = entityTransformSnap.Tick;
+        }
+
+        var historiesToApply = FPM_Manager.Instance.TransformHistories.FindAll(x => x.tick > clientTargetTick);
+        foreach (var history in historiesToApply)
+        {
+            sumOfPosition += new Vector3(0, history.positionChange.y, 0);
+            sumOfVelocity += new Vector3(0, history.velocityChange.y, 0);
+        }
+    }
+
     private bool CanJump()
     {
         return Entities.MyCharacter.IsGrounded;
