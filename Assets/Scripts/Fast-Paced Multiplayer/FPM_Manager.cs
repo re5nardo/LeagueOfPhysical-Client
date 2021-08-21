@@ -24,7 +24,7 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
     private Vector3 lastVelocity;
     private Vector3 lastAngularVelocity;
 
-    private const int RECONCILE_PROCESS = 6;    //  이 프레임 기간동안 보정해준다.
+    private const int RECONCILE_PROCESS = 4;    //  이 프레임 기간동안 보정해준다.
     private int reconcileCount = 0;
 
     private RoomProtocolDispatcher roomProtocolDispatcher = null;
@@ -125,7 +125,7 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
 
         if (reconcileCount > 0)
         {
-            int targetTick = Game.Current.CurrentTick + 1;
+            int targetTick = Game.Current.CurrentTick;
             var targetHistory = reconcileHistories.Find(x => x.tick == targetTick);
             if (targetHistory == null)
             {
