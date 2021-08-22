@@ -85,14 +85,5 @@ namespace Behavior
         {
             return m_vec3Destination;
         }
-
-        public override void OnReceiveSynchronization(ISnap snap)
-        {
-            MoveSnap moveSnap = snap as MoveSnap;
-
-            m_vec3Destination = moveSnap.destination;
-
-            Entity.SendCommandToViews(new AnimatorSetBool("Move", true));
-        }
     }
 }

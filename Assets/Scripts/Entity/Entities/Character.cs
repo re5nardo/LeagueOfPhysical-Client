@@ -13,8 +13,6 @@ namespace Entity
 		}
 		#endregion
 
-        private EntityTransformSynchronization entityTransformSynchronization = null;
-
         private CharacterBasicData characterBasicData = null;
 		private CharacterStatusData characterStatusData = null;
         private CharacterSkillData characterSkillData = null;
@@ -42,8 +40,6 @@ namespace Entity
 		protected override void InitComponents()
 		{
 			base.InitComponents();
-
-            entityTransformSynchronization = AttachComponent(gameObject.AddComponent<EntityTransformSynchronization>());
 
             characterBasicData = AttachComponent(gameObject.AddComponent<CharacterBasicData>());
             characterStatusData = AttachComponent(gameObject.AddComponent<CharacterStatusData>());
