@@ -14,6 +14,7 @@ public class DebugCommandRegister : MonoSingleton<DebugCommandRegister>
 
         DebugLogConsole.AddCommand<float, float>("SpeedFactor", "Set SpeedFactor  [  example : SpeedFactor 0.2 1.5  ]", DebugCommandHandler.SpeedFactorHandler.Handle);
         DebugLogConsole.AddCommand<float>("TransformDelayFactor", "Set TransformDelayFactor  [  example : TransformDelayFactor 0.2  ]", DebugCommandHandler.TransformDelayFactorHandler.Handle);
+        DebugLogConsole.AddCommand<float, float, float>("MyEntityPosition", "Set My Entity Position  [  example : MyEntityPosition 0 0 0  ]", DebugCommandHandler.MyCharacterPositionHandler.Handle);
     }
 
     protected override void OnDestroy()
@@ -22,5 +23,6 @@ public class DebugCommandRegister : MonoSingleton<DebugCommandRegister>
 
         DebugLogConsole.RemoveCommand("SpeedFactor");
         DebugLogConsole.RemoveCommand("TransformDelayFactor");
+        DebugLogConsole.RemoveCommand("MyEntityPosition");
     }
 }
