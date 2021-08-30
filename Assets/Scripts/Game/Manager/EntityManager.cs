@@ -90,7 +90,7 @@ public class EntityManager : GameFramework.EntityManager
                 continue;
 			}
 
-			var entity = CreateEntity(entitySnapInfo);
+			var entity = CreateEntity(entitySnapInfo) as MonoEntityBase;
 
 			if (entity.EntityID == Entities.MyEntityID)
 			{
@@ -113,10 +113,13 @@ public class EntityManager : GameFramework.EntityManager
                 info.velocity = entitySnapInfo.velocity;
             }
 
-            if (Entities.MyEntityID != entitySnapInfo.entityId)
+            entity.gameObject.AddComponent<TransformController>();
+            if (entity.ModelAnimator != null)
             {
-                (entity as MonoEntityBase).gameObject.AddComponent<TransformController>();
+                entity.gameObject.AddComponent<EntityAnimatorController>();
             }
+
+            entity.HasAuthority = entity.EntityID == Entities.MyEntityID;
         }
 	}
 

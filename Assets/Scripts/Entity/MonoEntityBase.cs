@@ -2,7 +2,6 @@
 using UnityEngine;
 using System;
 using System.Linq;
-using EntityCommand;
 using GameFramework;
 
 namespace Entity
@@ -15,9 +14,11 @@ namespace Entity
         public bool IsValid => EntityManager.Instance.IsRegistered(EntityID);
         public bool IsLocalEntity => EntityID < 0;
 
+        public bool HasAuthority { get; set; }
+
         private List<IComponent> components = new List<IComponent>();
 
-        protected EntityBasicView entityBasicView = null;
+        protected EntityBasicView entityBasicView;
 
         protected virtual void Awake()
         {
@@ -78,6 +79,7 @@ namespace Entity
         public Transform ModelTransform => entityBasicView.ModelTransform;
         public Rigidbody ModelRigidbody => entityBasicView.ModelRigidbody;
         public Collider ModelCollider => entityBasicView.ModelCollider;
+        public Animator ModelAnimator => entityBasicView.ModelAnimator;
 
         public Vector3 Forward { get { return (Quaternion.Euler(Rotation) * Vector3.forward).normalized; } }
         public Vector3 Up { get { return (Quaternion.Euler(Rotation) * Vector3.up).normalized; } }
@@ -87,47 +89,39 @@ namespace Entity
         #region IEntity
         public int EntityID { get; protected set; } = -1;
 
-        private Vector3 position;
         public Vector3 Position
         {
-            get => position;
+            get => ModelTransform.position;
             set
             {
-                position = value;
-                SendCommandToViews(new PositionChanged());
+                ModelTransform.position = value;
             }
         }
 
-        private Vector3 rotation;
         public Vector3 Rotation
         {
-            get => rotation;
+            get => ModelTransform.rotation.eulerAngles;
             set
             {
-                rotation = value;
-                SendCommandToViews(new RotationChanged());
+                ModelTransform.rotation = Quaternion.Euler(value);
             }
         }
 
-        private Vector3 velocity;
         public Vector3 Velocity
         {
-            get => velocity;
+            get => ModelRigidbody.velocity;
             set
             {
-                velocity = value;
-                SendCommandToViews(new VelocityChanged());
+                ModelRigidbody.velocity = value;
             }
         }
 
-        private Vector3 angularVelocity;
         public Vector3 AngularVelocity
         {
-            get => angularVelocity;
+            get => ModelRigidbody.angularVelocity;
             set
             {
-                angularVelocity = value;
-                SendCommandToViews(new AngularVelocityChanged());
+                ModelRigidbody.angularVelocity = value;
             }
         }
 
