@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 33190120219182814}
   - component: {fileID: 23308982706392594}
   - component: {fileID: -9189508886754722950}
-  - component: {fileID: 6554253712899593036}
   m_Layer: 0
   m_Name: Arrow Blue
   m_TagString: Untagged
@@ -96,19 +95,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.103694744, y: 0.11763968, z: 0.7501745}
   m_Center: {x: 0.00038153678, y: -0.004896123, z: -0.00037889183}
---- !u!54 &6554253712899593036
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1001714497607922}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 1
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0

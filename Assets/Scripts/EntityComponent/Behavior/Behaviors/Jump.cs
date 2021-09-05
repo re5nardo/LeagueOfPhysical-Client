@@ -20,7 +20,7 @@ namespace Behavior
                 return true;
             }
 
-            Entity.ModelRigidbody.AddForce(Vector3.up * SubGameBase.Current.SubGameEnvironment.JumpPowerFactor, ForceMode.VelocityChange);
+            Entity.Rigidbody.AddForce(Vector3.up * SubGameBase.Current.SubGameEnvironment.JumpPowerFactor, ForceMode.VelocityChange);
 
             return false;
         }

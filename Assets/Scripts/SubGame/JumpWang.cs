@@ -22,7 +22,7 @@ public class JumpWang : SubGameBase
 
         var entity = Entities.Get<MonoEntityBase>(entityId);
 
-        entity.ModelRigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+        entity.Rigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
     }
 
     protected override IEnumerator OnInitialize()
@@ -36,7 +36,7 @@ public class JumpWang : SubGameBase
                 continue;
             }
 
-            entity.ModelRigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+            entity.Rigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
         }
 
         Physics.gravity *= SubGameEnvironment.GravityFactor;

@@ -2,24 +2,25 @@
 using UnityEngine;
 using EntityCommand;
 using GameFramework;
+using Entity;
 
 public class EntityBasicView : MonoViewComponentBase
 {
 	private GameObject m_goModel = null;
-	private Transform m_trModel = null;
-    private Rigidbody m_RigidbodyModel = null;
     private Collider m_ColliderModel = null;
     private Animator m_AnimatorModel = null;
 	private List<Renderer> m_listModelRenderer = new List<Renderer>();
 
-    public Transform ModelTransform => m_trModel;
-    public Rigidbody ModelRigidbody => m_RigidbodyModel;
     public Collider ModelCollider => m_ColliderModel;
     public Animator ModelAnimator => m_AnimatorModel;
+
+    protected MonoEntityBase monoEntity;
 
     public override void OnAttached(IEntity entity)
     {
         base.OnAttached(entity);
+
+        monoEntity = entity as MonoEntityBase;
 
         AddCommandHandler(typeof(ModelChanged), OnModelChanged);
         AddCommandHandler(typeof(AnimatorSetTrigger), OnAnimatorSetTrigger);
@@ -31,6 +32,8 @@ public class EntityBasicView : MonoViewComponentBase
     public override void OnDetached()
     {
         base.OnDetached();
+
+        monoEntity = null;
 
         RemoveCommandHandler(typeof(ModelChanged), OnModelChanged);
         RemoveCommandHandler(typeof(AnimatorSetTrigger), OnAnimatorSetTrigger);
@@ -93,10 +96,8 @@ public class EntityBasicView : MonoViewComponentBase
     public virtual void SetModel(GameObject model)
     {
         m_goModel = model;
-        m_goModel.transform.parent = null;
-        m_trModel = m_goModel.transform;
+        m_goModel.transform.SetParent(monoEntity.Transform);
 
-        m_RigidbodyModel = m_goModel.GetComponent<Rigidbody>();
         m_ColliderModel = m_goModel.GetComponent<Collider>();
         m_AnimatorModel = m_goModel.GetComponent<Animator>();
 
@@ -114,8 +115,6 @@ public class EntityBasicView : MonoViewComponentBase
 		}
 
 		m_goModel = null;
-		m_trModel = null;
-        m_RigidbodyModel = null;
         m_ColliderModel = null;
         m_AnimatorModel = null;
 

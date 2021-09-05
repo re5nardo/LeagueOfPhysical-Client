@@ -20,17 +20,23 @@ namespace Entity
 
         protected EntityBasicView entityBasicView;
 
+        public Transform Transform { get; private set; }
+        public Rigidbody Rigidbody { get; private set; }
+
         protected virtual void Awake()
         {
-            InitComponents();
+            InitEntity();
+            InitEntityComponents();
         }
 
-        protected virtual void OnDestroy()
+        protected virtual void InitEntity()
         {
-            DetachAllComponents();
+            Transform = gameObject.GetComponent<Transform>();
+            Rigidbody = gameObject.AddComponent<Rigidbody>();
+            Rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
         }
 
-        protected virtual void InitComponents()
+        protected virtual void InitEntityComponents()
         {
         }
 
@@ -76,8 +82,6 @@ namespace Entity
         public abstract float MovementSpeed { get; }
         public abstract float FactoredMovementSpeed { get; }
 
-        public Transform ModelTransform => entityBasicView.ModelTransform;
-        public Rigidbody ModelRigidbody => entityBasicView.ModelRigidbody;
         public Collider ModelCollider => entityBasicView.ModelCollider;
         public Animator ModelAnimator => entityBasicView.ModelAnimator;
 
@@ -91,37 +95,37 @@ namespace Entity
 
         public Vector3 Position
         {
-            get => ModelTransform.position;
+            get => Transform.position;
             set
             {
-                ModelTransform.position = value;
+                Transform.position = value;
             }
         }
 
         public Vector3 Rotation
         {
-            get => ModelTransform.rotation.eulerAngles;
+            get => Transform.rotation.eulerAngles;
             set
             {
-                ModelTransform.rotation = Quaternion.Euler(value);
+                Transform.rotation = Quaternion.Euler(value);
             }
         }
 
         public Vector3 Velocity
         {
-            get => ModelRigidbody.velocity;
+            get => Rigidbody.velocity;
             set
             {
-                ModelRigidbody.velocity = value;
+                Rigidbody.velocity = value;
             }
         }
 
         public Vector3 AngularVelocity
         {
-            get => ModelRigidbody.angularVelocity;
+            get => Rigidbody.angularVelocity;
             set
             {
-                ModelRigidbody.angularVelocity = value;
+                Rigidbody.angularVelocity = value;
             }
         }
 
@@ -141,13 +145,6 @@ namespace Entity
             component.OnDetached();
 
             return component;
-        }
-
-        public void DetachAllComponents()
-        {
-            var iteration = new List<IEntityComponent>(entityComponents);
-
-            iteration.ForEach(component => DetachEntityComponent(component));
         }
 
         public T GetEntityComponent<T>() where T : IEntityComponent

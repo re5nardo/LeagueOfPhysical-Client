@@ -99,7 +99,7 @@ namespace LOP
 
         public void OnMyCharacterCreated(Character character)
         {
-            GameUI.CameraController.SetTarget(character.ModelTransform);
+            GameUI.CameraController.SetTarget(character.Transform);
             GameUI.CameraController.StartFollowTarget();
 
             GameUI.PlayerInputController.SetCharacterID(character.EntityID);
