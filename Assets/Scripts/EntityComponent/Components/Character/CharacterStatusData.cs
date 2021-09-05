@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
 
-public class CharacterStatusData : MonoComponentBase
+public class CharacterStatusData : MonoEntityComponentBase
 {
 	private FirstStatus m_FirstStatus;
 	private SecondStatus m_SecondStatus;

@@ -7,7 +7,7 @@ using GameFramework;
 
 namespace State
 {
-	public abstract class StateBase : MonoComponentBase
+	public abstract class StateBase : MonoEntityComponentBase
     {
 		public event Action<StateBase> onStateEnd = null;
 

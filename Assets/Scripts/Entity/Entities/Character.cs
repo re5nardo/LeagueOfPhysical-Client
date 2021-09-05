@@ -41,15 +41,15 @@ namespace Entity
 		{
 			base.InitComponents();
 
-            characterBasicData = AttachComponent(gameObject.AddComponent<CharacterBasicData>());
-            characterStatusData = AttachComponent(gameObject.AddComponent<CharacterStatusData>());
-            characterSkillData = AttachComponent(gameObject.AddComponent<CharacterSkillData>());
+            characterBasicData = AttachEntityComponent(gameObject.AddComponent<CharacterBasicData>());
+            characterStatusData = AttachEntityComponent(gameObject.AddComponent<CharacterStatusData>());
+            characterSkillData = AttachEntityComponent(gameObject.AddComponent<CharacterSkillData>());
 
-            entityBasicView = AttachComponent(gameObject.AddComponent<CharacterView>());
+            entityBasicView = AttachEntityComponent(gameObject.AddComponent<CharacterView>());
 
-            behaviorController = AttachComponent(gameObject.AddComponent<BehaviorController>());
-            stateController = AttachComponent(gameObject.AddComponent<StateController>());
-            characterStatusController = AttachComponent(gameObject.AddComponent<CharacterStatusController>());
+            behaviorController = AttachEntityComponent(gameObject.AddComponent<BehaviorController>());
+            stateController = AttachEntityComponent(gameObject.AddComponent<StateController>());
+            characterStatusController = AttachEntityComponent(gameObject.AddComponent<CharacterStatusController>());
 			//m_SkillController = AttachComponent(gameObject.AddComponent<SkillController>());
 		}
 

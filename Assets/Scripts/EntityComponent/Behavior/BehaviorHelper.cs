@@ -7,7 +7,7 @@ public class BehaviorHelper
 {
     public static void BehaviorDestroyer(BehaviorBase behavior)
     {
-		behavior.Entity.DetachComponent(behavior);
+		behavior.Entity.DetachEntityComponent(behavior);
 
 		Object.Destroy(behavior);
     }

@@ -16,7 +16,7 @@ namespace Entity
 
         public bool HasAuthority { get; set; }
 
-        private List<IComponent> components = new List<IComponent>();
+        private List<IEntityComponent> entityComponents = new List<IEntityComponent>();
 
         protected EntityBasicView entityBasicView;
 
@@ -125,18 +125,18 @@ namespace Entity
             }
         }
 
-        public T AttachComponent<T>(T component) where T : IComponent
+        public T AttachEntityComponent<T>(T component) where T : IEntityComponent
         {
-            components.Add(component);
+            entityComponents.Add(component);
 
             component.OnAttached(this);
 
             return component;
         }
 
-        public T DetachComponent<T>(T component) where T : IComponent
+        public T DetachEntityComponent<T>(T component) where T : IEntityComponent
         {
-            components.Remove(component);
+            entityComponents.Remove(component);
 
             component.OnDetached();
 
@@ -145,14 +145,14 @@ namespace Entity
 
         public void DetachAllComponents()
         {
-            var iteration = new List<IComponent>(components);
+            var iteration = new List<IEntityComponent>(entityComponents);
 
-            iteration.ForEach(component => DetachComponent(component));
+            iteration.ForEach(component => DetachEntityComponent(component));
         }
 
-        public T GetEntityComponent<T>() where T : IComponent
+        public T GetEntityComponent<T>() where T : IEntityComponent
         {
-            var found = components.Find(x => x is T);
+            var found = entityComponents.Find(x => x is T);
 
             if (found == null)
                 return default;
@@ -160,9 +160,9 @@ namespace Entity
             return (T)found;
         }
 
-        public List<T> GetEntityComponents<T>() where T : IComponent
+        public List<T> GetEntityComponents<T>() where T : IEntityComponent
         {
-            var found = components.FindAll(x => x is T);
+            var found = entityComponents.FindAll(x => x is T);
 
             if (found == null)
                 return null;
@@ -172,11 +172,11 @@ namespace Entity
 
         public void SendCommandToAll(ICommand command)
         {
-            List<IComponent> temp = new List<IComponent>(components);
+            List<IEntityComponent> temp = new List<IEntityComponent>(entityComponents);
 
             foreach (var component in temp)
             {
-                if (!components.Contains(component))
+                if (!entityComponents.Contains(component))
                     continue;
 
                 component.OnCommand(command);
@@ -185,11 +185,11 @@ namespace Entity
 
         public void SendCommand(ICommand command, List<Type> cullings)
         {
-            List<IComponent> temp = new List<IComponent>(components);
+            List<IEntityComponent> temp = new List<IEntityComponent>(entityComponents);
 
             foreach (var component in temp)
             {
-                if (!components.Contains(component))
+                if (!entityComponents.Contains(component))
                     continue;
 
                 if (cullings.Exists(x => x.IsAssignableFrom(component.GetType())))
