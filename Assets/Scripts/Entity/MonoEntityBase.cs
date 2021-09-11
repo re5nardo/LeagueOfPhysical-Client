@@ -40,8 +40,16 @@ namespace Entity
         {
         }
 
-        public virtual void Initialize(params object[] param)
+        public virtual void Initialize(EntityCreationData entityCreationData)
         {
+            EntityID = entityCreationData.entityId;
+            Position = entityCreationData.position;
+            Rotation = entityCreationData.rotation;
+            Velocity = entityCreationData.velocity;
+            AngularVelocity = entityCreationData.angularVelocity;
+            EntityType = entityCreationData.entityType;
+            EntityRole = entityCreationData.entityRole;
+            HasAuthority = entityCreationData.hasAuthority;
         }
 
         public virtual void OnTick(int tick)

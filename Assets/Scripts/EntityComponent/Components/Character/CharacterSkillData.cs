@@ -11,9 +11,9 @@ public class CharacterSkillData : MonoEntityComponentBase
     private int activeSkill2ID;
     private int ultimateSkillID;
 
-    public override void Initialize(params object[] param)
+    public override void Initialize(EntityCreationData entityCreationData)
     {
-        base.Initialize(param);
+        base.Initialize(entityCreationData);
 
         foreach (int skillID in (Entity as Character).MasterData.SkillIDs)
         {

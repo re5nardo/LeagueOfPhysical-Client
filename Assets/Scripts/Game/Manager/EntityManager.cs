@@ -82,24 +82,24 @@ public class EntityManager : GameFramework.EntityManager
 	{
 		SC_EntityAppear entityAppear = msg as SC_EntityAppear;
 
-		foreach (EntitySnapInfo entitySnapInfo in entityAppear.listEntitySnapInfo)
+		foreach (EntitySnap entitySnap in entityAppear.listEntitySnap)
 		{
-			if(dicEntity.ContainsKey(entitySnapInfo.entityId))
+			if(dicEntity.ContainsKey(entitySnap.entityId))
 			{
-				Debug.LogError("[OnSC_EntityAppear] Entity already exists! EntityID : " + entitySnapInfo.entityId);
+				Debug.LogError("[OnSC_EntityAppear] Entity already exists! EntityID : " + entitySnap.entityId);
                 continue;
 			}
 
-			var entity = CreateEntity(entitySnapInfo) as MonoEntityBase;
+			var entity = CreateEntity(entitySnap) as MonoEntityBase;
 
 			if (entity.EntityID == Entities.MyEntityID)
 			{
                 EntityTransformInfo info = new EntityTransformInfo();
                 info.tick = entityAppear.tick;
-                info.entityId = entitySnapInfo.entityId;
-                info.position = entitySnapInfo.position;
-                info.rotation = entitySnapInfo.rotation;
-                info.velocity = entitySnapInfo.velocity;
+                info.entityId = entitySnap.entityId;
+                info.position = entitySnap.position;
+                info.rotation = entitySnap.rotation;
+                info.velocity = entitySnap.velocity;
 
                 LOP.Game.Current.OnMyCharacterCreated(entity as Character);
 			}
@@ -107,10 +107,10 @@ public class EntityManager : GameFramework.EntityManager
 			{
 				EntityTransformInfo info = new EntityTransformInfo();
                 info.tick = entityAppear.tick;
-                info.entityId = entitySnapInfo.entityId;
-                info.position = entitySnapInfo.position;
-                info.rotation = entitySnapInfo.rotation;
-                info.velocity = entitySnapInfo.velocity;
+                info.entityId = entitySnap.entityId;
+                info.position = entitySnap.position;
+                info.rotation = entitySnap.rotation;
+                info.velocity = entitySnap.velocity;
             }
 
             entity.gameObject.AddComponent<TransformController>();
@@ -151,64 +151,69 @@ public class EntityManager : GameFramework.EntityManager
         Destroy(entity.gameObject);
     }
 
-    private IEntity CreateEntity(EntitySnapInfo entitySnapInfo)
+    private IEntity CreateEntity(EntitySnap entitySnap)
     {
 		IEntity entity = null;
 
-        if (entitySnapInfo.entityType == EntityType.Character)
+        if (entitySnap.entityType == EntityType.Character)
         {
-			CharacterSnapInfo characterSnapInfo = entitySnapInfo as CharacterSnapInfo;
+			CharacterSnap characterSnap = entitySnap as CharacterSnap;
 
 			entity = Character.Builder()
-                .SetEntityID(characterSnapInfo.entityId)
-                .SetEntityRole(characterSnapInfo.entityRole)
-                .SetMasterDataID(characterSnapInfo.masterDataId)
-                .SetModelPath(characterSnapInfo.model)
-                .SetFirstStatus(characterSnapInfo.firstStatus)
-				.SetSecondStatus(characterSnapInfo.secondStatus)
-				.SetPosition(characterSnapInfo.position)
-                .SetRotation(characterSnapInfo.rotation)
-				.SetVelocity(characterSnapInfo.velocity)
-				.SetAngularVelocity(characterSnapInfo.angularVelocity)
-				.SetSelectableFirstStatusCount(0)
+                .SetEntityId(characterSnap.entityId)
+                .SetEntityType(characterSnap.entityType)
+                .SetEntityRole(characterSnap.entityRole)
+                .SetMasterDataId(characterSnap.masterDataId)
+                .SetModelId(characterSnap.modelId)
+                .SetFirstStatus(characterSnap.firstStatus)
+				.SetSecondStatus(characterSnap.secondStatus)
+				.SetPosition(characterSnap.position)
+                .SetRotation(characterSnap.rotation)
+				.SetVelocity(characterSnap.velocity)
+				.SetAngularVelocity(characterSnap.angularVelocity)
+                .SetHasAuthority(characterSnap.hasAuthority)
 				.Build();
         }
-        else if (entitySnapInfo.entityType == EntityType.Projectile)
+        else if (entitySnap.entityType == EntityType.Projectile)
         {
-			ProjectileSnapInfo projectileSnapInfo = entitySnapInfo as ProjectileSnapInfo;
+			ProjectileSnap projectileSnap = entitySnap as ProjectileSnap;
 
 			entity = Projectile.Builder()
-                .SetEntityID(projectileSnapInfo.entityId)
-                .SetEntityRole(projectileSnapInfo.entityRole)
-                .SetMasterDataID(projectileSnapInfo.masterDataId)
-                .SetModelPath(projectileSnapInfo.model)
-                .SetPosition(projectileSnapInfo.position)
-                .SetRotation(projectileSnapInfo.rotation)
-				.SetVelocity(projectileSnapInfo.velocity)
-				.SetAngularVelocity(projectileSnapInfo.angularVelocity)
-				.SetMovementSpeed(projectileSnapInfo.movementSpeed)
+                .SetEntityId(projectileSnap.entityId)
+                .SetEntityType(projectileSnap.entityType)
+                .SetEntityRole(projectileSnap.entityRole)
+                .SetMasterDataId(projectileSnap.masterDataId)
+                .SetModelId(projectileSnap.modelId)
+                .SetPosition(projectileSnap.position)
+                .SetRotation(projectileSnap.rotation)
+				.SetVelocity(projectileSnap.velocity)
+				.SetAngularVelocity(projectileSnap.angularVelocity)
+				.SetMovementSpeed(projectileSnap.movementSpeed)
+                .SetHasAuthority(projectileSnap.hasAuthority)
 				.Build();
         }
-		else if (entitySnapInfo.entityType == EntityType.GameItem)
+		else if (entitySnap.entityType == EntityType.GameItem)
 		{
-			GameItemSnapInfo gameItemSnapInfo = entitySnapInfo as GameItemSnapInfo;
+			GameItemSnap gameItemSnap = entitySnap as GameItemSnap;
 
 			entity = GameItem.Builder()
-				.SetEntityID(gameItemSnapInfo.entityId)
-                .SetEntityRole(gameItemSnapInfo.entityRole)
-                .SetMasterDataID(gameItemSnapInfo.masterDataId)
-				.SetModelPath(gameItemSnapInfo.model)
-				.SetPosition(gameItemSnapInfo.position)
-				.SetRotation(gameItemSnapInfo.rotation)
-				.SetVelocity(gameItemSnapInfo.velocity)
-				.SetAngularVelocity(gameItemSnapInfo.angularVelocity)
-				.SetHP(gameItemSnapInfo.HP)
-				.SetMaximumHP(gameItemSnapInfo.maximumHP)
+				.SetEntityId(gameItemSnap.entityId)
+                .SetEntityType(gameItemSnap.entityType)
+                .SetEntityRole(gameItemSnap.entityRole)
+                .SetMasterDataId(gameItemSnap.masterDataId)
+				.SetModelId(gameItemSnap.modelId)
+				.SetPosition(gameItemSnap.position)
+				.SetRotation(gameItemSnap.rotation)
+				.SetVelocity(gameItemSnap.velocity)
+				.SetAngularVelocity(gameItemSnap.angularVelocity)
+				.SetHP(gameItemSnap.HP)
+				.SetMaximumHP(gameItemSnap.maximumHP)
+                .SetHasAuthority(gameItemSnap.hasAuthority)
 				.Build();
 		}
 		else
         {
-            Debug.LogError("entitySnapInfo.m_EntityType is invalid! entitySnapInfo.m_EntityType : " + entitySnapInfo.entityType.ToString());
+            Debug.LogError("entitySnapInfo.m_EntityType is invalid! entitySnapInfo.m_EntityType : " + entitySnap.entityType.ToString());
             return null;
         }
 

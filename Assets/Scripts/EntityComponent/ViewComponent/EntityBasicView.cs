@@ -97,6 +97,9 @@ public class EntityBasicView : MonoViewComponentBase
     {
         m_goModel = model;
         m_goModel.transform.SetParent(monoEntity.Transform);
+        m_goModel.transform.localPosition = Vector3.zero;
+        m_goModel.transform.localRotation = Quaternion.identity;
+        m_goModel.transform.localScale = Vector3.one;
 
         m_ColliderModel = m_goModel.GetComponent<Collider>();
         m_AnimatorModel = m_goModel.GetComponent<Animator>();

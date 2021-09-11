@@ -44,15 +44,11 @@ namespace Entity
             stateController = AttachEntityComponent(gameObject.AddComponent<StateController>());
         }
 
-		public override void Initialize(params object[] param)
+		public override void Initialize(EntityCreationData entityCreationData)
 		{
-            base.Initialize(param);
+            base.Initialize(entityCreationData);
 
-            EntityID = (int)param[0];
-			EntityType = EntityType.GameItem;
-            EntityRole = (EntityRole)param[5];
-
-            gameItemBasicData.Initialize(param[1], param[2], param[3], param[4]);
+            gameItemBasicData.Initialize(entityCreationData);
 		}
 		#endregion
 

@@ -6,19 +6,7 @@ using Entity;
 
 public class EntityBasicData : MonoEntityComponentBase
 {
-    protected string modelId = "";
-    public string ModelId => modelId;
-
     new protected MonoEntityBase Entity = null;
-
-    public override void Initialize(params object[] param)
-	{
-		base.Initialize(param);
-
-        modelId = (string)param[0];
-
-		Entity.SendCommandToViews(new ModelChanged(modelId));
-	}
 
     public override void OnAttached(IEntity entity)
     {

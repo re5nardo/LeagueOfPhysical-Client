@@ -1,19 +1,27 @@
 ﻿using UnityEngine;
+using EntityCommand;
 
 public class GameItemBasicData : EntityBasicData
 {
-	private int m_nMasterDataID = -1;
+    public string ModelId { get; private set; }
+    private int m_nMasterDataID = -1;
 	private int m_nHP = 0;
 	private int m_nMaximumHP = 0;
 
-	public override void Initialize(params object[] param)
+	public override void Initialize(EntityCreationData entityCreationData)
 	{
-		base.Initialize(param[1]);
+		base.Initialize(entityCreationData);
 
-		m_nMasterDataID = (int)param[0];
-		m_nHP = (int)param[2];
-		m_nMaximumHP = (int)param[3];
-	}
+        GameItemCreationData gameItemCreationData = entityCreationData as GameItemCreationData;
+
+        m_nMasterDataID = gameItemCreationData.masterDataId;
+        m_nHP = gameItemCreationData.HP;
+        m_nMaximumHP = gameItemCreationData.maximumHP;
+
+        ModelId = gameItemCreationData.modelId;
+
+        Entity.SendCommandToViews(new ModelChanged(ModelId));
+    }
 
 	public int MasterDataID { get { return m_nMasterDataID; } }
 	
