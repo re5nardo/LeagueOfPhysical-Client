@@ -2,25 +2,29 @@
 
 public class ProjectileBasicData : EntityBasicData
 {
-    public string ModelId { get; private set; }
-    private int m_nMasterDataID = -1;
-	private float m_fMovementSpeed = 0f;
+    public int MasterDataId { get; private set; } = -1;
 
-	public override void Initialize(EntityCreationData entityCreationData)
+    private string modelId;
+    public string ModelId
+    {
+        get => modelId;
+        private set
+        {
+            modelId = value;
+            Entity.SendCommandToViews(new ModelChanged(value));
+        }
+    }
+
+    public float MovementSpeed { get; private set; }
+
+    public override void Initialize(EntityCreationData entityCreationData)
 	{
 		base.Initialize(entityCreationData);
 
         ProjectileCreationData projectileCreationData = entityCreationData as ProjectileCreationData;
 
-        m_nMasterDataID = projectileCreationData.masterDataId;
-        m_fMovementSpeed = projectileCreationData.movementSpeed;
-
+        MasterDataId = projectileCreationData.masterDataId;
         ModelId = projectileCreationData.modelId;
-
-        Entity.SendCommandToViews(new ModelChanged(ModelId));
+        MovementSpeed = projectileCreationData.movementSpeed;
     }
-
-	public int MasterDataID { get { return m_nMasterDataID; } }
-
-	public float MovementSpeed { get { return m_fMovementSpeed; } }
 }

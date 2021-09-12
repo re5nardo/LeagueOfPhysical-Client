@@ -29,7 +29,7 @@ namespace Entity
 			{
 				if (masterData == null)
 				{
-                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.Character>(characterBasicData.MasterDataID);
+                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.Character>(characterBasicData.MasterDataId);
 				}
 
 				return masterData;
@@ -66,34 +66,32 @@ namespace Entity
 		#region Interface For Convenience
 		public int Level
 		{
-			get { return characterBasicData.Level; }
-			set { characterBasicData.Level = value; }
-		}
+			get => characterBasicData.Level;
+            set => characterBasicData.Level = value;
+        }
 
-		public int CurrentHP 
+		public int HP
+        {
+			get => characterStatusData.HP;
+            set => characterStatusData.HP = value;
+        }
+
+		public int MP
 		{
-			get { return characterStatusData.CurrentHP; }
-			set { characterStatusData.CurrentHP = value; }
-		}
+			get => characterStatusData.MP;
+            set => characterStatusData.MP = value;
+        }
 
-		public int CurrentMP
-		{
-			get { return characterStatusData.CurrentMP; }
-			set { characterStatusData.CurrentHP = value; }
-		}
+		public int MaximumHP => characterStatusData.MaximumHP;
 
-		public int MaximumHP { get { return characterStatusData.MaximumHP; } }
+        public int MaximumMP => characterStatusData.MaximumMP;
 
-		public int MaximumMP { get { return characterStatusData.MaximumMP; } }
-
-		public bool IsAlive { get { return characterStatusData.CurrentHP > 0; } }
-
-		public bool IsSelectableFirstStatus { get { return characterStatusData.SelectableFirstStatusCount > 0; } }
+        public bool IsAlive => characterStatusData.HP > 0;
 
         public override float MovementSpeed => characterStatusData.MovementSpeed;
-        public override float FactoredMovementSpeed => characterStatusData.MovementSpeed * SubGameBase.Current.SubGameEnvironment.MoveSpeedFactor;
+        public override float FactoredMovementSpeed => MovementSpeed * SubGameBase.Current.SubGameEnvironment.MoveSpeedFactor;
 
-        public int BasicAttackSkillID { get { return characterSkillData.BasicAttackSkillID;  } }
+        public int BasicAttackSkillID => characterSkillData.BasicAttackSkillID;
 		#endregion
 	}
 }

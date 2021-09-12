@@ -15,7 +15,7 @@ public class EntityHealHandler
 
         if (entity.EntityType == EntityType.Character)
         {
-            (entity as Character).CurrentHP = entityHeal.afterHP;
+            (entity as Character).HP = entityHeal.afterHP;
         }
 
         GameObject goFloatingItem = ResourcePool.Instance.GetResource(Define.ResourcePath.UI.FLOATING_ITEM, LOP.Game.Current.GameUI.GetFloatingItemCanvas().transform);

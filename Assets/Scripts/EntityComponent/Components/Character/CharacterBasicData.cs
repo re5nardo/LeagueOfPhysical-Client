@@ -3,28 +3,28 @@ using EntityCommand;
 
 public class CharacterBasicData : EntityBasicData
 {
-    public string ModelId { get; private set; }
-    private int m_nMasterDataID = -1;
-	
-	public override void Initialize(EntityCreationData entityCreationData)
+    public int MasterDataId { get; private set; } = -1;
+
+    private string modelId;
+    public string ModelId
+    {
+        get => modelId;
+        private set
+        {
+            modelId = value;
+            Entity.SendCommandToViews(new ModelChanged(value));
+        }
+    }
+
+    public int Level { get; set; } = 1;
+
+    public override void Initialize(EntityCreationData entityCreationData)
 	{
 		base.Initialize(entityCreationData);
 
         CharacterCreationData characterCreationData = entityCreationData as CharacterCreationData;
 
-        m_nMasterDataID = characterCreationData.masterDataId;
-
+        MasterDataId = characterCreationData.masterDataId;
         ModelId = characterCreationData.modelId;
-
-        Entity.SendCommandToViews(new ModelChanged(ModelId));
     }
-
-	public int MasterDataID { get { return m_nMasterDataID; } }
-
-	private int Level__ = 1;
-	public int Level
-	{
-		get { return Level__; }
-		set { Level__ = value; }
-	}
 }

@@ -24,7 +24,7 @@ namespace Entity
 			{
 				if (masterData == null)
 				{
-                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.Projectile>(projectileBasicData.MasterDataID);
+                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.Projectile>(projectileBasicData.MasterDataId);
 				}
 
 				return masterData;
@@ -54,7 +54,7 @@ namespace Entity
 
         #region Interface For Convenience
         public override float MovementSpeed => projectileBasicData.MovementSpeed;
-        public override float FactoredMovementSpeed => projectileBasicData.MovementSpeed * SubGameBase.Current.SubGameEnvironment.MoveSpeedFactor;
+        public override float FactoredMovementSpeed => MovementSpeed * SubGameBase.Current.SubGameEnvironment.MoveSpeedFactor;
         #endregion
     }
 }

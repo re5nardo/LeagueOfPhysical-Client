@@ -1,19 +1,15 @@
 ﻿using GameFramework;
+using System;
 
 public class CharacterStatusController : MonoEntityComponentBase
 {
 	public void OnSelectableFirstStatusCount(int nSelectableFirstStatusCount)
 	{
-		CharacterStatusData characterStatusData = Entity.GetEntityComponent<CharacterStatusData>();
-
-        characterStatusData.SelectableFirstStatusCount = nSelectableFirstStatusCount;
-	}
+        throw new NotImplementedException();
+    }
 
 	public void OnCharacterStatusChange(FirstStatus firstStatus, SecondStatus secondStatus)
 	{
-        CharacterStatusData characterStatusData = Entity.GetEntityComponent<CharacterStatusData>();
-
-        characterStatusData.SetFirstStatus(firstStatus);
-        characterStatusData.SetSecondStatus(secondStatus);
-	}
+        throw new NotImplementedException();
+    }
 }

@@ -15,11 +15,11 @@ public class EntityDamageHandler
 
         if (entity.EntityType == EntityType.GameItem)
         {
-            (entity as GameItem).CurrentHP = entityDamage.afterHP;
+            (entity as GameItem).HP = entityDamage.afterHP;
         }
         else if (entity.EntityType == EntityType.Character)
         {
-            (entity as Character).CurrentHP = entityDamage.afterHP;
+            (entity as Character).HP = entityDamage.afterHP;
         }
 
         GameObject goFloatingItem = ResourcePool.Instance.GetResource(Define.ResourcePath.UI.FLOATING_ITEM, LOP.Game.Current.GameUI.GetFloatingItemCanvas().transform);

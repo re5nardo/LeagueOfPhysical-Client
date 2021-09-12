@@ -34,8 +34,8 @@ public class PlayerHealthBar : HealthBarBase
 
             //  UI
             level.text = character.Level.ToString();
-            sliderHP.value = character.MaximumHP == 0 ? 0 : (float)character.CurrentHP / character.MaximumHP;
-            sliderMP.value = character.MaximumMP == 0 ? 0 : (float)character.CurrentMP / character.MaximumMP;
+            sliderHP.value = character.MaximumHP == 0 ? 0 : (float)character.HP / character.MaximumHP;
+            sliderMP.value = character.MaximumMP == 0 ? 0 : (float)character.MP / character.MaximumMP;
             //            m_sliderExp.value = character.GetCurrentExpPercent() / 100.0f;
 
             //  Position
@@ -51,8 +51,8 @@ public class PlayerHealthBar : HealthBarBase
         GlobalMonoBehavior.StartCoroutine(WaitForMasterData(character));
       
         level.text = character.Level.ToString();
-        sliderHP.value = character.MaximumHP == 0 ? 0 : (float)character.CurrentHP / character.MaximumHP;
-        sliderMP.value = character.MaximumMP == 0 ? 0 : (float)character.CurrentMP / character.MaximumMP;
+        sliderHP.value = character.MaximumHP == 0 ? 0 : (float)character.HP / character.MaximumHP;
+        sliderMP.value = character.MaximumMP == 0 ? 0 : (float)character.MP / character.MaximumMP;
         //        m_sliderExp.value = character.GetCurrentExpPercent() / 100.0f;
     }
 

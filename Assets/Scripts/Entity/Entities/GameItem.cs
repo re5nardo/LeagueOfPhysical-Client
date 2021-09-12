@@ -24,7 +24,7 @@ namespace Entity
 			{
 				if (masterData == null)
 				{
-                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.GameItem>(gameItemBasicData.MasterDataID);
+                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.GameItem>(gameItemBasicData.MasterDataId);
 				}
 
 				return masterData;
@@ -54,13 +54,13 @@ namespace Entity
 
         #region Interface For Convenience
         public override float MovementSpeed => gameItemBasicData.MovementSpeed;
-        public override float FactoredMovementSpeed => gameItemBasicData.MovementSpeed * SubGameBase.Current.SubGameEnvironment.MoveSpeedFactor;
+        public override float FactoredMovementSpeed => MovementSpeed * SubGameBase.Current.SubGameEnvironment.MoveSpeedFactor;
 
-		public int CurrentHP
-		{
-			get { return gameItemBasicData.CurrentHP; }
-			set { gameItemBasicData.CurrentHP = value; }
-		}
+		public int HP
+        {
+			get => gameItemBasicData.HP;
+            set => gameItemBasicData.HP = value;
+        }
 		#endregion
 	}
 }
