@@ -118,8 +118,6 @@ public class EntityManager : GameFramework.EntityManager
             {
                 entity.gameObject.AddComponent<EntityAnimatorController>();
             }
-
-            entity.HasAuthority = entity.EntityID == Entities.MyEntityID;
         }
 	}
 
@@ -171,7 +169,7 @@ public class EntityManager : GameFramework.EntityManager
                 .SetRotation(characterSnap.rotation)
 				.SetVelocity(characterSnap.velocity)
 				.SetAngularVelocity(characterSnap.angularVelocity)
-                .SetHasAuthority(characterSnap.hasAuthority)
+                .SetOwnerId(characterSnap.ownerId)
 				.Build();
         }
         else if (entitySnap.entityType == EntityType.Projectile)
@@ -189,7 +187,7 @@ public class EntityManager : GameFramework.EntityManager
 				.SetVelocity(projectileSnap.velocity)
 				.SetAngularVelocity(projectileSnap.angularVelocity)
 				.SetMovementSpeed(projectileSnap.movementSpeed)
-                .SetHasAuthority(projectileSnap.hasAuthority)
+                .SetOwnerId(projectileSnap.ownerId)
 				.Build();
         }
 		else if (entitySnap.entityType == EntityType.GameItem)
@@ -208,7 +206,7 @@ public class EntityManager : GameFramework.EntityManager
 				.SetAngularVelocity(gameItemSnap.angularVelocity)
 				.SetHP(gameItemSnap.HP)
 				.SetMaximumHP(gameItemSnap.maximumHP)
-                .SetHasAuthority(gameItemSnap.hasAuthority)
+                .SetOwnerId(gameItemSnap.ownerId)
 				.Build();
 		}
 		else

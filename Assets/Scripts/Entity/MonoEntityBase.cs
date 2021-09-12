@@ -14,7 +14,8 @@ namespace Entity
         public bool IsValid => EntityManager.Instance.IsRegistered(EntityID);
         public bool IsLocalEntity => EntityID < 0;
 
-        public bool HasAuthority { get; set; }
+        public string OwnerId { get; private set; } = "server";
+        public bool HasAuthority => OwnerId == LOP.Application.UserId || OwnerId == "local";
 
         private List<IEntityComponent> entityComponents = new List<IEntityComponent>();
 
@@ -49,7 +50,7 @@ namespace Entity
             AngularVelocity = entityCreationData.angularVelocity;
             EntityType = entityCreationData.entityType;
             EntityRole = entityCreationData.entityRole;
-            HasAuthority = entityCreationData.hasAuthority;
+            OwnerId = entityCreationData.ownerId;
         }
 
         public virtual void OnTick(int tick)
