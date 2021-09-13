@@ -17,7 +17,6 @@ public class CustomSerializationCode
 	public const byte SC_Ping = 19;
 	public const byte SC_SelectableFirstStatusCount = 20;
 	public const byte SC_CharacterStatusChange = 21;
-	public const byte SC_SelectableAbilityInfo = 24;
     public const byte SC_GameEvents = 25;
     public const byte SC_SyncTick = 26;
     public const byte SC_Synchronization = 27;
@@ -48,7 +47,6 @@ public class PhotonEvent
 	public const byte SC_Ping = 14;
 	public const byte SC_SelectableFirstStatusCount = 15;
 	public const byte SC_CharacterStatusChange = 16;
-	public const byte SC_SelectableAbilityInfo = 17;
     public const byte SC_GameEvents = 18;
     public const byte SC_SyncTick = 19;
     public const byte SC_Synchronization = 20;
@@ -424,23 +422,6 @@ namespace NetworkModel.PUN
         public byte GetEventID()
         {
             return PhotonEvent.SC_CharacterStatusChange;
-        }
-    }
-
-    [Serializable]
-    public class SC_SelectableAbilityInfo : IPhotonEventMessage
-    {
-        public int senderID { get; set; }
-        public List<int> m_SelectableAbilityIDs = new List<int>();
-
-        public SC_SelectableAbilityInfo(List<int> selectableAbilityIDs)
-        {
-            m_SelectableAbilityIDs = selectableAbilityIDs;
-        }
-
-        public byte GetEventID()
-        {
-            return PhotonEvent.SC_SelectableAbilityInfo;
         }
     }
 
