@@ -14,13 +14,13 @@ public class EntityBasicView : MonoViewComponentBase
     public Collider ModelCollider => m_ColliderModel;
     public Animator ModelAnimator => m_AnimatorModel;
 
-    protected MonoEntityBase monoEntity;
+    protected LOPEntityBase lopEntity;
 
     public override void OnAttached(IEntity entity)
     {
         base.OnAttached(entity);
 
-        monoEntity = entity as MonoEntityBase;
+        lopEntity = entity as LOPEntityBase;
 
         AddCommandHandler(typeof(ModelChanged), OnModelChanged);
         AddCommandHandler(typeof(AnimatorSetTrigger), OnAnimatorSetTrigger);
@@ -33,7 +33,7 @@ public class EntityBasicView : MonoViewComponentBase
     {
         base.OnDetached();
 
-        monoEntity = null;
+        lopEntity = null;
 
         RemoveCommandHandler(typeof(ModelChanged), OnModelChanged);
         RemoveCommandHandler(typeof(AnimatorSetTrigger), OnAnimatorSetTrigger);
@@ -96,7 +96,7 @@ public class EntityBasicView : MonoViewComponentBase
     public virtual void SetModel(GameObject model)
     {
         m_goModel = model;
-        m_goModel.transform.SetParent(monoEntity.Transform);
+        m_goModel.transform.SetParent(lopEntity.Transform);
         m_goModel.transform.localPosition = Vector3.zero;
         m_goModel.transform.localRotation = Quaternion.identity;
         m_goModel.transform.localScale = Vector3.one;

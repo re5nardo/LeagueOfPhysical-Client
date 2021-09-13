@@ -42,7 +42,7 @@ namespace Skill
 
         public float CoolTime { get { return m_fCoolTime; } }
 
-        new public MonoEntityBase Entity { get; private set; }
+        new public LOPEntityBase Entity { get; private set; }
 
         private MasterData.Skill masterData = null;
         public MasterData.Skill MasterData
@@ -63,7 +63,7 @@ namespace Skill
         {
             base.OnAttached(entity);
 
-            Entity = entity as MonoEntityBase;
+            Entity = entity as LOPEntityBase;
         }
 
         public override void OnDetached()

@@ -1,7 +1,7 @@
 ﻿
 namespace Entity
 {
-	public class GameItem : MonoEntityBase
+	public class GameItem : LOPEntityBase
     {
 		#region Builder
 		private static GameItemBuilder gameItemBuilder = new GameItemBuilder();

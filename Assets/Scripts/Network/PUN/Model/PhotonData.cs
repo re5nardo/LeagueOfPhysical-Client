@@ -74,7 +74,7 @@ namespace NetworkModel.PUN
         {
         }
 
-        public EntityTransformInfo(MonoEntityBase entity)
+        public EntityTransformInfo(LOPEntityBase entity)
         {
             m_nEntityID = entity.EntityID;
             m_Position = entity.Position;
@@ -84,7 +84,7 @@ namespace NetworkModel.PUN
             m_GameTime = Game.Current.GameTime;
         }
 
-        public void SetEntityTransformInfo(MonoEntityBase entity)
+        public void SetEntityTransformInfo(LOPEntityBase entity)
         {
             m_nEntityID = entity.EntityID;
             m_Position = entity.Position;

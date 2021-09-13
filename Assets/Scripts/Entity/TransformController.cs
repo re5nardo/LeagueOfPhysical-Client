@@ -7,7 +7,7 @@ using GameFramework;
 
 public class TransformController : MonoBehaviour
 {
-    private MonoEntityBase monoEntity;
+    private LOPEntityBase entity;
     private RoomProtocolDispatcher roomProtocolDispatcher;
     private EntityTransformSnap entityTransformSnap = new EntityTransformSnap();
     private List<EntityTransformSnap> entityTransformSnaps = new List<EntityTransformSnap>();
@@ -15,7 +15,7 @@ public class TransformController : MonoBehaviour
 
     private void Awake()
     {
-        monoEntity = GetComponent<MonoEntityBase>();
+        entity = GetComponent<LOPEntityBase>();
 
         roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
         roomProtocolDispatcher[typeof(SC_Synchronization)] = OnSC_Synchronization;
@@ -30,7 +30,7 @@ public class TransformController : MonoBehaviour
 
     private void OnSC_Synchronization(IMessage msg)
     {
-        if (monoEntity.HasAuthority)
+        if (entity.HasAuthority)
         {
             return;
         }
@@ -39,7 +39,7 @@ public class TransformController : MonoBehaviour
 
         synchronization.listSnap?.ForEach(snap =>
         {
-            if (snap is EntityTransformSnap entityTransformSnap && entityTransformSnap.entityId == monoEntity.EntityID)
+            if (snap is EntityTransformSnap entityTransformSnap && entityTransformSnap.entityId == entity.EntityID)
             {
                 entityTransformSnaps.Add(entityTransformSnap);
 
@@ -55,10 +55,10 @@ public class TransformController : MonoBehaviour
 
     private void OnLateTickEnd(int tick)
     {
-        if (monoEntity.HasAuthority)
+        if (entity.HasAuthority)
         {
             var synchronization = ObjectPool.Instance.GetObject<CS_Synchronization>();
-            synchronization.listSnap.Add(entityTransformSnap.Set(monoEntity));
+            synchronization.listSnap.Add(entityTransformSnap.Set(entity));
 
             RoomNetwork.Instance.Send(synchronization, 0, instant: true);
         }
@@ -66,7 +66,7 @@ public class TransformController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!monoEntity.HasAuthority)
+        if (!entity.HasAuthority)
         {
             SyncTransform();
         }
@@ -88,19 +88,19 @@ public class TransformController : MonoBehaviour
         {
             float t = (before.GameTime == next.GameTime) ? 0 : (syncTime - before.GameTime) / (next.GameTime - before.GameTime);
 
-            monoEntity.Position = Vector3.Lerp(before.position, next.position, t);
-            monoEntity.Rotation = Quaternion.Lerp(Quaternion.Euler(before.rotation), Quaternion.Euler(next.rotation), t).eulerAngles;
-            monoEntity.Velocity = Vector3.Lerp(before.velocity, next.velocity, t);
-            monoEntity.AngularVelocity = Vector3.Lerp(before.angularVelocity, next.angularVelocity, t);
+            entity.Position = Vector3.Lerp(before.position, next.position, t);
+            entity.Rotation = Quaternion.Lerp(Quaternion.Euler(before.rotation), Quaternion.Euler(next.rotation), t).eulerAngles;
+            entity.Velocity = Vector3.Lerp(before.velocity, next.velocity, t);
+            entity.AngularVelocity = Vector3.Lerp(before.angularVelocity, next.angularVelocity, t);
         }
         else if (before != null)
         {
             float elapsed = syncTime - before.GameTime;
 
-            monoEntity.Position = before.position + before.velocity * elapsed;
-            monoEntity.Rotation = before.rotation;
-            monoEntity.Velocity = before.velocity;
-            monoEntity.AngularVelocity = before.angularVelocity;
+            entity.Position = before.position + before.velocity * elapsed;
+            entity.Rotation = before.rotation;
+            entity.Velocity = before.velocity;
+            entity.AngularVelocity = before.angularVelocity;
         }
     }
 }
