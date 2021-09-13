@@ -31,8 +31,8 @@ namespace Entity
 			}
 		}
 
-		#region MonoEntityBase
-		protected override void InitEntityComponents()
+        #region LOPEntityBase
+        protected override void InitEntityComponents()
 		{
 			base.InitEntityComponents();
 
