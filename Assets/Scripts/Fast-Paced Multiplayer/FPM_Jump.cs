@@ -58,7 +58,7 @@ public class FPM_Jump : MonoBehaviour
 
     private void Predict()
     {
-        var entity = Entities.Get<LOPEntityBase>(jumpInputData.entityId);
+        var entity = Entities.Get<LOPMonoEntityBase>(jumpInputData.entityId);
 
         var behaviorController = entity.GetEntityComponent<BehaviorController>();
         behaviorController.Jump();

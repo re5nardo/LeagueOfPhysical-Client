@@ -90,7 +90,7 @@ public class EntityManager : GameFramework.EntityManager
                 continue;
 			}
 
-			var entity = CreateEntity(entitySnap) as LOPEntityBase;
+			var entity = CreateEntity(entitySnap) as LOPMonoEntityBase;
 
 			if (entity.EntityID == Entities.MyEntityID)
 			{
@@ -140,7 +140,7 @@ public class EntityManager : GameFramework.EntityManager
 
     public void DestroyEntity(int nEntityID)
     {
-        LOPEntityBase entity = GetEntity(nEntityID) as LOPEntityBase;
+        var entity = GetEntity(nEntityID) as LOPMonoEntityBase;
 
         entity.SendCommandToAll(new Destroying());
 
@@ -223,7 +223,7 @@ public class EntityManager : GameFramework.EntityManager
         //  sort
         //  ...
 
-        GetAllEntities<LOPEntityBase>()?.ForEach(entity =>
+        GetAllEntities<LOPMonoEntityBase>()?.ForEach(entity =>
         {
             if (entity.IsValid)
             {

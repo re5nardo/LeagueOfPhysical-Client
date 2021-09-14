@@ -8,7 +8,7 @@ using GameFramework;
 
 public class EntityAnimatorController : MonoBehaviour
 {
-    private LOPEntityBase entity;
+    private LOPMonoEntityBase entity;
     private RoomProtocolDispatcher roomProtocolDispatcher;
     private EntityAnimatorSnap entityAnimatorSnap = new EntityAnimatorSnap();
 
@@ -25,7 +25,7 @@ public class EntityAnimatorController : MonoBehaviour
 
     private void Awake()
     {
-        entity = GetComponent<LOPEntityBase>();
+        entity = GetComponent<LOPMonoEntityBase>();
 
         roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
         roomProtocolDispatcher[typeof(SC_Synchronization)] = OnSC_Synchronization;

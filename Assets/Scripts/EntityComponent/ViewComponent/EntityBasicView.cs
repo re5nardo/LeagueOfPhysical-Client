@@ -14,13 +14,13 @@ public class EntityBasicView : MonoViewComponentBase
     public Collider ModelCollider => m_ColliderModel;
     public Animator ModelAnimator => m_AnimatorModel;
 
-    protected LOPEntityBase lopEntity;
+    protected LOPMonoEntityBase lopEntity;
 
     public override void OnAttached(IEntity entity)
     {
         base.OnAttached(entity);
 
-        lopEntity = entity as LOPEntityBase;
+        lopEntity = entity as LOPMonoEntityBase;
 
         AddCommandHandler(typeof(ModelChanged), OnModelChanged);
         AddCommandHandler(typeof(AnimatorSetTrigger), OnAnimatorSetTrigger);

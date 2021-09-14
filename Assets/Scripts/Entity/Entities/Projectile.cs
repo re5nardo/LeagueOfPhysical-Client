@@ -1,7 +1,7 @@
 ﻿
 namespace Entity
 {
-	public class Projectile : LOPEntityBase
+	public class Projectile : LOPMonoEntityBase
     {
 		#region Builder
 		private static ProjectileBuilder projectileBuilder = new ProjectileBuilder();

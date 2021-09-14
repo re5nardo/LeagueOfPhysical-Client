@@ -11,7 +11,7 @@ public class EntityHealHandler
     {
         EntityHeal entityHeal = gameEvent as EntityHeal;
 
-        LOPEntityBase entity = Entities.Get<LOPEntityBase>(entityHeal.healedEntityID);
+        var entity = Entities.Get<LOPMonoEntityBase>(entityHeal.healedEntityID);
 
         if (entity.EntityType == EntityType.Character)
         {

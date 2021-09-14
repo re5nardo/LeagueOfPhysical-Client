@@ -20,7 +20,7 @@ public class JumpWang : SubGameBase
     {
         int entityId = (int)param[0];
 
-        var entity = Entities.Get<LOPEntityBase>(entityId);
+        var entity = Entities.Get<LOPMonoEntityBase>(entityId);
 
         entity.Rigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
     }
@@ -29,7 +29,7 @@ public class JumpWang : SubGameBase
     {
         yield return SceneManager.LoadSceneAsync(LOP.Game.Current.GameManager.mapName, LoadSceneMode.Additive);
 
-        foreach (var entity in Entities.GetAll<LOPEntityBase>())
+        foreach (var entity in Entities.GetAll<LOPMonoEntityBase>())
         {
             if (entity is MapObjectBase)
             {
