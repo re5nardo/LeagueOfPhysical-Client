@@ -4,7 +4,7 @@ using UnityEngine;
 using Entity;
 using GameFramework;
 
-public class CharacterSkillData : MonoEntityComponentBase
+public class CharacterSkillData : LOPMonoEntityComponentBase
 {
     private int basicAttackSkillID;
     private int activeSkill1ID;

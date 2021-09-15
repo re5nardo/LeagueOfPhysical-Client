@@ -1,7 +1,7 @@
 ﻿using GameFramework;
 using System;
 
-public class CharacterStatusController : MonoEntityComponentBase
+public class CharacterStatusController : LOPMonoEntityComponentBase
 {
 	public void OnSelectableFirstStatusCount(int nSelectableFirstStatusCount)
 	{

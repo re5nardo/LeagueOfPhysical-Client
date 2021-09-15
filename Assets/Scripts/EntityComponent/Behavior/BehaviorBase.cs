@@ -7,7 +7,7 @@ using Entity;
 
 namespace Behavior
 {
-    public abstract class BehaviorBase : MonoEntityComponentBase
+    public abstract class BehaviorBase : LOPMonoEntityComponentBase
     {
         public event Action<BehaviorBase> onBehaviorEnd = null;
 
