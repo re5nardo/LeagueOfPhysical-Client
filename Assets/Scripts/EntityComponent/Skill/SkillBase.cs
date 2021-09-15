@@ -42,8 +42,6 @@ namespace Skill
 
         public float CoolTime { get { return m_fCoolTime; } }
 
-        new public LOPMonoEntityBase Entity { get; private set; }
-
         private MasterData.Skill masterData = null;
         public MasterData.Skill MasterData
         {
@@ -57,22 +55,6 @@ namespace Skill
                 return masterData;
             }
         }
-
-        #region IComponent
-        public override void OnAttached(IEntity entity)
-        {
-            base.OnAttached(entity);
-
-            Entity = entity as LOPMonoEntityBase;
-        }
-
-        public override void OnDetached()
-        {
-            base.OnDetached();
-
-            Entity = null;
-        }
-        #endregion
 
         #region SkillInputData
         public virtual void OnReceiveSkillInputData(SkillInputData skillInputData)

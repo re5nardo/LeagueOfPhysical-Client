@@ -45,8 +45,6 @@ namespace State
             }
         }
 
-        new public LOPMonoEntityBase Entity { get; private set; }
-
 		private MasterData.State masterData = null;
 		public MasterData.State MasterData
 		{
@@ -60,22 +58,6 @@ namespace State
 				return masterData;
 			}
 		}
-
-		#region IComponent
-		public override void OnAttached(IEntity entity)
-		{
-			base.OnAttached(entity);
-
-			Entity = entity as LOPMonoEntityBase;
-		}
-
-		public override void OnDetached()
-		{
-			base.OnDetached();
-
-			Entity = null;
-		}
-		#endregion
 
 		public virtual void SetData(int nStateMasterID, params object[] param)
 		{
