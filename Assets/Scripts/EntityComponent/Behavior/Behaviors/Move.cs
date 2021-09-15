@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using GameFramework;
-using EntityCommand;
+using EntityMessage;
 
 namespace Behavior
 {
@@ -15,7 +15,7 @@ namespace Behavior
         {
             base.OnBehaviorStart();
 
-            Entity.SendCommandToViews(new AnimatorSetBool("Move", true));
+            Entity.MessageBroker.Publish(new AnimatorSetBool("Move", true));
         }
 
         protected override bool OnBehaviorUpdate()
@@ -62,7 +62,7 @@ namespace Behavior
         {
             base.OnBehaviorEnd();
 
-            Entity.SendCommandToViews(new AnimatorSetBool("Move", false));
+            Entity.MessageBroker.Publish(new AnimatorSetBool("Move", false));
         }
 
         public override void SetData(int nBehaviorMasterID, params object[] param)

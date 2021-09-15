@@ -4,7 +4,7 @@ using UnityEngine;
 using Entity;
 using System;
 using GameFramework;
-using EntityCommand;
+using EntityMessage;
 using NetworkModel.Mirror;
 
 public class EntityManager : GameFramework.EntityManager
@@ -142,7 +142,7 @@ public class EntityManager : GameFramework.EntityManager
     {
         var entity = GetEntity<LOPMonoEntityBase>(nEntityID);
 
-        entity.SendCommandToAll(new Destroying());
+        entity.MessageBroker.Publish(new Destroying());
 
         UnregisterEntity(nEntityID);
 

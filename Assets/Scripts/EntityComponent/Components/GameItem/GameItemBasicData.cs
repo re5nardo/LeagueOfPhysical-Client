@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using EntityCommand;
+using EntityMessage;
 
 public class GameItemBasicData : EntityBasicData
 {
@@ -12,7 +12,7 @@ public class GameItemBasicData : EntityBasicData
         private set
         {
             modelId = value;
-            Entity.SendCommandToViews(new ModelChanged(value));
+            Entity.MessageBroker.Publish(new ModelChanged(value));
         }
     }
 

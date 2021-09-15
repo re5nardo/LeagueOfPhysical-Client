@@ -1,4 +1,4 @@
-﻿using EntityCommand;
+﻿using EntityMessage;
 
 public class ProjectileBasicData : EntityBasicData
 {
@@ -11,7 +11,7 @@ public class ProjectileBasicData : EntityBasicData
         private set
         {
             modelId = value;
-            Entity.SendCommandToViews(new ModelChanged(value));
+            Entity.MessageBroker.Publish(new ModelChanged(value));
         }
     }
 

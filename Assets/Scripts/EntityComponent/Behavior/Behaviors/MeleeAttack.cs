@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Entity;
-using EntityCommand;
+using EntityMessage;
 
 namespace Behavior
 {
@@ -19,7 +19,7 @@ namespace Behavior
         {
             base.OnBehaviorStart();
 
-			Entity.SendCommandToViews(new AnimatorSetTrigger("Attack"));
+			Entity.MessageBroker.Publish(new AnimatorSetTrigger("Attack"));
 		}
 
         protected override bool OnBehaviorUpdate()
