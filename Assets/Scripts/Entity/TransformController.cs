@@ -20,12 +20,12 @@ public class TransformController : MonoBehaviour
         roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
         roomProtocolDispatcher[typeof(SC_Synchronization)] = OnSC_Synchronization;
 
-        TickPubSubService.AddSubscriber("LateTickEnd", OnLateTickEnd);
+        SceneMessageBroker.AddSubscriber<TickMessage.LateTickEnd>(OnLateTickEnd);
     }
 
     private void OnDestroy()
     {
-        TickPubSubService.RemoveSubscriber("LateTickEnd", OnLateTickEnd);
+        SceneMessageBroker.RemoveSubscriber<TickMessage.LateTickEnd>(OnLateTickEnd);
     }
 
     private void OnSC_Synchronization(IMessage msg)
@@ -53,7 +53,7 @@ public class TransformController : MonoBehaviour
         });
     }
 
-    private void OnLateTickEnd(int tick)
+    private void OnLateTickEnd(TickMessage.LateTickEnd message)
     {
         if (entity.HasAuthority)
         {

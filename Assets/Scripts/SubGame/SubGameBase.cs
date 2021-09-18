@@ -41,8 +41,8 @@ public abstract class SubGameBase : MonoBehaviour
 
         IsGameEnd = false;
 
-        TickPubSubService.AddSubscriber("Tick", OnTick);
-        TickPubSubService.AddSubscriber("EarlyTickEnd", OnEarlyTickEnd);
+        SceneMessageBroker.AddSubscriber<TickMessage.Tick>(OnTickMessage);
+        SceneMessageBroker.AddSubscriber<TickMessage.EarlyTickEnd>(OnEarlyTickEndMessage);
 
         OnGameStart();
 
@@ -57,8 +57,18 @@ public abstract class SubGameBase : MonoBehaviour
 
         IsGameEnd = true;
 
-        TickPubSubService.RemoveSubscriber("Tick", OnTick);
-        TickPubSubService.RemoveSubscriber("EarlyTickEnd", OnEarlyTickEnd);
+        SceneMessageBroker.RemoveSubscriber<TickMessage.Tick>(OnTickMessage);
+        SceneMessageBroker.RemoveSubscriber<TickMessage.EarlyTickEnd>(OnEarlyTickEndMessage);
+    }
+
+    private void OnTickMessage(TickMessage.Tick message)
+    {
+        OnTick(message.tick);
+    }
+
+    private void OnEarlyTickEndMessage(TickMessage.EarlyTickEnd message)
+    {
+        OnEarlyTickEnd(message.tick);
     }
 
     protected abstract IEnumerator OnInitialize();

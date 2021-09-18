@@ -54,12 +54,12 @@ public class EntityManager : GameFramework.EntityManager
         roomProtocolDispatcher[typeof(SC_EntityAppear)] = OnSC_EntityAppear;
         roomProtocolDispatcher[typeof(SC_EntityDisAppear)] = OnSC_EntityDisAppear;
 
-        TickPubSubService.AddSubscriber("Tick", OnTick);
+        SceneMessageBroker.AddSubscriber<TickMessage.Tick>(OnTick);
 	}
 
     private void OnDestroy()
     {
-        TickPubSubService.RemoveSubscriber("Tick", OnTick);
+        SceneMessageBroker.RemoveSubscriber<TickMessage.Tick>(OnTick);
     }
 #endregion
 
@@ -67,14 +67,14 @@ public class EntityManager : GameFramework.EntityManager
     {
         base.RegisterEntity(entity);
 
-        GamePubSubService.Publish(GameMessageKey.EntityRegister, new object[] { entity.EntityID });
+        SceneMessageBroker.Publish(new GameMessage.EntityRegister(entity.EntityID));
     }
 
     public override void UnregisterEntity(int nEntityID)
     {
         base.UnregisterEntity(nEntityID);
 
-        GamePubSubService.Publish(GameMessageKey.EntityUnregister, new object[] { nEntityID });
+        SceneMessageBroker.Publish(new GameMessage.EntityUnregister(nEntityID));
     }
 
     #region Message Handler
@@ -218,7 +218,7 @@ public class EntityManager : GameFramework.EntityManager
         return entity;
     }
 
-    private void OnTick(int tick)
+    private void OnTick(TickMessage.Tick message)
     {
         //  sort
         //  ...
@@ -227,7 +227,7 @@ public class EntityManager : GameFramework.EntityManager
         {
             if (entity.IsValid)
             {
-                entity.OnTick(tick);
+                entity.OnTick(message.tick);
             }
         });
     }

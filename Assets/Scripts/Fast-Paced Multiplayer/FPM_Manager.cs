@@ -20,7 +20,7 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         fpm_Move = gameObject.AddComponent<FPM_Move>();
         fpm_Jump = gameObject.AddComponent<FPM_Jump>();
 
-        TickPubSubService.AddSubscriber("EarlyTick", OnEarlyTick);
+        SceneMessageBroker.AddSubscriber<TickMessage.EarlyTick>(OnEarlyTick);
 
         roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
     }
@@ -29,10 +29,10 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
     {
         base.OnDestroy();
 
-        TickPubSubService.RemoveSubscriber("EarlyTick", OnEarlyTick);
+        SceneMessageBroker.RemoveSubscriber<TickMessage.EarlyTick>(OnEarlyTick);
     }
 
-    private void OnEarlyTick(int tick)
+    private void OnEarlyTick(TickMessage.EarlyTick message)
     {
         fpm_Jump.ProcessJumpInputData();
         fpm_Move.ProcessPlayerMoveInput();

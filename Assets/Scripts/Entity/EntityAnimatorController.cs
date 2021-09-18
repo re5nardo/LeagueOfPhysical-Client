@@ -41,12 +41,12 @@ public class EntityAnimatorController : MonoBehaviour
         transitionHash = new int[entity.ModelAnimator.layerCount];
         layerWeight = new float[entity.ModelAnimator.layerCount];
 
-        TickPubSubService.AddSubscriber("LateTickEnd", OnLateTickEnd);
+        SceneMessageBroker.AddSubscriber<TickMessage.LateTickEnd>(OnLateTickEnd);
     }
 
     private void OnDestroy()
     {
-        TickPubSubService.RemoveSubscriber("LateTickEnd", OnLateTickEnd);
+        SceneMessageBroker.RemoveSubscriber<TickMessage.LateTickEnd>(OnLateTickEnd);
     }
 
     private void OnSC_Synchronization(IMessage msg)
@@ -67,7 +67,7 @@ public class EntityAnimatorController : MonoBehaviour
         });
     }
 
-    private void OnLateTickEnd(int tick)
+    private void OnLateTickEnd(TickMessage.LateTickEnd message)
     {
         if (entity.HasAuthority)
         {

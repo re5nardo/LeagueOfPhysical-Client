@@ -68,25 +68,25 @@ namespace LOP
 
         private void OnTick(int tick)
         {
-            TickPubSubService.Publish("EarlyTick", tick);
-            TickPubSubService.Publish("Tick", tick);
-            TickPubSubService.Publish("LateTick", tick);
+            SceneMessageBroker.Publish(new TickMessage.EarlyTick(tick));
+            SceneMessageBroker.Publish(new TickMessage.Tick(tick));
+            SceneMessageBroker.Publish(new TickMessage.LateTick(tick));
         }
 
         private void OnTickEnd(int tick)
         {
-            TickPubSubService.Publish("EarlyTickEnd", tick);
-            TickPubSubService.Publish("TickEnd", tick);
-            TickPubSubService.Publish("LateTickEnd", tick);
+            SceneMessageBroker.Publish(new TickMessage.EarlyTickEnd(tick));
+            SceneMessageBroker.Publish(new TickMessage.TickEnd(tick));
+            SceneMessageBroker.Publish(new TickMessage.LateTickEnd(tick));
         }
 
         private void OnUpdateElapsedTime(float time)
         {
-            TickPubSubService.Publish("BeforePhysicsSimulation", CurrentTick);
+            SceneMessageBroker.Publish(new TickMessage.BeforePhysicsSimulation(CurrentTick));
 
             Physics.Simulate(time);
 
-            TickPubSubService.Publish("AfterPhysicsSimulation", CurrentTick);
+            SceneMessageBroker.Publish(new TickMessage.AfterPhysicsSimulation(CurrentTick));
         }
 
         private void NotifyPlayerLookAtPosition()
