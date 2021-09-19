@@ -14,6 +14,8 @@ namespace LOP
 
         public float Latency { get; private set; } = 0.04f;     //  sec     실제 ping data 활용해야 함
 
+        private RoomProtocolDispatcher roomProtocolDispatcher = null;
+
         #region MonoBehaviour
         private IEnumerator Start()
         {
@@ -34,6 +36,8 @@ namespace LOP
 
         private IEnumerator Initialize()
         {
+            roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
+
             RoomId = RoomConnector.Instance.Room.roomId;
             MatchSetting = RoomConnector.Instance.Room.matchSetting;
 

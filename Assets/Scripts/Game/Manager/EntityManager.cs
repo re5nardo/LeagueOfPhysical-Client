@@ -42,23 +42,21 @@ public class EntityManager : GameFramework.EntityManager
     }
     #endregion
 
-    private RoomProtocolDispatcher roomProtocolDispatcher = null;
-
     #region MonoBehaviour
     private void Awake()
     {
         positionGrid = new Grid();
         positionGrid.SetGrid(10);
 
-        roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
-        roomProtocolDispatcher[typeof(SC_EntityAppear)] = OnSC_EntityAppear;
-        roomProtocolDispatcher[typeof(SC_EntityDisAppear)] = OnSC_EntityDisAppear;
-
+        SceneMessageBroker.AddSubscriber<SC_EntityAppear>(OnSC_EntityAppear);
+        SceneMessageBroker.AddSubscriber<SC_EntityDisAppear>(OnSC_EntityDisAppear);
         SceneMessageBroker.AddSubscriber<TickMessage.Tick>(OnTick);
 	}
 
     private void OnDestroy()
     {
+        SceneMessageBroker.RemoveSubscriber<SC_EntityAppear>(OnSC_EntityAppear);
+        SceneMessageBroker.RemoveSubscriber<SC_EntityDisAppear>(OnSC_EntityDisAppear);
         SceneMessageBroker.RemoveSubscriber<TickMessage.Tick>(OnTick);
     }
 #endregion

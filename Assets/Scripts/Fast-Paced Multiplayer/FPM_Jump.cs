@@ -14,14 +14,16 @@ public class FPM_Jump : MonoBehaviour
     private List<TickNSequence> clientTickNSequences = new List<TickNSequence>();
     private List<TickNSequence> serverTickNSequences = new List<TickNSequence>();
 
-    private RoomProtocolDispatcher roomProtocolDispatcher = null;
-
     private void Awake()
     {
-        MessageBroker.Default.Receive<JumpInputData>().Subscribe(OnJumpInputData).AddTo(this);
+        SceneMessageBroker.AddSubscriber<JumpInputData>(OnJumpInputData);
+        SceneMessageBroker.AddSubscriber<SC_ProcessInputData>(OnSC_ProcessInputData);
+    }
 
-        roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
-        roomProtocolDispatcher[typeof(SC_ProcessInputData)] = OnSC_ProcessInputData;
+    private void OnDestroy()
+    {
+        SceneMessageBroker.RemoveSubscriber<JumpInputData>(OnJumpInputData);
+        SceneMessageBroker.RemoveSubscriber<SC_ProcessInputData>(OnSC_ProcessInputData);
     }
 
     public void ProcessJumpInputData()
@@ -70,10 +72,8 @@ public class FPM_Jump : MonoBehaviour
         this.jumpInputData = jumpInputData;
     }
 
-    private void OnSC_ProcessInputData(IMessage msg)
+    private void OnSC_ProcessInputData(SC_ProcessInputData processInputData)
     {
-        SC_ProcessInputData processInputData = msg as SC_ProcessInputData;
-
         if (processInputData.type == "jump")
         {
             serverTickNSequences.Add(new TickNSequence(processInputData.tick, processInputData.sequence));

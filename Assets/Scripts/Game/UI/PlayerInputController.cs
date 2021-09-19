@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Entity;
 using GameFramework;
-using UniRx;
 using NetworkModel.Mirror;
 
 public class PlayerInputController : MonoBehaviour
@@ -20,7 +19,6 @@ public class PlayerInputController : MonoBehaviour
 
     [SerializeField] private TextureButton jumpBtn = null;
 
-    private RoomProtocolDispatcher roomProtocolDispatcher = null;
     private Character Entity = null;
     private SkillInputData skillInputData = null;
 
@@ -97,8 +95,7 @@ public class PlayerInputController : MonoBehaviour
 
         jumpBtn.button.onClick.AddListener(OnJumpBtnClicked);
 
-        roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
-        roomProtocolDispatcher[typeof(SC_EntitySkillInfo)] = OnSC_EntitySkillInfo;
+        SceneMessageBroker.AddSubscriber<SC_EntitySkillInfo>(OnSC_EntitySkillInfo);
 	}
 
 	private void OnDestroy()
@@ -118,13 +115,13 @@ public class PlayerInputController : MonoBehaviour
 		ultimateSkillBtn.onClicked -= OnSkillBtnClicked;
 
         jumpBtn.button.onClick.RemoveListener(OnJumpBtnClicked);
+
+        SceneMessageBroker.RemoveSubscriber<SC_EntitySkillInfo>(OnSC_EntitySkillInfo);
     }
 
 	#region Message Handler
-	private void OnSC_EntitySkillInfo(IMessage msg)
+	private void OnSC_EntitySkillInfo(SC_EntitySkillInfo entitySkillInfo)
 	{
-		SC_EntitySkillInfo entitySkillInfo = msg as SC_EntitySkillInfo;
-
 		foreach (KeyValuePair<int, float> kv in entitySkillInfo.dicSkillInfo)
 		{
 			MasterData.Skill masterSkill = MasterDataManager.Instance.GetMasterData<MasterData.Skill>(kv.Key);
@@ -155,7 +152,7 @@ public class PlayerInputController : MonoBehaviour
 
         var playerMoveInput = new PlayerMoveInput(inputType: PlayerMoveInput.InputType.Press);
 
-        MessageBroker.Default.Publish(playerMoveInput);
+        SceneMessageBroker.Publish(playerMoveInput);
     }
 
 	private void OnMoveControllerRelease(Vector2 screenPosition)
@@ -165,7 +162,7 @@ public class PlayerInputController : MonoBehaviour
 
         var playerMoveInput = new PlayerMoveInput(inputType: PlayerMoveInput.InputType.Release);
 
-        MessageBroker.Default.Publish(playerMoveInput);
+        SceneMessageBroker.Publish(playerMoveInput);
     }
 
 	private void OnMoveControllerHold(Vector2 holdPosition)
@@ -185,7 +182,7 @@ public class PlayerInputController : MonoBehaviour
 
         var playerMoveInput = new PlayerMoveInput(inputData: new Vector3(x, 0, z).normalized, inputType: PlayerMoveInput.InputType.Hold);
 
-        MessageBroker.Default.Publish(playerMoveInput);
+        SceneMessageBroker.Publish(playerMoveInput);
 
     }
 
@@ -247,7 +244,7 @@ public class PlayerInputController : MonoBehaviour
     {
         var jumpInputData = new JumpInputData();
 
-        MessageBroker.Default.Publish(jumpInputData);
+        SceneMessageBroker.Publish(jumpInputData);
     }
     #endregion
 }

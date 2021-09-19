@@ -11,8 +11,6 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
     private FPM_Move fpm_Move = null;
     private FPM_Jump fpm_Jump = null;
 
-    private RoomProtocolDispatcher roomProtocolDispatcher = null;
-
     protected override void Awake()
     {
         base.Awake();
@@ -21,8 +19,6 @@ public class FPM_Manager : MonoSingleton<FPM_Manager>
         fpm_Jump = gameObject.AddComponent<FPM_Jump>();
 
         SceneMessageBroker.AddSubscriber<TickMessage.EarlyTick>(OnEarlyTick);
-
-        roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
     }
 
     protected override void OnDestroy()

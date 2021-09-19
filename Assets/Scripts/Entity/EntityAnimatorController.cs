@@ -9,7 +9,6 @@ using GameFramework;
 public class EntityAnimatorController : MonoBehaviour
 {
     private LOPMonoEntityBase entity;
-    private RoomProtocolDispatcher roomProtocolDispatcher;
     private EntityAnimatorSnap entityAnimatorSnap = new EntityAnimatorSnap();
 
     // Note: not an object[] array because otherwise initialization is real annoying
@@ -27,9 +26,6 @@ public class EntityAnimatorController : MonoBehaviour
     {
         entity = GetComponent<LOPMonoEntityBase>();
 
-        roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
-        roomProtocolDispatcher[typeof(SC_Synchronization)] = OnSC_Synchronization;
-
         // store the animator parameters in a variable - the "Animator.parameters" getter allocates
         // a new parameter array every time it is accessed so we should avoid doing it in a loop
         parameters = entity.ModelAnimator.parameters.Where(par => !entity.ModelAnimator.IsParameterControlledByCurve(par.nameHash)).ToArray();
@@ -41,22 +37,22 @@ public class EntityAnimatorController : MonoBehaviour
         transitionHash = new int[entity.ModelAnimator.layerCount];
         layerWeight = new float[entity.ModelAnimator.layerCount];
 
+        SceneMessageBroker.AddSubscriber<SC_Synchronization>(OnSC_Synchronization);
         SceneMessageBroker.AddSubscriber<TickMessage.LateTickEnd>(OnLateTickEnd);
     }
 
     private void OnDestroy()
     {
+        SceneMessageBroker.RemoveSubscriber<SC_Synchronization>(OnSC_Synchronization);
         SceneMessageBroker.RemoveSubscriber<TickMessage.LateTickEnd>(OnLateTickEnd);
     }
 
-    private void OnSC_Synchronization(IMessage msg)
+    private void OnSC_Synchronization(SC_Synchronization synchronization)
     {
         if (entity.HasAuthority)
         {
             return;
         }
-
-        SC_Synchronization synchronization = msg as SC_Synchronization;
 
         synchronization.listSnap?.ForEach(snap =>
         {

@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Entity;
 using NetworkModel.Mirror;
-using GameFramework;
 
 public class TransformController : MonoBehaviour
 {
     private LOPMonoEntityBase entity;
-    private RoomProtocolDispatcher roomProtocolDispatcher;
     private EntityTransformSnap entityTransformSnap = new EntityTransformSnap();
     private List<EntityTransformSnap> entityTransformSnaps = new List<EntityTransformSnap>();
     private AverageQueue latencies = new AverageQueue();
@@ -17,25 +15,22 @@ public class TransformController : MonoBehaviour
     {
         entity = GetComponent<LOPMonoEntityBase>();
 
-        roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
-        roomProtocolDispatcher[typeof(SC_Synchronization)] = OnSC_Synchronization;
-
+        SceneMessageBroker.AddSubscriber<SC_Synchronization>(OnSC_Synchronization);
         SceneMessageBroker.AddSubscriber<TickMessage.LateTickEnd>(OnLateTickEnd);
     }
 
     private void OnDestroy()
     {
+        SceneMessageBroker.RemoveSubscriber<SC_Synchronization>(OnSC_Synchronization);
         SceneMessageBroker.RemoveSubscriber<TickMessage.LateTickEnd>(OnLateTickEnd);
     }
 
-    private void OnSC_Synchronization(IMessage msg)
+    private void OnSC_Synchronization(SC_Synchronization synchronization)
     {
         if (entity.HasAuthority)
         {
             return;
         }
-
-        SC_Synchronization synchronization = msg as SC_Synchronization;
 
         synchronization.listSnap?.ForEach(snap =>
         {

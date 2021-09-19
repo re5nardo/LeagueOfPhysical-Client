@@ -5,22 +5,25 @@ using NetworkModel.Mirror;
 
 public class GameEventManager : MonoBehaviour
 {
-    private RoomProtocolDispatcher roomProtocolDispatcher = null;
     private GameEventDispatcher gameEventDispatcher = null;
 
     private void Awake()
     {
-        roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
-        roomProtocolDispatcher[typeof(SC_GameEvents)] = (msg) =>
-        {
-            SC_GameEvents gameEvents = msg as SC_GameEvents;
-
-            gameEvents.listGameEvent.ForEach(gameEvent =>
-            {
-                gameEventDispatcher.DispatchGameEvent(gameEvent);
-            });
-        };
+        SceneMessageBroker.AddSubscriber<SC_GameEvents>(OnSC_GameEvents);
 
         gameEventDispatcher = gameObject.AddComponent<GameEventDispatcher>();
+    }
+
+    private void OnDestroy()
+    {
+        SceneMessageBroker.RemoveSubscriber<SC_GameEvents>(OnSC_GameEvents);
+    }
+
+    private void OnSC_GameEvents(SC_GameEvents gameEvents)
+    {
+        gameEvents.listGameEvent.ForEach(gameEvent =>
+        {
+            gameEventDispatcher.DispatchGameEvent(gameEvent);
+        });
     }
 }

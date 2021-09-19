@@ -17,7 +17,6 @@ namespace LOP
         public GameEventManager GameEventManager => gameEventManager;
         public GameManager GameManager => gameManager;
 
-        private RoomProtocolDispatcher roomProtocolDispatcher = null;
         private GameEventManager gameEventManager = null;
         private GameManager gameManager = null;
         private MyInfo myInfo = null;
@@ -27,16 +26,15 @@ namespace LOP
             Physics.autoSimulation = false;
 
             tickUpdater = gameObject.AddComponent<LOPTickUpdater>();
-            roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
             gameEventManager = gameObject.AddComponent<GameEventManager>();
             gameManager = gameObject.AddComponent<GameManager>();
             myInfo = gameObject.AddComponent<MyInfo>();
 
-            roomProtocolDispatcher[typeof(SC_EnterRoom)] = LOP.Game.Current.OnEnterRoom;
-            roomProtocolDispatcher[typeof(SC_SyncTick)] = SC_SyncTickHandler.Handle;
-            roomProtocolDispatcher[typeof(SC_EmotionExpression)] = SC_EmotionExpressionHandler.Handle;
-            roomProtocolDispatcher[typeof(SC_Synchronization)] = SC_SynchronizationHandler.Handle;
-            roomProtocolDispatcher[typeof(SC_GameEnd)] = SC_GameEndHandler.Handle;
+            SceneMessageBroker.AddSubscriber<SC_EnterRoom>(LOP.Game.Current.OnEnterRoom);
+            SceneMessageBroker.AddSubscriber<SC_SyncTick>(SC_SyncTickHandler.Handle);
+            SceneMessageBroker.AddSubscriber<SC_EmotionExpression>(SC_EmotionExpressionHandler.Handle);
+            SceneMessageBroker.AddSubscriber<SC_Synchronization>(SC_SynchronizationHandler.Handle);
+            SceneMessageBroker.AddSubscriber<SC_GameEnd>(SC_GameEndHandler.Handle);
 
             tickUpdater.Initialize(1 / 30f, true, Room.Instance.Latency, OnTick, OnTickEnd, OnUpdateElapsedTime);
             GameUI.Initialize();
@@ -55,6 +53,12 @@ namespace LOP
             base.Clear();
 
             Physics.autoSimulation = true;
+
+            SceneMessageBroker.RemoveSubscriber<SC_EnterRoom>(LOP.Game.Current.OnEnterRoom);
+            SceneMessageBroker.RemoveSubscriber<SC_SyncTick>(SC_SyncTickHandler.Handle);
+            SceneMessageBroker.RemoveSubscriber<SC_EmotionExpression>(SC_EmotionExpressionHandler.Handle);
+            SceneMessageBroker.RemoveSubscriber<SC_Synchronization>(SC_SynchronizationHandler.Handle);
+            SceneMessageBroker.RemoveSubscriber<SC_GameEnd>(SC_GameEndHandler.Handle);
 
             GameUI.Clear();
         }

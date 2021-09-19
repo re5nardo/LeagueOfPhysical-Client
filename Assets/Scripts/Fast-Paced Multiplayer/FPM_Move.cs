@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
-using UniRx;
 using Entity;
 using NetworkModel.Mirror;
 
@@ -14,14 +13,16 @@ public class FPM_Move : MonoBehaviour
     private List<TickNSequence> clientTickNSequences = new List<TickNSequence>();
     private List<TickNSequence> serverTickNSequences = new List<TickNSequence>();
 
-    private RoomProtocolDispatcher roomProtocolDispatcher = null;
-
     private void Awake()
     {
-        MessageBroker.Default.Receive<PlayerMoveInput>().Subscribe(OnPlayerMoveInput).AddTo(this);
+        SceneMessageBroker.AddSubscriber<PlayerMoveInput>(OnPlayerMoveInput);
+        SceneMessageBroker.AddSubscriber<SC_ProcessInputData>(OnSC_ProcessInputData);
+    }
 
-        roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
-        roomProtocolDispatcher[typeof(SC_ProcessInputData)] = OnSC_ProcessInputData;
+    private void OnDestroy()
+    {
+        SceneMessageBroker.RemoveSubscriber<PlayerMoveInput>(OnPlayerMoveInput);
+        SceneMessageBroker.RemoveSubscriber<SC_ProcessInputData>(OnSC_ProcessInputData);
     }
 
     public void ProcessPlayerMoveInput()
@@ -81,10 +82,8 @@ public class FPM_Move : MonoBehaviour
         this.playerMoveInput = playerMoveInput;
     }
 
-    private void OnSC_ProcessInputData(IMessage msg)
+    private void OnSC_ProcessInputData(SC_ProcessInputData processInputData)
     {
-        SC_ProcessInputData processInputData = msg as SC_ProcessInputData;
-
         if (processInputData.type == "move")
         {
             serverTickNSequences.Add(new TickNSequence(processInputData.tick, processInputData.sequence));
