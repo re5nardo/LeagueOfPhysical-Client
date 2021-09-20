@@ -11,9 +11,9 @@ public class CharacterSkillData : LOPMonoEntityComponentBase
     private int activeSkill2ID;
     private int ultimateSkillID;
 
-    public override void Initialize(EntityCreationData entityCreationData)
+    protected override void OnInitialize(EntityCreationData entityCreationData)
     {
-        base.Initialize(entityCreationData);
+        base.OnInitialize(entityCreationData);
 
         foreach (int skillID in (Entity as Character).MasterData.SkillIDs)
         {

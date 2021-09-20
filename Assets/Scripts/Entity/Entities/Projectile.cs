@@ -44,9 +44,9 @@ namespace Entity
             stateController = AttachEntityComponent(gameObject.AddComponent<StateController>());
         }
 
-		public override void Initialize(EntityCreationData entityCreationData)
+        protected override void OnInitialize(EntityCreationData entityCreationData)
 		{
-            base.Initialize(entityCreationData);
+            base.OnInitialize(entityCreationData);
 
             projectileBasicData.Initialize(entityCreationData);
 		}

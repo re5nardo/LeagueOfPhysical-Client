@@ -11,6 +11,7 @@ namespace Entity
 
         public bool IsValid => EntityManager.Instance.IsRegistered(EntityID);
         public bool IsLocalEntity => EntityID < 0;
+        public bool Initialized { get; private set; }
 
         public string OwnerId { get; set; } = "server";
         public bool HasAuthority => OwnerId == LOP.Application.UserId || OwnerId == "local";
@@ -44,7 +45,14 @@ namespace Entity
         {
         }
 
-        public virtual void Initialize(EntityCreationData entityCreationData)
+        public void Initialize(EntityCreationData entityCreationData)
+        {
+            OnInitialize(entityCreationData);
+
+            Initialized = true;
+        }
+
+        protected virtual void OnInitialize(EntityCreationData entityCreationData)
         {
             EntityID = entityCreationData.entityId;
             Position = entityCreationData.position;

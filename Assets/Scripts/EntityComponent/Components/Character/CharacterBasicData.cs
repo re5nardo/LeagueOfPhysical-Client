@@ -18,9 +18,9 @@ public class CharacterBasicData : EntityBasicData
 
     public int Level { get; set; } = 1;
 
-    public override void Initialize(EntityCreationData entityCreationData)
+    protected override void OnInitialize(EntityCreationData entityCreationData)
 	{
-		base.Initialize(entityCreationData);
+		base.OnInitialize(entityCreationData);
 
         CharacterCreationData characterCreationData = entityCreationData as CharacterCreationData;
 

@@ -26,9 +26,9 @@ public class CharacterStatusData : LOPMonoEntityComponentBase
 
     public float MovementSpeed => secondStatus.MovementSpeed;
 
-    public override void Initialize(EntityCreationData entityCreationData)
+    protected override void OnInitialize(EntityCreationData entityCreationData)
 	{
-		base.Initialize(entityCreationData);
+		base.OnInitialize(entityCreationData);
 
         CharacterCreationData characterCreationData = entityCreationData as CharacterCreationData;
 
