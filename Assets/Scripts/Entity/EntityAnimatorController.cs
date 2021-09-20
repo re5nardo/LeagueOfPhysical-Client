@@ -37,30 +37,24 @@ public class EntityAnimatorController : MonoBehaviour
         transitionHash = new int[entity.ModelAnimator.layerCount];
         layerWeight = new float[entity.ModelAnimator.layerCount];
 
-        SceneMessageBroker.AddSubscriber<SC_Synchronization>(OnSC_Synchronization);
+        SceneMessageBroker.AddSubscriber<EntityAnimatorSnap>(OnEntityAnimatorSnap).Where(snap => snap.entityId == entity.EntityID);
         SceneMessageBroker.AddSubscriber<TickMessage.LateTickEnd>(OnLateTickEnd);
     }
 
     private void OnDestroy()
     {
-        SceneMessageBroker.RemoveSubscriber<SC_Synchronization>(OnSC_Synchronization);
+        SceneMessageBroker.RemoveSubscriber<EntityAnimatorSnap>(OnEntityAnimatorSnap);
         SceneMessageBroker.RemoveSubscriber<TickMessage.LateTickEnd>(OnLateTickEnd);
     }
 
-    private void OnSC_Synchronization(SC_Synchronization synchronization)
+    private void OnEntityAnimatorSnap(EntityAnimatorSnap entityAnimatorSnap)
     {
         if (entity.HasAuthority)
         {
             return;
         }
 
-        synchronization.listSnap?.ForEach(snap =>
-        {
-            if (snap is EntityAnimatorSnap entityAnimatorSnap && entityAnimatorSnap.entityId == entity.EntityID)
-            {
-                SyncAnimator(entityAnimatorSnap);
-            }
-        });
+        SyncAnimator(entityAnimatorSnap);
     }
 
     private void OnLateTickEnd(TickMessage.LateTickEnd message)

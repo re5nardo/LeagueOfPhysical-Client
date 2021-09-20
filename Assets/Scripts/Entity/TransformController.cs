@@ -15,37 +15,31 @@ public class TransformController : MonoBehaviour
     {
         entity = GetComponent<LOPMonoEntityBase>();
 
-        SceneMessageBroker.AddSubscriber<SC_Synchronization>(OnSC_Synchronization);
+        SceneMessageBroker.AddSubscriber<EntityTransformSnap>(OnEntityTransformSnap).Where(snap => snap.entityId == entity.EntityID);
         SceneMessageBroker.AddSubscriber<TickMessage.LateTickEnd>(OnLateTickEnd);
     }
 
     private void OnDestroy()
     {
-        SceneMessageBroker.RemoveSubscriber<SC_Synchronization>(OnSC_Synchronization);
+        SceneMessageBroker.RemoveSubscriber<EntityTransformSnap>(OnEntityTransformSnap);
         SceneMessageBroker.RemoveSubscriber<TickMessage.LateTickEnd>(OnLateTickEnd);
     }
 
-    private void OnSC_Synchronization(SC_Synchronization synchronization)
+    private void OnEntityTransformSnap(EntityTransformSnap entityTransformSnap)
     {
         if (entity.HasAuthority)
         {
             return;
         }
 
-        synchronization.listSnap?.ForEach(snap =>
+        entityTransformSnaps.Add(entityTransformSnap);
+
+        if (entityTransformSnaps.Count > 100)
         {
-            if (snap is EntityTransformSnap entityTransformSnap && entityTransformSnap.entityId == entity.EntityID)
-            {
-                entityTransformSnaps.Add(entityTransformSnap);
+            entityTransformSnaps.RemoveRange(0, entityTransformSnaps.Count - 100);
+        }
 
-                if (entityTransformSnaps.Count > 100)
-                {
-                    entityTransformSnaps.RemoveRange(0, entityTransformSnaps.Count - 100);
-                }
-
-                latencies.Add((float)(Mirror.NetworkTime.time - entityTransformSnap.GameTime));
-            }
-        });
+        latencies.Add((float)(Mirror.NetworkTime.time - entityTransformSnap.GameTime));
     }
 
     private void OnLateTickEnd(TickMessage.LateTickEnd message)

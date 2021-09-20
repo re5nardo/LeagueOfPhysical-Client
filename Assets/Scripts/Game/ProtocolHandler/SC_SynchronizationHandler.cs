@@ -1,15 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GameFramework;
 using NetworkModel.Mirror;
 
 public class SC_SynchronizationHandler
 {
-    public static void Handle(IMessage msg)
+    public static void Handle(SC_Synchronization synchronization)
     {
-        SC_Synchronization synchronization = msg as SC_Synchronization;
-
-        SynchronizationManager.Handle(synchronization.listSnap);
+        synchronization.listSnap?.ForEach(snap =>
+        {
+            SceneMessageBroker.Publish(snap.GetType(), snap);
+        });
     }
 }
