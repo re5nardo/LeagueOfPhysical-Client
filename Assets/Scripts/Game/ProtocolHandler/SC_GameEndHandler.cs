@@ -8,10 +8,8 @@ using Mirror;
 
 public class SC_GameEndHandler
 {
-    public static void Handle(IMessage msg)
+    public static void Handle(SC_GameEnd gameEnd)
     {
-        SC_GameEnd gameEnd = msg as SC_GameEnd;
-
         NetworkManager.singleton.StopClient();
 
         SceneManager.LoadScene("Lobby");

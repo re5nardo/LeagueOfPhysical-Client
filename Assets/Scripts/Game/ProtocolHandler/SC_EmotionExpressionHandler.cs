@@ -6,10 +6,8 @@ using NetworkModel.Mirror;
 
 public class SC_EmotionExpressionHandler
 {
-    public static void Handle(IMessage msg)
+    public static void Handle(SC_EmotionExpression emotionExpression)
     {
-        SC_EmotionExpression emotionExpression = msg as SC_EmotionExpression;
-
         IEntity entity = Entities.Get(emotionExpression.entityId);
         if (entity == null)
         {

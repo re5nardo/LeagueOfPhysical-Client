@@ -6,10 +6,8 @@ using NetworkModel.Mirror;
 
 public class SC_SyncTickHandler
 {
-    public static void Handle(IMessage msg)
+    public static void Handle(SC_SyncTick syncTick)
     {
-        SC_SyncTick syncTick = msg as SC_SyncTick;
-
         Game.Current.SetSyncTick(syncTick.tick);
     }
 }
