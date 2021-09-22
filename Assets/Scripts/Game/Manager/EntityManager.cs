@@ -111,10 +111,10 @@ public class EntityManager : GameFramework.EntityManager
                 info.velocity = entitySnap.velocity;
             }
 
-            entity.gameObject.AddComponent<TransformController>();
+            entity.AttachEntityComponent(entity.gameObject.AddComponent<EntityTransformController>());
             if (entity.ModelAnimator != null)
             {
-                entity.gameObject.AddComponent<EntityAnimatorController>();
+                entity.AttachEntityComponent(entity.gameObject.AddComponent<EntityAnimatorController>());
             }
         }
 	}

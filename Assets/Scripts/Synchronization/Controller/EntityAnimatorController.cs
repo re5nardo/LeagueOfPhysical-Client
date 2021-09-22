@@ -2,13 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using Entity;
 using NetworkModel.Mirror;
 using GameFramework;
 
-public class EntityAnimatorController : MonoBehaviour
+public class EntityAnimatorController : LOPMonoEntityComponentBase
 {
-    private LOPMonoEntityBase entity;
     private EntityAnimatorSnap entityAnimatorSnap = new EntityAnimatorSnap();
 
     // Note: not an object[] array because otherwise initialization is real annoying
@@ -22,34 +20,36 @@ public class EntityAnimatorController : MonoBehaviour
     private int[] transitionHash;
     private float[] layerWeight;
 
-    private void Awake()
+    public override void OnAttached(IEntity entity)
     {
-        entity = GetComponent<LOPMonoEntityBase>();
+        base.OnAttached(entity);
 
         // store the animator parameters in a variable - the "Animator.parameters" getter allocates
         // a new parameter array every time it is accessed so we should avoid doing it in a loop
-        parameters = entity.ModelAnimator.parameters.Where(par => !entity.ModelAnimator.IsParameterControlledByCurve(par.nameHash)).ToArray();
+        parameters = Entity.ModelAnimator.parameters.Where(par => !Entity.ModelAnimator.IsParameterControlledByCurve(par.nameHash)).ToArray();
         lastIntParameters = new int[parameters.Length];
         lastFloatParameters = new float[parameters.Length];
         lastBoolParameters = new bool[parameters.Length];
 
-        animationHash = new int[entity.ModelAnimator.layerCount];
-        transitionHash = new int[entity.ModelAnimator.layerCount];
-        layerWeight = new float[entity.ModelAnimator.layerCount];
+        animationHash = new int[Entity.ModelAnimator.layerCount];
+        transitionHash = new int[Entity.ModelAnimator.layerCount];
+        layerWeight = new float[Entity.ModelAnimator.layerCount];
 
         SceneMessageBroker.AddSubscriber<EntityAnimatorSnap>(OnEntityAnimatorSnap).Where(snap => snap.entityId == entity.EntityID);
         SceneMessageBroker.AddSubscriber<TickMessage.LateTickEnd>(OnLateTickEnd);
     }
 
-    private void OnDestroy()
+    public override void OnDetached()
     {
+        base.OnDetached();
+
         SceneMessageBroker.RemoveSubscriber<EntityAnimatorSnap>(OnEntityAnimatorSnap);
         SceneMessageBroker.RemoveSubscriber<TickMessage.LateTickEnd>(OnLateTickEnd);
     }
 
     private void OnEntityAnimatorSnap(EntityAnimatorSnap entityAnimatorSnap)
     {
-        if (entity.HasAuthority)
+        if (Entity.HasAuthority)
         {
             return;
         }
@@ -59,7 +59,7 @@ public class EntityAnimatorController : MonoBehaviour
 
     private void OnLateTickEnd(TickMessage.LateTickEnd message)
     {
-        if (entity.HasAuthority)
+        if (Entity.HasAuthority)
         {
             var synchronization = ObjectPool.Instance.GetObject<CS_Synchronization>();
             SetEntityAnimatorSnap(entityAnimatorSnap);
@@ -71,7 +71,7 @@ public class EntityAnimatorController : MonoBehaviour
 
     private void SyncAnimator(EntityAnimatorSnap entityAnimatorSnap)
     {
-        entity.ModelAnimator.speed = entityAnimatorSnap.animatorSpeed;
+        Entity.ModelAnimator.speed = entityAnimatorSnap.animatorSpeed;
 
         for (int i = 0; i < parameters.Length; i++)
         {
@@ -79,28 +79,28 @@ public class EntityAnimatorController : MonoBehaviour
             if (par.type == AnimatorControllerParameterType.Int)
             {
                 int newIntValue = (int)entityAnimatorSnap.animationParametersData.values[i];
-                entity.ModelAnimator.SetInteger(par.nameHash, newIntValue);
+                Entity.ModelAnimator.SetInteger(par.nameHash, newIntValue);
             }
             else if (par.type == AnimatorControllerParameterType.Float)
             {
                 float newFloatValue = (float)entityAnimatorSnap.animationParametersData.values[i];
-                entity.ModelAnimator.SetFloat(par.nameHash, newFloatValue);
+                Entity.ModelAnimator.SetFloat(par.nameHash, newFloatValue);
             }
             else if (par.type == AnimatorControllerParameterType.Bool)
             {
                 bool newBoolValue = (bool)entityAnimatorSnap.animationParametersData.values[i];
-                entity.ModelAnimator.SetBool(par.nameHash, newBoolValue);
+                Entity.ModelAnimator.SetBool(par.nameHash, newBoolValue);
             }
         }
 
         entityAnimatorSnap.animStateDataList?.ForEach(animStateData =>
         {
-            if (animStateData.stateHash != 0 && entity.ModelAnimator.enabled)
+            if (animStateData.stateHash != 0 && Entity.ModelAnimator.enabled)
             {
-                entity.ModelAnimator.Play(animStateData.stateHash, animStateData.layerId, animStateData.normalizedTime);
+                Entity.ModelAnimator.Play(animStateData.stateHash, animStateData.layerId, animStateData.normalizedTime);
             }
 
-            entity.ModelAnimator.SetLayerWeight(animStateData.layerId, animStateData.weight);
+            Entity.ModelAnimator.SetLayerWeight(animStateData.layerId, animStateData.weight);
         });
     }
 
@@ -110,16 +110,16 @@ public class EntityAnimatorController : MonoBehaviour
         stateHash = 0;
         normalizedTime = 0;
 
-        float lw = entity.ModelAnimator.GetLayerWeight(layerId);
+        float lw = Entity.ModelAnimator.GetLayerWeight(layerId);
         if (Mathf.Abs(lw - layerWeight[layerId]) > 0.001f)
         {
             layerWeight[layerId] = lw;
             change = true;
         }
 
-        if (entity.ModelAnimator.IsInTransition(layerId))
+        if (Entity.ModelAnimator.IsInTransition(layerId))
         {
-            AnimatorTransitionInfo tt = entity.ModelAnimator.GetAnimatorTransitionInfo(layerId);
+            AnimatorTransitionInfo tt = Entity.ModelAnimator.GetAnimatorTransitionInfo(layerId);
             if (tt.fullPathHash != transitionHash[layerId])
             {
                 // first time in this transition
@@ -130,7 +130,7 @@ public class EntityAnimatorController : MonoBehaviour
             return change;
         }
 
-        AnimatorStateInfo st = entity.ModelAnimator.GetCurrentAnimatorStateInfo(layerId);
+        AnimatorStateInfo st = Entity.ModelAnimator.GetCurrentAnimatorStateInfo(layerId);
         if (st.fullPathHash != animationHash[layerId])
         {
             // first time in this animation state
@@ -151,32 +151,32 @@ public class EntityAnimatorController : MonoBehaviour
     private void SetEntityAnimatorSnap(EntityAnimatorSnap entityAnimatorSnap)
     {
         entityAnimatorSnap.Tick = Game.Current.CurrentTick;
-        entityAnimatorSnap.entityId = entity.EntityID;
-        entityAnimatorSnap.animatorSpeed = entity.ModelAnimator.speed;
+        entityAnimatorSnap.entityId = Entity.EntityID;
+        entityAnimatorSnap.animatorSpeed = Entity.ModelAnimator.speed;
 
         entityAnimatorSnap.animationParametersData.values.Clear();
-        for (int i = 0; i < entity.ModelAnimator.parameters.Length; i++)
+        for (int i = 0; i < Entity.ModelAnimator.parameters.Length; i++)
         {
-            AnimatorControllerParameter par = entity.ModelAnimator.parameters[i];
+            AnimatorControllerParameter par = Entity.ModelAnimator.parameters[i];
             if (par.type == AnimatorControllerParameterType.Int)
             {
-                int value = entity.ModelAnimator.GetInteger(par.nameHash);
+                int value = Entity.ModelAnimator.GetInteger(par.nameHash);
                 entityAnimatorSnap.animationParametersData.values.Add(value);
             }
             else if (par.type == AnimatorControllerParameterType.Float)
             {
-                float value = entity.ModelAnimator.GetFloat(par.nameHash);
+                float value = Entity.ModelAnimator.GetFloat(par.nameHash);
                 entityAnimatorSnap.animationParametersData.values.Add(value);
             }
             else if (par.type == AnimatorControllerParameterType.Bool)
             {
-                bool value = entity.ModelAnimator.GetBool(par.nameHash);
+                bool value = Entity.ModelAnimator.GetBool(par.nameHash);
                 entityAnimatorSnap.animationParametersData.values.Add(value);
             }
         }
 
         entityAnimatorSnap.animStateDataList.Clear();
-        for (int i = 0; i < entity.ModelAnimator.layerCount; i++)
+        for (int i = 0; i < Entity.ModelAnimator.layerCount; i++)
         {
             if (!CheckAnimStateChanged(out var stateHash, out var normalizedTime, i))
             {
