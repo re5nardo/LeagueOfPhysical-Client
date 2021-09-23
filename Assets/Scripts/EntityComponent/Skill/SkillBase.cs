@@ -1,4 +1,3 @@
-using Entity;
 using GameFramework;
 using UnityEngine;
 using NetworkModel.Mirror;
@@ -9,38 +8,19 @@ namespace Skill
     {
         protected abstract void OnSkillUpdate();
 
-        protected int m_nSkillMasterID = -1;
+        public int MasterDataId { get; protected set; } = -1;
+
+        public float CoolTime { get; protected set; }
+        public bool IsCoolTime => CoolTime > 0;
+
         protected float m_fLastUpdateTime = -1f;
         protected float m_fElapsedTime = 0f;
-        protected float m_fCoolTime = 0f;
         protected int startTick = -1;
         protected int lastTick = -1;
 
-        protected float DeltaTime
-        {
-            get
-            {
-                return lastTick == -1 ? CurrentUpdateTime : CurrentUpdateTime - LastUpdateTime;
-            }
-        }
-
-        protected float CurrentUpdateTime
-        {
-            get
-            {
-                return Game.Current.CurrentTick == 0 ? 0 : (Game.Current.CurrentTick - startTick + 1) * Game.Current.TickInterval;
-            }
-        }
-
-        protected float LastUpdateTime
-        {
-            get
-            {
-                return lastTick == -1 ? -1 : (lastTick - startTick + 1) * Game.Current.TickInterval;
-            }
-        }
-
-        public float CoolTime { get { return m_fCoolTime; } }
+        protected float DeltaTime => lastTick == -1 ? CurrentUpdateTime : CurrentUpdateTime - LastUpdateTime;
+        protected float CurrentUpdateTime => Game.Current.CurrentTick == 0 ? 0 : (Game.Current.CurrentTick - startTick + 1) * Game.Current.TickInterval;
+        protected float LastUpdateTime => lastTick == -1 ? -1 : (lastTick - startTick + 1) * Game.Current.TickInterval;
 
         private MasterData.Skill masterData = null;
         public MasterData.Skill MasterData
@@ -49,7 +29,7 @@ namespace Skill
             {
                 if (masterData == null)
                 {
-                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.Skill>(m_nSkillMasterID);
+                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.Skill>(MasterDataId);
                 }
 
                 return masterData;
@@ -62,9 +42,9 @@ namespace Skill
         }
         #endregion
 
-        public virtual void SetData(int nSkillMasterID, params object[] param)
+        public virtual void SetData(int masterDataId, params object[] param)
         {
-            m_nSkillMasterID = nSkillMasterID;
+            this.MasterDataId = masterDataId;
         }
 
         public void StartSkill()
@@ -75,16 +55,10 @@ namespace Skill
             OnTick(Game.Current.CurrentTick);
         }
 
-        public int GetSkillMasterID()
-        {
-            return m_nSkillMasterID;
-        }
-
         public void OnTick(int tick)
         {
             if (lastTick == tick)
             {
-                //Debug.LogWarning("Tick() is ignored! lastTick == tick");
                 return;
             }
 
