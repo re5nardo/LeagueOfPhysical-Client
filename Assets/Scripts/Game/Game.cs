@@ -30,7 +30,7 @@ namespace LOP
             gameManager = gameObject.AddComponent<GameManager>();
             myInfo = gameObject.AddComponent<MyInfo>();
 
-            SceneMessageBroker.AddSubscriber<SC_EnterRoom>(LOP.Game.Current.OnEnterRoom);
+            SceneMessageBroker.AddSubscriber<SC_EnterRoom>(OnEnterRoom);
             SceneMessageBroker.AddSubscriber<SC_SyncTick>(SC_SyncTickHandler.Handle);
             SceneMessageBroker.AddSubscriber<SC_EmotionExpression>(SC_EmotionExpressionHandler.Handle);
             SceneMessageBroker.AddSubscriber<SC_Synchronization>(SC_SynchronizationHandler.Handle);
@@ -55,7 +55,7 @@ namespace LOP
 
             Physics.autoSimulation = true;
 
-            SceneMessageBroker.RemoveSubscriber<SC_EnterRoom>(LOP.Game.Current.OnEnterRoom);
+            SceneMessageBroker.RemoveSubscriber<SC_EnterRoom>(OnEnterRoom);
             SceneMessageBroker.RemoveSubscriber<SC_SyncTick>(SC_SyncTickHandler.Handle);
             SceneMessageBroker.RemoveSubscriber<SC_EmotionExpression>(SC_EmotionExpressionHandler.Handle);
             SceneMessageBroker.RemoveSubscriber<SC_Synchronization>(SC_SynchronizationHandler.Handle);
