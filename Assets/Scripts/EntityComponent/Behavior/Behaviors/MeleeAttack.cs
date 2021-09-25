@@ -27,9 +27,9 @@ namespace Behavior
             return true;
         }
 
-        public override void SetData(int nBehaviorMasterID, params object[] param)
+        public override void Initialize(BehaviorParam behaviorParam)
         {
-            base.SetData(nBehaviorMasterID);
+            base.Initialize(behaviorParam);
 
             m_fLifespan = MasterData.Lifespan;
             m_fAttackTime = float.Parse(MasterData.ClassParams.Find(x => x.Contains("AttackTime")).Split(':')[1]);
