@@ -36,6 +36,7 @@ namespace LOP
             SceneMessageBroker.AddSubscriber<SC_Synchronization>(SC_SynchronizationHandler.Handle);
             SceneMessageBroker.AddSubscriber<SC_GameEnd>(SC_GameEndHandler.Handle);
             SceneMessageBroker.AddSubscriber<SC_OwnerChanged>(SC_OwnerChangedHandler.Handle);
+            SceneMessageBroker.AddSubscriber<GameMessage.EntityRegister>(OnEntityRegister);
 
             tickUpdater.Initialize(1 / 30f, true, Room.Instance.Latency, OnTick, OnTickEnd, OnUpdateElapsedTime);
             GameUI.Initialize();
@@ -61,6 +62,7 @@ namespace LOP
             SceneMessageBroker.RemoveSubscriber<SC_Synchronization>(SC_SynchronizationHandler.Handle);
             SceneMessageBroker.RemoveSubscriber<SC_GameEnd>(SC_GameEndHandler.Handle);
             SceneMessageBroker.RemoveSubscriber<SC_OwnerChanged>(SC_OwnerChangedHandler.Handle);
+            SceneMessageBroker.RemoveSubscriber<GameMessage.EntityRegister>(OnEntityRegister);
 
             GameUI.Clear();
         }
@@ -103,12 +105,25 @@ namespace LOP
             //RoomNetwork.Instance.Send(notifyPlayerLookAtPosition, PhotonNetwork.masterClient.ID);
         }
 
-        public void OnMyCharacterCreated(Character character)
+        private void OnEntityRegister(GameMessage.EntityRegister entityRegister)
         {
-            GameUI.CameraController.SetTarget(character.Transform);
-            GameUI.CameraController.StartFollowTarget();
+            if (entityRegister.entityId == Entities.MyEntityID)
+            {
+                var character = Entities.Get<Character>(entityRegister.entityId);
 
-            GameUI.PlayerInputController.SetCharacterID(character.EntityID);
+                GameUI.CameraController.SetTarget(character.Transform);
+                GameUI.CameraController.StartFollowTarget();
+
+                GameUI.PlayerInputController.SetCharacterID(character.EntityID);
+            }
+        }
+
+        private void OnEnterRoom(SC_EnterRoom enterRoom)
+        {
+            MyInfo.EntityID = enterRoom.entityId;
+            GameUI.EmotionExpressionSelector.SetData(0, 1, 2, 3);   //  Dummy
+
+            Run(enterRoom.tick);
         }
     }
 }

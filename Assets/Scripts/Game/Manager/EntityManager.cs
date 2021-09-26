@@ -90,11 +90,6 @@ public class EntityManager : GameFramework.EntityManager
 
 			var entity = CreateEntity(entitySnap);
 
-			if (entity.EntityID == Entities.MyEntityID)
-			{
-                LOP.Game.Current.OnMyCharacterCreated(entity as Character);
-			}
-
             entity.AttachEntityComponent(entity.gameObject.AddComponent<EntityTransformController>());
             if (entity.ModelAnimator != null)
             {
