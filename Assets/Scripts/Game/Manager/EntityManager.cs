@@ -92,24 +92,8 @@ public class EntityManager : GameFramework.EntityManager
 
 			if (entity.EntityID == Entities.MyEntityID)
 			{
-                EntityTransformInfo info = new EntityTransformInfo();
-                info.tick = entityAppear.tick;
-                info.entityId = entitySnap.entityId;
-                info.position = entitySnap.position;
-                info.rotation = entitySnap.rotation;
-                info.velocity = entitySnap.velocity;
-
                 LOP.Game.Current.OnMyCharacterCreated(entity as Character);
 			}
-			else
-			{
-				EntityTransformInfo info = new EntityTransformInfo();
-                info.tick = entityAppear.tick;
-                info.entityId = entitySnap.entityId;
-                info.position = entitySnap.position;
-                info.rotation = entitySnap.rotation;
-                info.velocity = entitySnap.velocity;
-            }
 
             entity.AttachEntityComponent(entity.gameObject.AddComponent<EntityTransformController>());
             if (entity.ModelAnimator != null)
