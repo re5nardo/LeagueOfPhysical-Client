@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using Entity;
 
 public class DirectionInputController : MonoBehaviour
 {
@@ -12,6 +11,8 @@ public class DirectionInputController : MonoBehaviour
     public event Action<Vector2> onPress;
     public event Action<Vector2> onRelease;
     public event Action<Vector2> onHold;
+
+    public Vector2 PressedPosition => directionKey.PressedPosition;
 
     private void Awake()
     {
@@ -27,17 +28,9 @@ public class DirectionInputController : MonoBehaviour
         directionKey.onHold -= OnDirectionKeyHold;
     }
 
-    public Vector2 GetPressedPosition()
-    {
-        return directionKey.PressedPosition;
-    }
-
     #region Event Handler
     private void OnDirectionKeyPress(Vector2 vec2ScreenPosition)
     {
-        if (!Entities.MyCharacter.IsAlive)
-            return;
-
         inputCircleDisplay.Show(vec2ScreenPosition);
 
         onPress?.Invoke(vec2ScreenPosition);
@@ -52,9 +45,6 @@ public class DirectionInputController : MonoBehaviour
 
     private void OnDirectionKeyHold(Vector2 vec2ScreenPosition)
     {
-        if (!Entities.MyCharacter.IsAlive)
-            return;
-
         inputCircleDisplay.OnTouchHold(vec2ScreenPosition);
 
         onHold?.Invoke(vec2ScreenPosition);

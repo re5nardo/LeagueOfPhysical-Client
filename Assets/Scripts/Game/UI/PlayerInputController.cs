@@ -170,12 +170,10 @@ public class PlayerInputController : MonoBehaviour
 		if (!Entities.MyCharacter.IsAlive)
             return;
 
-        Vector2 pressedPosition = moveController.GetPressedPosition();
-
-		if (holdPosition == pressedPosition)
+		if (holdPosition == moveController.PressedPosition)
             return;
 
-        float y = Util.Math.FindDegree(holdPosition - pressedPosition) + LOP.Game.Current.GameUI.CameraController.GetRotation_Y();
+        float y = Util.Math.FindDegree(holdPosition - moveController.PressedPosition) + LOP.Game.Current.GameUI.CameraController.GetRotation_Y();
 
 		float x = Mathf.Sin(Mathf.Deg2Rad * y);
 		float z = Mathf.Cos(Mathf.Deg2Rad * y);
@@ -191,7 +189,7 @@ public class PlayerInputController : MonoBehaviour
         if (!Entities.MyCharacter.IsAlive)
             return;
 
-        Vector2 vec2FinalDir = vec2ScreenPosition - basicAttackController.GetPressedPosition();
+        Vector2 vec2FinalDir = vec2ScreenPosition - basicAttackController.PressedPosition;
 
         if (vec2FinalDir.magnitude < 40)
         {
@@ -204,7 +202,7 @@ public class PlayerInputController : MonoBehaviour
 		if (!Entities.MyCharacter.IsAlive)
 			return;
 
-		Vector2 vec2FinalDir = vec2ScreenPosition - basicAttackController.GetPressedPosition();
+		Vector2 vec2FinalDir = vec2ScreenPosition - basicAttackController.PressedPosition;
 
 		float y = Util.Math.FindDegree(vec2FinalDir);
 		y += LOP.Game.Current.GameUI.CameraController.GetRotation_Y();

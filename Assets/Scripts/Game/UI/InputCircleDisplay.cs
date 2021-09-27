@@ -12,7 +12,7 @@ public class InputCircleDisplay : MonoBehaviour
     private RectTransform rtMine = null;
 
     private RectTransform rectTransformParent = null;
-    private RectTransform RectTransformParent { get { return rectTransformParent ?? (rectTransformParent = transform.parent?.GetComponent<RectTransform>()); } }
+    private RectTransform RectTransformParent => rectTransformParent ?? (rectTransformParent = transform.parent?.GetComponent<RectTransform>());
 
     private float maxRadius = 0f;
 

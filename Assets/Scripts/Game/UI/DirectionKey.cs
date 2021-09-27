@@ -8,15 +8,14 @@ public class DirectionKey : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 	[HideInInspector] public Vector2Handler onPress = null;
 	[HideInInspector] public Vector2Handler onRelease = null;
 
-    private Vector2 pressedPosition; 
-    public Vector2 PressedPosition { get { return pressedPosition; } }
+    public Vector2 PressedPosition { get; private set; }
 
     private Vector2 lastPosition;
 
     #region Event Handler
     public void OnPointerDown(PointerEventData eventData)
     {
-        pressedPosition = lastPosition = eventData.position;
+        PressedPosition = lastPosition = eventData.position;
 
         onPress?.Invoke(eventData.position);
 

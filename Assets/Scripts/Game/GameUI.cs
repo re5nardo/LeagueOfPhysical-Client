@@ -44,5 +44,4 @@ public class GameUI : MonoBehaviour
 
         return target.Canvas;
     }
-
 }

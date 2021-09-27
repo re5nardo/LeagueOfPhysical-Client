@@ -26,6 +26,8 @@ public abstract class SubGameBase : MonoBehaviour
         {
             Current = null;
         }
+
+        Clear();
     }
 
     public IEnumerator Initialize()
@@ -34,7 +36,11 @@ public abstract class SubGameBase : MonoBehaviour
 
         Initialized = true;
     }
-    
+
+    protected virtual void Clear()
+    {
+    }
+
     public void StartGame()
     {
         startTick = Game.Current.CurrentTick;
