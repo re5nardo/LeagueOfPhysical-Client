@@ -4,18 +4,22 @@ using UnityEngine;
 
 public class GameUI : MonoBehaviour
 {
-    [SerializeField] private CameraController m_CameraController = null;
-    [SerializeField] private EmotionExpressionSelector m_EmotionExpressionSelector = null;
-    [SerializeField] private TextureButton m_ButtonEmotionExpression = null;
-    [SerializeField] private PlayerInputController m_PlayerInputController = null;
+    [SerializeField] private CameraController cameraController = null;
+    [SerializeField] private EmotionExpressionSelector emotionExpressionSelector = null;
+    [SerializeField] private TextureButton emotionExpressionButton = null;
+    [SerializeField] private PlayerInputController playerInputController = null;
 
-    public CameraController             CameraController            { get { return m_CameraController; } }
-    public EmotionExpressionSelector    EmotionExpressionSelector   { get { return m_EmotionExpressionSelector; } }
-    public PlayerInputController        PlayerInputController       { get { return m_PlayerInputController; } }
+    public CameraController CameraController => cameraController;
+    public EmotionExpressionSelector EmotionExpressionSelector => emotionExpressionSelector;
+    public PlayerInputController PlayerInputController => playerInputController;
+
+    public Canvas TopMostCanvas => ManagedCanvasManager.Instance.GetTopMost(CanvasLayer.Contents).Canvas;
+    public Canvas HealthBarCanvas => (ManagedCanvasManager.Instance.Get(CanvasLayer.Contents, "Canvas - 100") ?? ManagedCanvasManager.Instance.GetTopMost(CanvasLayer.Contents)).Canvas;
+    public Canvas FloatingItemCanvas => (ManagedCanvasManager.Instance.Get(CanvasLayer.Contents, "Canvas - 400") ?? ManagedCanvasManager.Instance.GetTopMost(CanvasLayer.Contents)).Canvas;
 
     public void Initialize()
     {
-        m_ButtonEmotionExpression.button.onClick.AddListener(() =>
+        emotionExpressionButton.button.onClick.AddListener(() =>
         {
             EmotionExpressionSelector.Show();
         });
@@ -23,25 +27,6 @@ public class GameUI : MonoBehaviour
 
     public void Clear()
     {
-        m_ButtonEmotionExpression.button.onClick.RemoveAllListeners();
-    }
-
-    public Canvas GetTopMostCanvas()
-    {
-        return ManagedCanvasManager.Instance.GetTopMost(CanvasLayer.Contents).Canvas;
-    }
-
-    public Canvas GetHealthBarCanvas()
-    {
-        var target = ManagedCanvasManager.Instance.Get(CanvasLayer.Contents, "Canvas - 100") ?? ManagedCanvasManager.Instance.GetTopMost(CanvasLayer.Contents);
-
-        return target.Canvas;
-    }
-
-    public Canvas GetFloatingItemCanvas()
-    {
-        var target = ManagedCanvasManager.Instance.Get(CanvasLayer.Contents, "Canvas - 400") ?? ManagedCanvasManager.Instance.GetTopMost(CanvasLayer.Contents);
-
-        return target.Canvas;
+        emotionExpressionButton.button.onClick.RemoveAllListeners();
     }
 }

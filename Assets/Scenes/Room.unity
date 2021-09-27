@@ -1617,10 +1617,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b91825e064715c74a808797ee3312972, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CameraController: {fileID: 592084917}
-  m_EmotionExpressionSelector: {fileID: 1435579596}
-  m_ButtonEmotionExpression: {fileID: 1751108334}
-  m_PlayerInputController: {fileID: 1587400348}
+  cameraController: {fileID: 592084917}
+  emotionExpressionSelector: {fileID: 1435579596}
+  emotionExpressionButton: {fileID: 1751108334}
+  playerInputController: {fileID: 1587400348}
 --- !u!4 &1555665391
 Transform:
   m_ObjectHideFlags: 0

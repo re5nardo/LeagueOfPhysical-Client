@@ -10,7 +10,7 @@ public class EntityGetMoneyHandler
     {
         EntityGetMoney entityGetMoney = gameEvent as EntityGetMoney;
 
-        GameObject goFloatingGetMoney = ResourcePool.Instance.GetResource(Define.ResourcePath.UI.FLOATING_GET_MONEY, LOP.Game.Current.GameUI.GetFloatingItemCanvas().transform);
+        GameObject goFloatingGetMoney = ResourcePool.Instance.GetResource(Define.ResourcePath.UI.FLOATING_GET_MONEY, LOP.Game.Current.GameUI.FloatingItemCanvas.transform);
 
         FloatingItem floatingItem = goFloatingGetMoney.GetComponent<FloatingItem>();
 

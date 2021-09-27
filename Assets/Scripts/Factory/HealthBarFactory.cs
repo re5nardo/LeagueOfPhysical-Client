@@ -9,7 +9,7 @@ public class HealthBarFactory : MonoSingleton<HealthBarFactory>
     {
         if (type == HealthBarType.Player)
         {
-            GameObject goHealthBar = ResourcePool.Instance.GetResource(Define.ResourcePath.HealthBar.PLAYER, LOP.Game.Current.GameUI.GetHealthBarCanvas().transform);
+            GameObject goHealthBar = ResourcePool.Instance.GetResource(Define.ResourcePath.HealthBar.PLAYER, LOP.Game.Current.GameUI.HealthBarCanvas.transform);
 
             return goHealthBar.GetComponent<HealthBarBase>();
         }

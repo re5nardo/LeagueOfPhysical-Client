@@ -14,7 +14,7 @@ public class SC_EmotionExpressionHandler
             return;
         }
 
-        GameObject goEmotionExpressionViewer = ResourcePool.Instance.GetResource(Define.ResourcePath.UI.EMOTION_EXPRESSION_VIEWER, LOP.Game.Current.GameUI.GetTopMostCanvas().transform);
+        GameObject goEmotionExpressionViewer = ResourcePool.Instance.GetResource(Define.ResourcePath.UI.EMOTION_EXPRESSION_VIEWER, LOP.Game.Current.GameUI.TopMostCanvas.transform);
         EmotionExpressionViewer emotionExpressionViewer = goEmotionExpressionViewer.GetComponent<EmotionExpressionViewer>();
         emotionExpressionViewer.SetData(entity, emotionExpression.emotionExpressionId);
 
