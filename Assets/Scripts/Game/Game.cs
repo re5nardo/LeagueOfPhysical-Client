@@ -13,13 +13,11 @@ namespace LOP
         public new static Game Current => GameFramework.Game.Current as Game;
 
         public GameUI GameUI => gameUI;
-        public MyInfo MyInfo => myInfo;
         public GameEventManager GameEventManager => gameEventManager;
         public GameManager GameManager => gameManager;
 
         private GameEventManager gameEventManager = null;
         private GameManager gameManager = null;
-        private MyInfo myInfo = null;
 
         public override IEnumerator Initialize()
         {
@@ -28,7 +26,6 @@ namespace LOP
             tickUpdater = gameObject.AddComponent<LOPTickUpdater>();
             gameEventManager = gameObject.AddComponent<GameEventManager>();
             gameManager = gameObject.AddComponent<GameManager>();
-            myInfo = gameObject.AddComponent<MyInfo>();
 
             SceneMessageBroker.AddSubscriber<SC_EnterRoom>(OnEnterRoom);
             SceneMessageBroker.AddSubscriber<SC_SyncTick>(SC_SyncTickHandler.Handle);
@@ -120,7 +117,8 @@ namespace LOP
 
         private void OnEnterRoom(SC_EnterRoom enterRoom)
         {
-            MyInfo.EntityID = enterRoom.entityId;
+            SceneDataContainer.Get<MyInfo>().EntityId = enterRoom.entityId;
+
             GameUI.EmotionExpressionSelector.SetData(0, 1, 2, 3);   //  Dummy
 
             Run(enterRoom.tick);

@@ -48,7 +48,7 @@ public class Entities
     #endregion
 
     #region Mine
-    public static int MyEntityID => LOP.Game.Current.MyInfo.EntityID;
+    public static int MyEntityID => SceneDataContainer.Get<MyInfo>().EntityId;
 
     public static IEntity Mine => Get(MyEntityID);
 
