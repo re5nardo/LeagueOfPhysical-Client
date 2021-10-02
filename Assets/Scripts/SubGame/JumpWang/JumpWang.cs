@@ -6,6 +6,8 @@ using Entity;
 
 public class JumpWang : SubGameBase
 {
+    [SerializeField] private JumpWangUI jumpWangUI = null;
+
     private void Start()
     {
         SceneMessageBroker.AddSubscriber<GameMessage.EntityRegister>(OnEntityRegister);

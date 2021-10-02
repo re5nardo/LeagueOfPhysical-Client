@@ -5,7 +5,20 @@ namespace Behavior
 {
     public class Jump : BehaviorBase
     {
+        private float normalizedPower;
+        private Vector3 direction;
+
         #region BehaviorBase
+        public override void Initialize(BehaviorParam behaviorParam)
+        {
+            base.Initialize(behaviorParam);
+
+            var jumpBehaviorParam = behaviorParam as JumpBehaviorParam;
+
+            normalizedPower = jumpBehaviorParam.normalizedPower;
+            direction = jumpBehaviorParam.direction;
+        }
+
         protected override void OnBehaviorStart()
         {
             base.OnBehaviorStart();
@@ -20,7 +33,7 @@ namespace Behavior
                 return true;
             }
 
-            Entity.Rigidbody.AddForce(Vector3.up * SubGameBase.Current.SubGameEnvironment.JumpPowerFactor, ForceMode.VelocityChange);
+            Entity.Rigidbody.AddForce(normalizedPower * direction.normalized * SubGameBase.Current.SubGameEnvironment.JumpPowerFactor, ForceMode.VelocityChange);
 
             return false;
         }
