@@ -25,23 +25,21 @@ public class JumpWangUI : MonoBehaviour
             return;
 
         float y = Util.Math.FindDegree(position - moveController.PressedPosition) + LOP.Game.Current.GameUI.CameraController.GetRotation_Y();
-
         float x = Mathf.Sin(Mathf.Deg2Rad * y);
-        float z = Mathf.Cos(Mathf.Deg2Rad * y);
-
-        var moveInput = new MoveInput();
-        moveInput.direction = new Vector3(x, 0, z);
-
-        SceneMessageBroker.Publish(moveInput);
+        
+        SceneMessageBroker.Publish(new MoveInput(new Vector3(x, 0, 0)));    //  use only x
     }
 
     private void OnJumpControllerRelease(Vector2 position)
     {
-        var direction = jumpController.PressedPosition - position;
+        if (jumpController.NormalizedPower <= 0.1f)
+        {
+            return;
+        }
 
         var jumpInput = new JumpInput();
-        jumpInput.normalizedPower = 1;
-        jumpInput.direction = direction.normalized;
+        jumpInput.normalizedPower = Mathf.Sqrt(jumpController.NormalizedPower);
+        jumpInput.direction = -jumpController.Direction;    //  reverse direction
 
         SceneMessageBroker.Publish(jumpInput);
     }

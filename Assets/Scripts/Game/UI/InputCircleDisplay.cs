@@ -14,14 +14,14 @@ public class InputCircleDisplay : MonoBehaviour
     private RectTransform rectTransformParent = null;
     private RectTransform RectTransformParent => rectTransformParent ?? (rectTransformParent = transform.parent?.GetComponent<RectTransform>());
 
-    private float maxRadius = 0f;
+    public float MaxRadius { get; private set; }
 
 	private void Awake()
 	{
         tfMine = transform;
         rtMine = GetComponent<RectTransform>();
 
-        maxRadius = (outerCircle.rectTransform.rect.height - innerCircle.rectTransform.rect.height) / 2;
+        MaxRadius = (outerCircle.rectTransform.rect.height - innerCircle.rectTransform.rect.height) / 2;
 	}
 
     public void Show(Vector2 vec2ScreenPosition)
@@ -42,13 +42,13 @@ public class InputCircleDisplay : MonoBehaviour
     {
         var dest = Util.UGUI.ConvertScreenToLocalPoint(rtMine, vec2ScreenPosition);
 
-        if (dest.magnitude < maxRadius)
+        if (dest.magnitude < MaxRadius)
         {
             innerCircle.transform.localPosition = dest;
         }
         else
         {
-            innerCircle.transform.localPosition = dest.normalized * maxRadius;
+            innerCircle.transform.localPosition = dest.normalized * MaxRadius;
         }
     }
 }

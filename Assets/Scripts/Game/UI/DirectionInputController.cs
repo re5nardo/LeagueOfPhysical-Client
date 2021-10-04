@@ -13,6 +13,8 @@ public class DirectionInputController : MonoBehaviour
     public event Action<Vector2> onHold;
 
     public Vector2 PressedPosition => directionKey.PressedPosition;
+    public float NormalizedPower { get; private set; }
+    public Vector2 Direction { get; private set; }
 
     private void Awake()
     {
@@ -36,11 +38,16 @@ public class DirectionInputController : MonoBehaviour
         onPress?.Invoke(vec2ScreenPosition);
     }
 
-    private void OnDirectionKeyRelease(Vector2 vec2ScreenPosition)
+    private void OnDirectionKeyRelease(Vector2 screenPosition)
     {
+        Direction = (screenPosition - directionKey.PressedPosition).normalized;
+
+        var normalizedPower = (screenPosition - directionKey.PressedPosition).magnitude / (inputCircleDisplay.MaxRadius * GetComponentInParent<Canvas>().GetComponent<RectTransform>().localScale.x);
+        NormalizedPower = Mathf.Min(normalizedPower, 1);
+
         inputCircleDisplay.Hide();
 
-        onRelease?.Invoke(vec2ScreenPosition);
+        onRelease?.Invoke(screenPosition);
     }
 
     private void OnDirectionKeyHold(Vector2 vec2ScreenPosition)
