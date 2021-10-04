@@ -25,7 +25,7 @@ public class FallingGame : SubGameBase
 
     protected override IEnumerator OnInitialize()
     {
-        yield return SceneManager.LoadSceneAsync(LOP.Game.Current.GameManager.mapName, LoadSceneMode.Additive);
+        yield return SceneManager.LoadSceneAsync(LOP.Game.Current.GameManager.MapData.sceneName, LoadSceneMode.Additive);
 
         foreach (var entity in Entities.GetAll<LOPMonoEntityBase>())
         {
@@ -37,7 +37,7 @@ public class FallingGame : SubGameBase
             entity.Rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
         }
 
-        Physics.gravity *= SubGameEnvironment.GravityFactor;
+        Physics.gravity *= LOP.Game.Current.GameManager.MapData.mapEnvironment.GravityFactor;
     }
 
     protected override void OnGameStart()

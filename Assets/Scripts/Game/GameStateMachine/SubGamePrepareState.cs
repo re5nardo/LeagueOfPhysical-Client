@@ -50,7 +50,10 @@ public class SubGamePrepareState : MonoStateBase
     {
         //  서버로 부터 받아야 됨..
         LOP.Game.Current.GameManager.subGameId = "JumpWang";
-        LOP.Game.Current.GameManager.mapName = "Space";
+        LOP.Game.Current.GameManager.mapId = "JumpWangMap";
+
+        //LOP.Game.Current.GameManager.subGameId = "FallingGame";
+        //LOP.Game.Current.GameManager.mapName = "Falling";
 
         yield return SceneManager.LoadSceneAsync(LOP.Game.Current.GameManager.SubGameData.sceneName, LoadSceneMode.Additive);
 

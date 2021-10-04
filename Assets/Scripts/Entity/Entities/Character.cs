@@ -96,7 +96,7 @@ namespace Entity
         public bool IsAlive => characterStatusData.HP > 0;
 
         public override float MovementSpeed => characterStatusData.MovementSpeed;
-        public override float FactoredMovementSpeed => MovementSpeed * SubGameBase.Current.SubGameEnvironment.MoveSpeedFactor;
+        public override float FactoredMovementSpeed => MovementSpeed * LOP.Game.Current.GameManager.MapData.mapEnvironment.MoveSpeedFactor;
 
         public int BasicAttackSkillID => characterSkillData.BasicAttackSkillID;
 		#endregion

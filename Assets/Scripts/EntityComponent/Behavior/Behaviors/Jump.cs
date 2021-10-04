@@ -28,12 +28,7 @@ namespace Behavior
 
         protected override bool OnBehaviorUpdate()
         {
-            if (Entity.EntityID != Entities.MyEntityID)
-            {
-                return true;
-            }
-
-            Entity.Rigidbody.AddForce(normalizedPower * direction.normalized * SubGameBase.Current.SubGameEnvironment.JumpPowerFactor, ForceMode.VelocityChange);
+            Entity.Rigidbody.AddForce(normalizedPower * direction.normalized * LOP.Game.Current.GameManager.MapData.mapEnvironment.JumpPowerFactor, ForceMode.VelocityChange);
 
             return false;
         }
