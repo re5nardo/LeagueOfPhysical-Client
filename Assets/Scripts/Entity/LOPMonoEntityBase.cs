@@ -40,6 +40,7 @@ namespace Entity
             Transform = gameObject.GetComponent<Transform>();
             Rigidbody = gameObject.AddComponent<Rigidbody>();
             Rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+            Rigidbody.drag = 0.05f;
         }
 
         protected virtual void InitEntityComponents()

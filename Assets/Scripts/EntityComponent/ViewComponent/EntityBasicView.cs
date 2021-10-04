@@ -21,6 +21,9 @@ public class EntityBasicView : LOPMonoEntityComponentBase
         Entity.MessageBroker.AddSubscriber<EntityMessage.AnimatorSetFloat>(OnAnimatorSetFloat);
         Entity.MessageBroker.AddSubscriber<EntityMessage.AnimatorSetBool>(OnAnimatorSetBool);
         Entity.MessageBroker.AddSubscriber<EntityMessage.Destroying>(OnDestroying);
+
+        SceneMessageBroker.AddSubscriber<TickMessage.BeforePhysicsSimulation>(OnBeforePhysicsSimulation);
+        SceneMessageBroker.AddSubscriber<TickMessage.AfterPhysicsSimulation>(OnAfterPhysicsSimulation);
     }
 
     public override void OnDetached()
@@ -32,6 +35,9 @@ public class EntityBasicView : LOPMonoEntityComponentBase
         Entity.MessageBroker.RemoveSubscriber<EntityMessage.AnimatorSetFloat>(OnAnimatorSetFloat);
         Entity.MessageBroker.RemoveSubscriber<EntityMessage.AnimatorSetBool>(OnAnimatorSetBool);
         Entity.MessageBroker.RemoveSubscriber<EntityMessage.Destroying>(OnDestroying);
+
+        SceneMessageBroker.RemoveSubscriber<TickMessage.BeforePhysicsSimulation>(OnBeforePhysicsSimulation);
+        SceneMessageBroker.RemoveSubscriber<TickMessage.AfterPhysicsSimulation>(OnAfterPhysicsSimulation);
     }
 
     #region Command Handlers
@@ -134,5 +140,15 @@ public class EntityBasicView : LOPMonoEntityComponentBase
             m_AnimatorModel.SetTrigger(name);
         }
 	}
+    #endregion
+
+    #region Physics Simulation
+    protected virtual void OnBeforePhysicsSimulation(TickMessage.BeforePhysicsSimulation message)
+    {
+    }
+
+    protected virtual void OnAfterPhysicsSimulation(TickMessage.AfterPhysicsSimulation message)
+    {
+    }
     #endregion
 }
