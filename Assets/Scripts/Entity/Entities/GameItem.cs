@@ -18,18 +18,7 @@ namespace Entity
         private StateController stateController = null;
 
         private MasterData.GameItem masterData = null;
-		public MasterData.GameItem MasterData
-		{
-			get
-			{
-				if (masterData == null)
-				{
-                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.GameItem>(gameItemBasicData.MasterDataId);
-				}
-
-				return masterData;
-			}
-		}
+        public MasterData.GameItem MasterData => masterData ?? (masterData = MasterDataManager.Instance.GetMasterData<MasterData.GameItem>(gameItemBasicData.MasterDataId));
 
         #region LOPEntityBase
         protected override void InitEntityComponents()

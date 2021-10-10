@@ -22,19 +22,8 @@ namespace Entity
         private CharacterStatusController characterStatusController = null;
 		//private SkillController m_SkillController = null;
 
-		private MasterData.Character masterData = null;
-		public MasterData.Character MasterData
-		{
-			get
-			{
-				if (masterData == null)
-				{
-                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.Character>(characterBasicData.MasterDataId);
-				}
-
-				return masterData;
-			}
-		}
+        private MasterData.Character masterData = null;
+        public MasterData.Character MasterData => masterData ?? (masterData = MasterDataManager.Instance.GetMasterData<MasterData.Character>(characterBasicData.MasterDataId));
 
         #region LOPEntityBase
         protected override void InitEntity()

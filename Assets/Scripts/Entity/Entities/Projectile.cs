@@ -18,18 +18,7 @@ namespace Entity
         private StateController stateController = null;
 
         private MasterData.Projectile masterData = null;
-		public MasterData.Projectile MasterData
-		{
-			get
-			{
-				if (masterData == null)
-				{
-                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.Projectile>(projectileBasicData.MasterDataId);
-				}
-
-				return masterData;
-			}
-		}
+        public MasterData.Projectile MasterData => masterData ?? (masterData = MasterDataManager.Instance.GetMasterData<MasterData.Projectile>(projectileBasicData.MasterDataId));
 
         #region LOPEntityBase
         protected override void InitEntityComponents()

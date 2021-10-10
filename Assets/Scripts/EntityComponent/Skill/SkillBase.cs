@@ -23,18 +23,7 @@ namespace Skill
         protected float LastUpdateTime => lastTick == -1 ? -1 : (lastTick - startTick + 1) * Game.Current.TickInterval;
 
         private MasterData.Skill masterData = null;
-        public MasterData.Skill MasterData
-        {
-            get
-            {
-                if (masterData == null)
-                {
-                    masterData = MasterDataManager.Instance.GetMasterData<MasterData.Skill>(MasterDataId);
-                }
-
-                return masterData;
-            }
-        }
+        public MasterData.Skill MasterData => masterData ?? (masterData = MasterDataManager.Instance.GetMasterData<MasterData.Skill>(MasterDataId));
 
         #region SkillInputData
         public virtual void OnReceiveSkillInputData(SkillInputData skillInputData)
