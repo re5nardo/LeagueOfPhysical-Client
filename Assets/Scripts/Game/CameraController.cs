@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using GameFramework;
 
 public class CameraController : MonoBehaviour
 {
@@ -139,7 +138,7 @@ public class CameraController : MonoBehaviour
         {
             Vector3 targetPosition = m_trTarget.position + m_vec3Offset;
 
-            m_trCameraController.position = Vector3.Lerp(m_trCameraController.position, targetPosition, Time.deltaTime);
+            m_trCameraController.position = Vector3.Slerp(m_trCameraController.position, targetPosition, Time.smoothDeltaTime);
         }
     }
 #endregion
