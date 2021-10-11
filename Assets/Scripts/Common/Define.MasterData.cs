@@ -31,6 +31,7 @@ namespace Define
 
             public const int CONTINUOUS_PATROL = 10000;
             public const int CONTINUOUS_ROTATION = 10001;
+            public const int CONTINUOUS_MOVE = 10002;
         }
     }
 }
