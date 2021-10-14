@@ -44,7 +44,7 @@ namespace FlapWangController
                 var entity = Entities.Get<LOPMonoEntityBase>(Entities.MyEntityID);
 
                 var behaviorController = entity.GetEntityComponent<BehaviorController>();
-                behaviorController.Jump(jumpInput.Value.normalizedPower, jumpInput.Value.direction);
+                behaviorController.Jump(jumpInput.Value.normalizedPower, jumpInput.Value.direction, Behavior.Jump.JumpType.FlapJump);
             }
 
             jumpInput = null;
