@@ -173,7 +173,7 @@ public class PlayerInputController : MonoBehaviour
 		if (holdPosition == moveController.PressedPosition)
             return;
 
-        float y = Util.Math.FindDegree(holdPosition - moveController.PressedPosition) + LOP.Game.Current.GameUI.CameraController.GetRotation_Y();
+        float y = Util.Math.FindDegree(holdPosition - moveController.PressedPosition) + LOP.Game.Current.GameUI.CameraController.RotationY;
 
 		float x = Mathf.Sin(Mathf.Deg2Rad * y);
 		float z = Mathf.Cos(Mathf.Deg2Rad * y);
@@ -204,9 +204,7 @@ public class PlayerInputController : MonoBehaviour
 
 		Vector2 vec2FinalDir = vec2ScreenPosition - basicAttackController.PressedPosition;
 
-		float y = Util.Math.FindDegree(vec2FinalDir);
-		y += LOP.Game.Current.GameUI.CameraController.GetRotation_Y();
-
+		float y = Util.Math.FindDegree(vec2FinalDir) + LOP.Game.Current.GameUI.CameraController.RotationY;
 		float x = Mathf.Sin(Mathf.Deg2Rad * y);
 		float z = Mathf.Cos(Mathf.Deg2Rad * y);
 

@@ -108,8 +108,8 @@ namespace LOP
             {
                 var character = Entities.Get<Character>(entityRegister.entityId);
 
-                GameUI.CameraController.SetTarget(character.Transform);
-                GameUI.CameraController.StartFollowTarget();
+                GameUI.CameraController.Target = character.Transform;
+                GameUI.CameraController.FollowTarget = true;
 
                 GameUI.PlayerInputController.SetCharacterID(character.EntityID);
             }

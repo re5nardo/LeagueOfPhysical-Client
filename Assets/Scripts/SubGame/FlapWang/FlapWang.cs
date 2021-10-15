@@ -48,7 +48,9 @@ public class FlapWang : SubGameBase
 
         Physics.gravity *= LOP.Game.Current.GameManager.MapData.mapEnvironment.GravityFactor;
 
-        LOP.Game.Current.GameUI.CameraController.SetFOV(90);
+        LOP.Game.Current.GameUI.CameraController.Camera.orthographic = true;
+        LOP.Game.Current.GameUI.CameraController.Camera.orthographicSize = 15;
+        LOP.Game.Current.GameUI.CameraController.Camera.transform.localPosition = new Vector3(8, 0, -20);
     }
 
     protected override void OnGameStart()

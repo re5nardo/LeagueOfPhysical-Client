@@ -24,7 +24,7 @@ public class JumpWangUI : MonoBehaviour
         if (position == moveController.PressedPosition)
             return;
 
-        float y = Util.Math.FindDegree(position - moveController.PressedPosition) + LOP.Game.Current.GameUI.CameraController.GetRotation_Y();
+        float y = Util.Math.FindDegree(position - moveController.PressedPosition) + LOP.Game.Current.GameUI.CameraController.RotationY;
         float x = Mathf.Sin(Mathf.Deg2Rad * y);
         
         SceneMessageBroker.Publish(new MoveInput(new Vector3(x, 0, 0)));    //  use only x
