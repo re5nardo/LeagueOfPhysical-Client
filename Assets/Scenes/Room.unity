@@ -577,14 +577,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae2984eb8b114dd4ca939248fbff5475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_trCamera: {fileID: 497655379}
-  m_DirectionKey: {fileID: 782550003}
-  m_toggleFollowTarget: {fileID: 1916992272}
-  m_fDefaultRotation_Y: 0
-  m_fDefaultRotation_X: 0
-  m_fDefaultZoomValue: -20
-  m_fDefaultMoveSensitivity: 1
-  m_fDefaultRotationSensitivity: 1
+  targetCamera: {fileID: 497655378}
+  directionKey: {fileID: 782550003}
+  followToggle: {fileID: 1916992272}
+  defaultRotationY: 0
+  defaultRotationX: 60
+  DefaultZoomValue: -20
+  defaultMoveSensitivity: 1
+  defaultRotationSensitivity: 1
 --- !u!4 &592084918
 Transform:
   m_ObjectHideFlags: 0

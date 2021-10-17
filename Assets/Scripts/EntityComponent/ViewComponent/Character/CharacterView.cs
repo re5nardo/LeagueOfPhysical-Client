@@ -16,20 +16,6 @@ public class CharacterView : EntityBasicView
 	}
 	#endregion
 
-	protected override void SetModel(string strModel)
-	{
-		base.SetModel(strModel);
-
-		CreateHealthBar();
-	}
-
-	protected override void ClearModel()
-	{
-		base.ClearModel();
-
-		ClearHealthBar();
-	}
-
 	public void CreateHealthBar()
 	{
 		if (m_HealthBar != null)
@@ -46,7 +32,7 @@ public class CharacterView : EntityBasicView
 		m_HealthBar.SetTarget(Entity as Character);
 	}
 
-	private void ClearHealthBar()
+	public void ClearHealthBar()
 	{
 		if (m_HealthBar != null)
 		{
