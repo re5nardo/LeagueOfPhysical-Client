@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 public static class Extension
 {
@@ -26,5 +27,10 @@ public static class Extension
         float z = Mathf.Cos(Mathf.Deg2Rad * source.y);
 
         return new Vector3(x, 0, z);
+    }
+
+    public static StringBuilder AppendTab(this StringBuilder stringBuilder)
+    {
+        return stringBuilder.Append("\t");
     }
 }
