@@ -4,13 +4,11 @@ using GameFramework;
 
 public class EntityBasicView : LOPMonoEntityComponentBase
 {
-	private GameObject m_goModel = null;
-    private Collider m_ColliderModel = null;
-    private Animator m_AnimatorModel = null;
-	private List<Renderer> m_listModelRenderer = new List<Renderer>();
+	private GameObject modelGameObject;
+    private List<Renderer> modelRenderers = new List<Renderer>();
 
-    public Collider ModelCollider => m_ColliderModel;
-    public Animator ModelAnimator => m_AnimatorModel;
+    public Collider ModelCollider { get; private set; }
+    public Animator ModelAnimator { get; private set; }
 
     public override void OnAttached(IEntity entity)
     {
@@ -87,59 +85,81 @@ public class EntityBasicView : LOPMonoEntityComponentBase
 
     public virtual void SetModel(GameObject model)
     {
-        m_goModel = model;
-        m_goModel.transform.SetParent(Entity.Transform);
-        m_goModel.transform.localPosition = Vector3.zero;
-        m_goModel.transform.localRotation = Quaternion.identity;
-        m_goModel.transform.localScale = Vector3.one;
+        modelGameObject = model;
+        modelGameObject.transform.SetParent(Entity.Transform);
+        modelGameObject.transform.localPosition = Vector3.zero;
+        modelGameObject.transform.localRotation = Quaternion.identity;
+        modelGameObject.transform.localScale = Vector3.one;
 
-        m_ColliderModel = m_goModel.GetComponent<Collider>();
-        m_AnimatorModel = m_goModel.GetComponent<Animator>();
+        ModelCollider = modelGameObject.GetComponent<Collider>();
+        ModelAnimator = modelGameObject.GetComponent<Animator>();
 
-        m_goModel.GetComponentsInChildren(true, m_listModelRenderer);
+        Entity.CollisionReporter.onCollisionEnter += OnModelCollisionEnterHandler;
+        Entity.CollisionReporter.onTriggerEnter += OnModelTriggerEnterHandler;
+        Entity.CollisionReporter.onTriggerStay += OnModelTriggerStayHandler;
+
+        modelGameObject.GetComponentsInChildren(true, modelRenderers);
     }
 
 	protected virtual void ClearModel()
 	{
-		if (m_goModel != null)
+		if (modelGameObject != null)
 		{
 			if (ResourcePool.HasInstance())
 			{
-				ResourcePool.Instance.ReturnResource(m_goModel);
+				ResourcePool.Instance.ReturnResource(modelGameObject);
 			}
 		}
 
-		m_goModel = null;
-        m_ColliderModel = null;
-        m_AnimatorModel = null;
+        modelGameObject = null;
+        ModelCollider = null;
+        ModelAnimator = null;
 
-		m_listModelRenderer.Clear();
+        Entity.CollisionReporter.onCollisionEnter -= OnModelCollisionEnterHandler;
+        Entity.CollisionReporter.onTriggerEnter -= OnModelTriggerEnterHandler;
+        Entity.CollisionReporter.onTriggerStay -= OnModelTriggerStayHandler;
+
+        modelRenderers.Clear();
 	}
 
 	#region Animator
 	public void Animator_SetFloat(string name, float value)
 	{
-        if (m_AnimatorModel != null)
+        if (ModelAnimator != null)
         {
-            m_AnimatorModel.SetFloat(name, value);
+            ModelAnimator.SetFloat(name, value);
         }
 	}
 
 	public void Animator_SetBool(string name, bool value)
 	{
-        if (m_AnimatorModel != null)
+        if (ModelAnimator != null)
         {
-            m_AnimatorModel.SetBool(name, value);
+            ModelAnimator.SetBool(name, value);
         }
 	}
 
 	public void Animator_SetTrigger(string name)
 	{
-        if (m_AnimatorModel != null)
+        if (ModelAnimator != null)
         {
-            m_AnimatorModel.SetTrigger(name);
+            ModelAnimator.SetTrigger(name);
         }
 	}
+    #endregion
+
+    #region Model Collision Handler
+    protected virtual void OnModelCollisionEnterHandler(Collider me, Collision collision)
+    {
+    }
+
+    protected virtual void OnModelTriggerEnterHandler(Collider me, Collider other)
+    {
+    }
+
+    protected virtual void OnModelTriggerStayHandler(Collider me, Collider other)
+    {
+    }
     #endregion
 
     #region Physics Simulation
