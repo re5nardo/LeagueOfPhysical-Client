@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Entity;
 using EntityMessage;
+using System.Linq;
 
 namespace Behavior
 {
@@ -31,11 +32,11 @@ namespace Behavior
         {
             base.Initialize(behaviorParam);
 
-            m_fLifespan = MasterData.Lifespan;
-            m_fAttackTime = float.Parse(MasterData.ClassParams.Find(x => x.Contains("AttackTime")).Split(':')[1]);
-            m_nTargetProjectileID = int.Parse(MasterData.ClassParams.Find(x => x.Contains("ProjectileID")).Split(':')[1]);
-            m_fTargetProjectileHeight = float.Parse(MasterData.ClassParams.Find(x => x.Contains("ProjectileHeight")).Split(':')[1]);
-            m_fTargetProjectileLifespan = float.Parse(MasterData.ClassParams.Find(x => x.Contains("ProjectileLifespan")).Split(':')[1]);
+            m_fLifespan = MasterData.lifespan;
+            m_fAttackTime = float.Parse(MasterData.classParams.First(x => x.Contains("AttackTime")).Split(':')[1]);
+            m_nTargetProjectileID = int.Parse(MasterData.classParams.First(x => x.Contains("ProjectileID")).Split(':')[1]);
+            m_fTargetProjectileHeight = float.Parse(MasterData.classParams.First(x => x.Contains("ProjectileHeight")).Split(':')[1]);
+            m_fTargetProjectileLifespan = float.Parse(MasterData.classParams.First(x => x.Contains("ProjectileLifespan")).Split(':')[1]);
         }
         #endregion
     }

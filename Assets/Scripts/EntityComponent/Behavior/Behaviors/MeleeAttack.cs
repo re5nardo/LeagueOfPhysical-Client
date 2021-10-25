@@ -2,6 +2,7 @@
 using UnityEngine;
 using Entity;
 using EntityMessage;
+using System.Linq;
 
 namespace Behavior
 {
@@ -31,8 +32,8 @@ namespace Behavior
         {
             base.Initialize(behaviorParam);
 
-            m_fLifespan = MasterData.Lifespan;
-            m_fAttackTime = float.Parse(MasterData.ClassParams.Find(x => x.Contains("AttackTime")).Split(':')[1]);
+            m_fLifespan = MasterData.lifespan;
+            m_fAttackTime = float.Parse(MasterData.classParams.First(x => x.Contains("AttackTime")).Split(':')[1]);
         }
         #endregion
     }
