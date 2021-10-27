@@ -33,5 +33,12 @@ namespace Define
             public const int CONTINUOUS_ROTATION = 1001;
             public const int CONTINUOUS_MOVE = 1002;
         }
+
+        public class StateID
+        {
+            public const int Invincible = 0;
+            public const int EntitySelfDestroy = 1;
+            public const int Unmovable = 2;
+        }
     }
 }
