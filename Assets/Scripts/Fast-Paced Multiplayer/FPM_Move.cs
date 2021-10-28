@@ -72,7 +72,7 @@ public class FPM_Move : MonoBehaviour
         else if (playerMoveInput.inputType == PlayerMoveInput.InputType.Release)
         {
             var behaviorController = entity.GetEntityComponent<BehaviorController>();
-            behaviorController.StopBehavior(Define.MasterData.BehaviorID.MOVE);
+            behaviorController.StopBehavior(Define.MasterData.BehaviorId.Move);
         }
     }
 
