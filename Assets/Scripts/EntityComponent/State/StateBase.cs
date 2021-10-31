@@ -16,6 +16,7 @@ namespace State
 
         public int MasterDataId { get; protected set; } = -1;
         public bool IsPlaying { get; private set; } = false;
+        public float Lifespan { get; protected set; }
 
         protected int startTick = -1;
         protected int lastTick = -1;
@@ -25,11 +26,15 @@ namespace State
         protected float LastUpdateTime => lastTick == -1 ? -1 : (lastTick - startTick + 1) * Game.Current.TickInterval;
 
         private StateMasterData masterData = null;
-        public StateMasterData MasterData => masterData ?? (masterData = ScriptableObjectUtil.Get<StateMasterData>(x => x.id == MasterDataId));
+        public StateMasterData MasterData => masterData ?? (masterData = MasterDataUtil.Get<StateMasterData>(MasterDataId));
 
         public virtual void Initialize(StateParam stateParam)
 		{
             this.MasterDataId = stateParam.masterDataId;
+        }
+
+        public virtual void OnAccumulate(StateParam stateParam)
+        {
         }
 
         public void StartState()
