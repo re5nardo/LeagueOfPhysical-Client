@@ -9,6 +9,7 @@ public abstract class SubGameBase : MonoBehaviour
     public static SubGameBase Current = null;
 
     public bool Initialized { get; private set; } = false;
+    public bool Finalized { get; private set; } = false;
     public bool IsGameEnd { get; protected set; } = false;
 
     protected int startTick = -1;
@@ -24,8 +25,6 @@ public abstract class SubGameBase : MonoBehaviour
         {
             Current = null;
         }
-
-        Clear();
     }
 
     public IEnumerator Initialize()
@@ -35,8 +34,11 @@ public abstract class SubGameBase : MonoBehaviour
         Initialized = true;
     }
 
-    protected virtual void Clear()
+    public IEnumerator Finalize()
     {
+        yield return OnFinalize();
+
+        Finalized = true;
     }
 
     public void StartGame()
@@ -76,6 +78,8 @@ public abstract class SubGameBase : MonoBehaviour
     }
 
     protected abstract IEnumerator OnInitialize();
+    protected abstract IEnumerator OnFinalize();
+
     protected abstract void OnGameStart();
     protected abstract void OnGameEnd();
     protected abstract void OnTick(int tick);

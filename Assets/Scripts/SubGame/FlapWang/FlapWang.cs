@@ -53,6 +53,11 @@ public class FlapWang : SubGameBase
         LOP.Game.Current.GameUI.CameraController.Camera.transform.localPosition = new Vector3(8, 0, -20);
     }
 
+    protected override IEnumerator OnFinalize()
+    {
+        yield return SceneManager.UnloadSceneAsync(LOP.Game.Current.GameManager.MapData.sceneName, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
+    }
+
     protected override void OnGameStart()
     {
     }

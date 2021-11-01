@@ -12,6 +12,11 @@ public class RememberGame : SubGameBase
         yield return SceneManager.LoadSceneAsync(bgSceneName, LoadSceneMode.Additive);
     }
 
+    protected override IEnumerator OnFinalize()
+    {
+        yield return SceneManager.UnloadSceneAsync(bgSceneName, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
+    }
+
     protected override void OnGameStart()
     {
     }
