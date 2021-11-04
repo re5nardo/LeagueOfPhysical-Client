@@ -149,13 +149,41 @@ namespace Entity
 
         public bool HasStatusEffect(StatusEffect statusEffect)
         {
+            var behaviors = GetEntityComponents<Behavior.BehaviorBase>();
+            if (behaviors != null)
+            {
+                foreach (var behavior in behaviors)
+                {
+                    if (behavior.MasterData.statusEffects != null && behavior.MasterData.statusEffects.Any(x => x == statusEffect))
+                    {
+                        return true;
+                    }
+                }
+            }
+
             var states = GetEntityComponents<State.StateBase>();
-            return states.Any(x => x.MasterData.statusEffects.Any(x => x == statusEffect));
+            if (states != null)
+            {
+                foreach (var state in states)
+                {
+                    if (state.MasterData.statusEffects != null && state.MasterData.statusEffects.Any(x => x == statusEffect))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public State.StateBase GetState(int masterDataId)
         {
             return GetEntityComponents<State.StateBase>()?.Find(state => state.MasterDataId == masterDataId);
+        }
+
+        public Behavior.BehaviorBase GetBehavior(int masterDataId)
+        {
+            return GetEntityComponents<Behavior.BehaviorBase>()?.Find(behavior => behavior.MasterDataId == masterDataId);
         }
         #endregion
     }
