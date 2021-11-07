@@ -65,14 +65,12 @@ public class FPM_Move : MonoBehaviour
         {
             //if (CanMove())
             {
-                var behaviorController = entity.GetEntityComponent<BehaviorController>();
-                behaviorController.Move(entity.Position + playerMoveInput.inputData.normalized * Game.Current.TickInterval * 5 * entity.FactoredMovementSpeed);
+                entity.BehaviorController.Move(entity.Position + playerMoveInput.inputData.normalized * Game.Current.TickInterval * 5 * entity.FactoredMovementSpeed);
             }
         }
         else if (playerMoveInput.inputType == PlayerMoveInput.InputType.Release)
         {
-            var behaviorController = entity.GetEntityComponent<BehaviorController>();
-            behaviorController.StopBehavior(Define.MasterData.BehaviorId.Move);
+            entity.BehaviorController.StopBehavior(Define.MasterData.BehaviorId.Move);
         }
     }
 

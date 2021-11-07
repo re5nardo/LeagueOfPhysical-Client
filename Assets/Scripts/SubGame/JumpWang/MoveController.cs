@@ -44,8 +44,7 @@ namespace JumpWangController
             {
                 var entity = Entities.Get<LOPMonoEntityBase>(Entities.MyEntityID);
 
-                var behaviorController = entity.GetEntityComponent<BehaviorController>();
-                behaviorController.Move(entity.Position + moveInput.Value.direction.normalized * Game.Current.TickInterval * entity.FactoredMovementSpeed);
+                entity.BehaviorController.Move(entity.Position + moveInput.Value.direction.normalized * Game.Current.TickInterval * entity.FactoredMovementSpeed);
             }
 
             moveInput = null;

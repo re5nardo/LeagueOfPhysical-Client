@@ -13,17 +13,14 @@ namespace Entity
 		}
 		#endregion
 
-        private CharacterBasicData characterBasicData = null;
-		private CharacterStatusData characterStatusData = null;
-        private CharacterSkillData characterSkillData = null;
+        public CharacterBasicData CharacterBasicData { get; private set; }
+        public CharacterStatusData CharacterStatusData { get; private set; }
+        public CharacterSkillData CharacterSkillData { get; private set; }
 
-        private BehaviorController behaviorController = null;
-        private StateController stateController = null;
-        private CharacterStatusController characterStatusController = null;
-		//private SkillController m_SkillController = null;
+        public CharacterStatusController CharacterStatusController { get; private set; }
 
         private MasterData.Character masterData = null;
-        public MasterData.Character MasterData => masterData ?? (masterData = MasterDataManager.Instance.GetMasterData<MasterData.Character>(characterBasicData.MasterDataId));
+        public MasterData.Character MasterData => masterData ?? (masterData = MasterDataManager.Instance.GetMasterData<MasterData.Character>(CharacterBasicData.MasterDataId));
 
         #region LOPEntityBase
         protected override void InitEntity()
@@ -37,57 +34,54 @@ namespace Entity
 		{
 			base.InitEntityComponents();
 
-            characterBasicData = AttachEntityComponent(gameObject.AddComponent<CharacterBasicData>());
-            characterStatusData = AttachEntityComponent(gameObject.AddComponent<CharacterStatusData>());
-            characterSkillData = AttachEntityComponent(gameObject.AddComponent<CharacterSkillData>());
+            CharacterBasicData = AttachEntityComponent(gameObject.AddComponent<CharacterBasicData>());
+            CharacterStatusData = AttachEntityComponent(gameObject.AddComponent<CharacterStatusData>());
+            CharacterSkillData = AttachEntityComponent(gameObject.AddComponent<CharacterSkillData>());
 
-            entityBasicView = AttachEntityComponent(gameObject.AddComponent<CharacterView>());
+            EntityBasicView = AttachEntityComponent(gameObject.AddComponent<CharacterView>());
 
-            behaviorController = AttachEntityComponent(gameObject.AddComponent<BehaviorController>());
-            stateController = AttachEntityComponent(gameObject.AddComponent<StateController>());
-            characterStatusController = AttachEntityComponent(gameObject.AddComponent<CharacterStatusController>());
-			//m_SkillController = AttachComponent(gameObject.AddComponent<SkillController>());
+            CharacterStatusController = AttachEntityComponent(gameObject.AddComponent<CharacterStatusController>());
 		}
 
         protected override void OnInitialize(EntityCreationData entityCreationData)
 		{
             base.OnInitialize(entityCreationData);
 
-            characterBasicData.Initialize(entityCreationData);
-            characterStatusData.Initialize(entityCreationData);
-            characterSkillData.Initialize(entityCreationData);
+            CharacterBasicData.Initialize(entityCreationData);
+            CharacterStatusData.Initialize(entityCreationData);
+            CharacterSkillData.Initialize(entityCreationData);
         }
 		#endregion
 
 		#region Interface For Convenience
 		public int Level
 		{
-			get => characterBasicData.Level;
-            set => characterBasicData.Level = value;
+			get => CharacterBasicData.Level;
+            set => CharacterBasicData.Level = value;
         }
 
 		public int HP
         {
-			get => characterStatusData.HP;
-            set => characterStatusData.HP = value;
+			get => CharacterStatusData.HP;
+            set => CharacterStatusData.HP = value;
         }
 
 		public int MP
 		{
-			get => characterStatusData.MP;
-            set => characterStatusData.MP = value;
+			get => CharacterStatusData.MP;
+            set => CharacterStatusData.MP = value;
         }
 
-		public int MaximumHP => characterStatusData.MaximumHP;
+		public int MaximumHP => CharacterStatusData.MaximumHP;
 
-        public int MaximumMP => characterStatusData.MaximumMP;
+        public int MaximumMP => CharacterStatusData.MaximumMP;
 
-        public bool IsAlive => characterStatusData.HP > 0;
+        public bool IsAlive => CharacterStatusData.HP > 0;
 
-        public override float MovementSpeed => characterStatusData.MovementSpeed;
+        public override float MovementSpeed => CharacterStatusData.MovementSpeed;
         public override float FactoredMovementSpeed => MovementSpeed * LOP.Game.Current.GameManager.MapData.mapEnvironment.MoveSpeedFactor;
 
-        public int BasicAttackSkillID => characterSkillData.BasicAttackSkillID;
+        public int BasicAttackSkillID => CharacterSkillData.BasicAttackSkillID;
 		#endregion
 	}
 }

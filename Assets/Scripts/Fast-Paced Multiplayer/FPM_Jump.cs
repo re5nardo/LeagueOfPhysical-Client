@@ -62,8 +62,7 @@ public class FPM_Jump : MonoBehaviour
     {
         var entity = Entities.Get<LOPMonoEntityBase>(jumpInputData.entityId);
 
-        var behaviorController = entity.GetEntityComponent<BehaviorController>();
-        behaviorController.Jump(1, Vector3.up, Behavior.Jump.JumpType.AddForce);
+        entity.BehaviorController.Jump(1, Vector3.up, Behavior.Jump.JumpType.AddForce);
     }
 
     private void OnJumpInputData(JumpInputData jumpInputData)
