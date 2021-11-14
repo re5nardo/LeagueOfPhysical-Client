@@ -16,6 +16,15 @@ namespace Behavior
         #endregion
 
         #region BehaviorBase
+        protected override void OnInitialize(BehaviorParam behaviorParam)
+        {
+            m_fLifespan = MasterData.lifespan;
+            //m_fAttackTime = float.Parse(MasterData.classParams.First(x => x.Contains("AttackTime")).Split(':')[1]);
+            //m_nTargetProjectileID = int.Parse(MasterData.classParams.First(x => x.Contains("ProjectileID")).Split(':')[1]);
+            //m_fTargetProjectileHeight = float.Parse(MasterData.classParams.First(x => x.Contains("ProjectileHeight")).Split(':')[1]);
+            //m_fTargetProjectileLifespan = float.Parse(MasterData.classParams.First(x => x.Contains("ProjectileLifespan")).Split(':')[1]);
+        }
+
         protected override void OnBehaviorStart()
         {
             base.OnBehaviorStart();
@@ -26,17 +35,6 @@ namespace Behavior
         protected override bool OnBehaviorUpdate()
         {
             return true;
-        }
-
-        public override void Initialize(BehaviorParam behaviorParam)
-        {
-            base.Initialize(behaviorParam);
-
-            m_fLifespan = MasterData.lifespan;
-            //m_fAttackTime = float.Parse(MasterData.classParams.First(x => x.Contains("AttackTime")).Split(':')[1]);
-            //m_nTargetProjectileID = int.Parse(MasterData.classParams.First(x => x.Contains("ProjectileID")).Split(':')[1]);
-            //m_fTargetProjectileHeight = float.Parse(MasterData.classParams.First(x => x.Contains("ProjectileHeight")).Split(':')[1]);
-            //m_fTargetProjectileLifespan = float.Parse(MasterData.classParams.First(x => x.Contains("ProjectileLifespan")).Split(':')[1]);
         }
         #endregion
     }

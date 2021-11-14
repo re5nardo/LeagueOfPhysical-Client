@@ -14,10 +14,8 @@ namespace State
             return CurrentUpdateTime < Lifespan;
         }
 
-        public override void Initialize(StateParam stateParam)
+        protected override void OnInitialize(StateParam stateParam)
         {
-            base.Initialize(stateParam);
-
             var basicStateParam = stateParam as BasicStateParam;
 
             Lifespan = basicStateParam.lifespan;

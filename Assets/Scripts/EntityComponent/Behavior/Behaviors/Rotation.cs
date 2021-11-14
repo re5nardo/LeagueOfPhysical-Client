@@ -12,6 +12,13 @@ namespace Behavior
         private float m_fAngularSpeed = 360 * 2;
 
         #region BehaviorBase
+        protected override void OnInitialize(BehaviorParam behaviorParam)
+        {
+            var rotationBehaviorParam = behaviorParam as RotationBehaviorParam;
+
+            Direction = rotationBehaviorParam.direction;
+        }
+
         protected override bool OnBehaviorUpdate()
         {
             if (Entity.EntityID != Entities.MyEntityID)
@@ -39,15 +46,6 @@ namespace Behavior
                 Entity.Rotation = new Vector3(Entity.Rotation.x, (Entity.Rotation.y + rotated) % 360, Entity.Rotation.z);
                 return true;
             }
-        }
-
-        public override void Initialize(BehaviorParam behaviorParam)
-        {
-            base.Initialize(behaviorParam);
-
-            var rotationBehaviorParam = behaviorParam as RotationBehaviorParam;
-
-            Direction = rotationBehaviorParam.direction;
         }
         #endregion
     }
