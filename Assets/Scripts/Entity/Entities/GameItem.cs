@@ -22,9 +22,9 @@ namespace Entity
 		{
 			base.InitEntityComponents();
 
-            GameItemBasicData = AttachEntityComponent(gameObject.AddComponent<GameItemBasicData>());
+            GameItemBasicData = AttachEntityComponent<GameItemBasicData>();
 
-            EntityBasicView = AttachEntityComponent(gameObject.AddComponent<EntityBasicView>());
+            EntityBasicView = AttachEntityComponent<EntityBasicView>();
         }
 
         protected override void OnInitialize(EntityCreationData entityCreationData)

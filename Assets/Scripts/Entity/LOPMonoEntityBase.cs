@@ -52,10 +52,10 @@ namespace Entity
 
         protected virtual void InitEntityComponents()
         {
-            BehaviorController = AttachEntityComponent(gameObject.AddComponent<BehaviorController>());
-            StateController = AttachEntityComponent(gameObject.AddComponent<StateController>());
+            BehaviorController = AttachEntityComponent<BehaviorController>();
+            StateController = AttachEntityComponent<StateController>();
 
-            Blackboard = AttachEntityComponent(gameObject.AddComponent<Blackboard>());
+            Blackboard = AttachEntityComponent<Blackboard>();
         }
 
         public void Initialize(EntityCreationData entityCreationData)
@@ -151,6 +151,7 @@ namespace Entity
 
         public Collider ModelCollider => EntityBasicView.ModelCollider;
         public Animator ModelAnimator => EntityBasicView.ModelAnimator;
+        public Renderer[] ModelRenderers => EntityBasicView.ModelRenderers;
 
         public Vector3 Forward => (Quaternion.Euler(Rotation) * Vector3.forward).normalized;
         public Vector3 Up => (Quaternion.Euler(Rotation) * Vector3.up).normalized;

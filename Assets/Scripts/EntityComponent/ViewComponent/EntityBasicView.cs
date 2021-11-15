@@ -5,15 +5,13 @@ using GameFramework;
 public class EntityBasicView : LOPMonoEntityComponentBase
 {
 	private GameObject modelGameObject;
-    private List<Renderer> modelRenderers = new List<Renderer>();
 
+    public Renderer[] ModelRenderers { get; private set; }
     public Collider ModelCollider { get; private set; }
     public Animator ModelAnimator { get; private set; }
 
-    public override void OnAttached(IEntity entity)
+    protected override void OnAttached(IEntity entity)
     {
-        base.OnAttached(entity);
-
         Entity.MessageBroker.AddSubscriber<EntityMessage.ModelChanged>(OnModelChanged);
         Entity.MessageBroker.AddSubscriber<EntityMessage.AnimatorSetTrigger>(OnAnimatorSetTrigger);
         Entity.MessageBroker.AddSubscriber<EntityMessage.AnimatorSetFloat>(OnAnimatorSetFloat);
@@ -24,10 +22,8 @@ public class EntityBasicView : LOPMonoEntityComponentBase
         SceneMessageBroker.AddSubscriber<TickMessage.AfterPhysicsSimulation>(OnAfterPhysicsSimulation);
     }
 
-    public override void OnDetached()
+    protected override void OnDetached()
     {
-        base.OnDetached();
-
         Entity.MessageBroker.RemoveSubscriber<EntityMessage.ModelChanged>(OnModelChanged);
         Entity.MessageBroker.RemoveSubscriber<EntityMessage.AnimatorSetTrigger>(OnAnimatorSetTrigger);
         Entity.MessageBroker.RemoveSubscriber<EntityMessage.AnimatorSetFloat>(OnAnimatorSetFloat);
@@ -98,7 +94,7 @@ public class EntityBasicView : LOPMonoEntityComponentBase
         Entity.CollisionReporter.onTriggerEnter += OnModelTriggerEnterHandler;
         Entity.CollisionReporter.onTriggerStay += OnModelTriggerStayHandler;
 
-        modelGameObject.GetComponentsInChildren(true, modelRenderers);
+        ModelRenderers = modelGameObject.GetComponentsInChildren<Renderer>(true);
     }
 
 	protected virtual void ClearModel()
@@ -119,7 +115,7 @@ public class EntityBasicView : LOPMonoEntityComponentBase
         Entity.CollisionReporter.onTriggerEnter -= OnModelTriggerEnterHandler;
         Entity.CollisionReporter.onTriggerStay -= OnModelTriggerStayHandler;
 
-        modelRenderers.Clear();
+        ModelRenderers = null;
 	}
 
 	#region Animator

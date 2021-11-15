@@ -20,10 +20,8 @@ public class EntityAnimatorController : LOPMonoEntityComponentBase
     private int[] transitionHash;
     private float[] layerWeight;
 
-    public override void OnAttached(IEntity entity)
+    protected override void OnAttached(IEntity entity)
     {
-        base.OnAttached(entity);
-
         // store the animator parameters in a variable - the "Animator.parameters" getter allocates
         // a new parameter array every time it is accessed so we should avoid doing it in a loop
         parameters = Entity.ModelAnimator.parameters.Where(par => !Entity.ModelAnimator.IsParameterControlledByCurve(par.nameHash)).ToArray();
@@ -39,10 +37,8 @@ public class EntityAnimatorController : LOPMonoEntityComponentBase
         SceneMessageBroker.AddSubscriber<TickMessage.LateTickEnd>(OnLateTickEnd);
     }
 
-    public override void OnDetached()
+    protected override void OnDetached()
     {
-        base.OnDetached();
-
         SceneMessageBroker.RemoveSubscriber<EntityAnimatorSnap>(OnEntityAnimatorSnap);
         SceneMessageBroker.RemoveSubscriber<TickMessage.LateTickEnd>(OnLateTickEnd);
     }

@@ -90,10 +90,10 @@ public class EntityManager : GameFramework.EntityManager
 
 			var entity = CreateEntity(entitySnap);
 
-            entity.AttachEntityComponent(entity.gameObject.AddComponent<EntityTransformController>());
+            entity.AttachEntityComponent<EntityTransformController>();
             if (entity.ModelAnimator != null)
             {
-                entity.AttachEntityComponent(entity.gameObject.AddComponent<EntityAnimatorController>());
+                entity.AttachEntityComponent<EntityAnimatorController>();
             }
         }
 	}
