@@ -9,6 +9,7 @@ namespace State
 	public abstract class StateBase : LOPMonoEntityComponentBase
     {
 		public event Action<StateBase> onStateEnd = null;
+        public event Action<StateBase> onLateStateEnd = null;
 
         public int MasterDataId { get; protected set; } = -1;
         public bool IsPlaying { get; private set; }
@@ -33,6 +34,11 @@ namespace State
         public void Initialize(StateParam stateParam)
 		{
             this.MasterDataId = stateParam.masterDataId;
+
+            MasterData.stateAttributes?.ForEach(stateAttribute =>
+            {
+                StateAttributeDispatcher.Dispatch(this, stateAttribute);
+            });
 
             OnInitialize(stateParam);
         }
@@ -83,6 +89,9 @@ namespace State
 
             onStateEnd?.Invoke(this);
             onStateEnd = null;
+
+            onLateStateEnd?.Invoke(this);
+            onLateStateEnd = null;
         }
 
         public void StopState()
