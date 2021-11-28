@@ -4,10 +4,13 @@ using UnityEngine;
 using GameFramework.FSM;
 using System;
 
-public class GameEndState : MonoStateBase
+namespace GameState
 {
-    public override IState GetNext<I>(I input)
+    public class GameEndState : MonoStateBase
     {
-        throw new Exception($"Invalid transition: {GetType().Name} with {input}");
+        public override IState GetNext<I>(I input)
+        {
+            throw new Exception($"Invalid transition: {GetType().Name} with {input}");
+        }
     }
 }

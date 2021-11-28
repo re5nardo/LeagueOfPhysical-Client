@@ -5,63 +5,66 @@ using UnityEngine.SceneManagement;
 using GameFramework.FSM;
 using System;
 
-public class SubGamePrepareState : MonoStateBase
+namespace GameState
 {
-    public override void Enter()
+    public class SubGamePrepareState : MonoStateBase
     {
-        StopCoroutine("Procedure");
-        StartCoroutine("Procedure");
-    }
-
-    public override void Exit()
-    {
-        StopCoroutine("Procedure");
-    }
-    
-    //public override void OnGameStateMessage(SC_GameState msg)
-    //{
-    //    switch (msg.gameState)
-    //    {
-    //        case "SubGameProgressState":
-    //            FSM.MoveNext(GameStateInput.SubGameProgressState);
-    //            break;
-    //    }
-    //}
-
-    public override IState GetNext<I>(I input)
-    {
-        if (!Enum.TryParse(input.ToString(), out GameStateInput gameStateInput))
+        public override void Enter()
         {
-            Debug.LogError($"Invalid input! input : {input}");
-            return default;
+            StopCoroutine("Procedure");
+            StartCoroutine("Procedure");
         }
 
-        switch (gameStateInput)
+        public override void Exit()
         {
-            case GameStateInput.StateDone:
-            case GameStateInput.SubGameProgressState:
-                return gameObject.GetOrAddComponent<SubGameProgressState>();
+            StopCoroutine("Procedure");
         }
 
-        throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");
-    }
+        //public override void OnGameStateMessage(SC_GameState msg)
+        //{
+        //    switch (msg.gameState)
+        //    {
+        //        case "SubGameProgressState":
+        //            FSM.MoveNext(GameStateInput.SubGameProgressState);
+        //            break;
+        //    }
+        //}
 
-    private IEnumerator Procedure()
-    {
-        //  서버로 부터 받아야 됨..
-        LOP.Game.Current.GameManager.subGameId = "FlapWang";
-        LOP.Game.Current.GameManager.mapId = "FlapWangMap";
+        public override IState GetNext<I>(I input)
+        {
+            if (!Enum.TryParse(input.ToString(), out GameStateInput gameStateInput))
+            {
+                Debug.LogError($"Invalid input! input : {input}");
+                return default;
+            }
 
-        //LOP.Game.Current.GameManager.subGameId = "FallingGame";
-        //LOP.Game.Current.GameManager.mapName = "Falling";
+            switch (gameStateInput)
+            {
+                case GameStateInput.StateDone:
+                case GameStateInput.SubGameProgressState:
+                    return gameObject.GetOrAddComponent<SubGameProgressState>();
+            }
 
-        yield return SceneManager.LoadSceneAsync(LOP.Game.Current.GameManager.SubGameData.sceneName, LoadSceneMode.Additive);
+            throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");
+        }
 
-        yield return SubGameBase.Current.Initialize();
+        private IEnumerator Procedure()
+        {
+            //  서버로 부터 받아야 됨..
+            LOP.Game.Current.GameManager.subGameId = "FlapWang";
+            LOP.Game.Current.GameManager.mapId = "FlapWangMap";
 
-        //  Send packet
-        //  ...
+            //LOP.Game.Current.GameManager.subGameId = "FallingGame";
+            //LOP.Game.Current.GameManager.mapName = "Falling";
 
-        FSM.MoveNext(GameStateInput.StateDone);
+            yield return SceneManager.LoadSceneAsync(LOP.Game.Current.GameManager.SubGameData.sceneName, LoadSceneMode.Additive);
+
+            yield return SubGameBase.Current.Initialize();
+
+            //  Send packet
+            //  ...
+
+            FSM.MoveNext(GameStateInput.StateDone);
+        }
     }
 }

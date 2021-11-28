@@ -4,58 +4,61 @@ using UnityEngine;
 using GameFramework.FSM;
 using System;
 
-public class GamePrepareState : MonoStateBase
+namespace GameState
 {
-    public override void Enter()
+    public class GamePrepareState : MonoStateBase
     {
-        StopCoroutine("Procedure");
-        StartCoroutine("Procedure");
-    }
-
-    public override void Exit()
-    {
-        StopCoroutine("Procedure");
-    }
-
-    //public override void OnGameStateMessage(SC_GameState msg)
-    //{
-    //    switch (msg.gameState)
-    //    {
-    //        case "SubGameProgressState":
-    //            FSM.MoveNext(GameStateInput.SubGameProgressState);
-    //            break;
-    //    }
-    //}
-
-    public override IState GetNext<I>(I input)
-    {
-        if (!Enum.TryParse(input.ToString(), out GameStateInput gameStateInput))
+        public override void Enter()
         {
-            Debug.LogError($"Invalid input! input : {input}");
-            return default;
+            StopCoroutine("Procedure");
+            StartCoroutine("Procedure");
         }
 
-        switch (gameStateInput)
+        public override void Exit()
         {
-            case GameStateInput.StateDone:
-                return gameObject.GetOrAddComponent<SubGamePrepareState>();
-                
-            case GameStateInput.SubGameProgressState:
-                return gameObject.GetOrAddComponent<SubGameProgressState>();
+            StopCoroutine("Procedure");
         }
 
-        throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");
-    }
+        //public override void OnGameStateMessage(SC_GameState msg)
+        //{
+        //    switch (msg.gameState)
+        //    {
+        //        case "SubGameProgressState":
+        //            FSM.MoveNext(GameStateInput.SubGameProgressState);
+        //            break;
+        //    }
+        //}
 
-    private IEnumerator Procedure()
-    {
-        //  게임에 기본 필요한 준비 (리소스 등등)
+        public override IState GetNext<I>(I input)
+        {
+            if (!Enum.TryParse(input.ToString(), out GameStateInput gameStateInput))
+            {
+                Debug.LogError($"Invalid input! input : {input}");
+                return default;
+            }
 
-        //  Send packet
-        //  ...
+            switch (gameStateInput)
+            {
+                case GameStateInput.StateDone:
+                    return gameObject.GetOrAddComponent<SubGamePrepareState>();
 
-        FSM.MoveNext(GameStateInput.StateDone);
+                case GameStateInput.SubGameProgressState:
+                    return gameObject.GetOrAddComponent<SubGameProgressState>();
+            }
 
-        yield break;
+            throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");
+        }
+
+        private IEnumerator Procedure()
+        {
+            //  게임에 기본 필요한 준비 (리소스 등등)
+
+            //  Send packet
+            //  ...
+
+            FSM.MoveNext(GameStateInput.StateDone);
+
+            yield break;
+        }
     }
 }

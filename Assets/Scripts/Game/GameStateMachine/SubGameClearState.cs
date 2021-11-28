@@ -5,56 +5,59 @@ using UnityEngine.SceneManagement;
 using GameFramework.FSM;
 using System;
 
-public class SubGameClearState : MonoStateBase
+namespace GameState
 {
-    public override void Enter()
+    public class SubGameClearState : MonoStateBase
     {
-        StopCoroutine("Procedure");
-        StartCoroutine("Procedure");
-    }
-   
-    public override void Exit()
-    {
-        StopCoroutine("Procedure");
-    }
-
-    //public override void OnGameStateMessage(SC_GameState msg)
-    //{
-    //    switch (msg.gameState)
-    //    {
-    //        case "GameEndState":
-    //            FSM.MoveNext(GameStateInput.MatchEndState);
-    //            break;
-    //    }
-    //}
-
-    public override IState GetNext<I>(I input)
-    {
-        if (!Enum.TryParse(input.ToString(), out GameStateInput gameStateInput))
+        public override void Enter()
         {
-            Debug.LogError($"Invalid input! input : {input}");
-            return default;
+            StopCoroutine("Procedure");
+            StartCoroutine("Procedure");
         }
 
-        switch (gameStateInput)
+        public override void Exit()
         {
-            case GameStateInput.StateDone:
-            case GameStateInput.GameEndState:
-                return gameObject.GetOrAddComponent<GameEndState>();
+            StopCoroutine("Procedure");
         }
 
-        throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");
-    }
+        //public override void OnGameStateMessage(SC_GameState msg)
+        //{
+        //    switch (msg.gameState)
+        //    {
+        //        case "GameEndState":
+        //            FSM.MoveNext(GameStateInput.MatchEndState);
+        //            break;
+        //    }
+        //}
 
-    private IEnumerator Procedure()
-    {
-        yield return SubGameBase.Current.Finalize();
+        public override IState GetNext<I>(I input)
+        {
+            if (!Enum.TryParse(input.ToString(), out GameStateInput gameStateInput))
+            {
+                Debug.LogError($"Invalid input! input : {input}");
+                return default;
+            }
 
-        yield return SceneManager.UnloadSceneAsync(LOP.Game.Current.GameManager.SubGameData.sceneName, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
+            switch (gameStateInput)
+            {
+                case GameStateInput.StateDone:
+                case GameStateInput.GameEndState:
+                    return gameObject.GetOrAddComponent<GameEndState>();
+            }
 
-        LOP.Game.Current.GameManager.subGameId = null;
-        LOP.Game.Current.GameManager.mapId = null;
+            throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");
+        }
 
-        FSM.MoveNext(GameStateInput.StateDone);
+        private IEnumerator Procedure()
+        {
+            yield return SubGameBase.Current.Finalize();
+
+            yield return SceneManager.UnloadSceneAsync(LOP.Game.Current.GameManager.SubGameData.sceneName, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
+
+            LOP.Game.Current.GameManager.subGameId = null;
+            LOP.Game.Current.GameManager.mapId = null;
+
+            FSM.MoveNext(GameStateInput.StateDone);
+        }
     }
 }
