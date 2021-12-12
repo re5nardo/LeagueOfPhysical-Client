@@ -60,7 +60,7 @@ public abstract class SubGameBase : MonoBehaviour
         SceneMessageBroker.AddSubscriber<TickMessage.Tick>(OnTickMessage);
         SceneMessageBroker.AddSubscriber<TickMessage.EarlyTickEnd>(OnEarlyTickEndMessage);
 
-        subGameStateMachine.MoveNext(SubGameStateInput.SubGamePrepareState);
+        subGameStateMachine.MoveNext(SubGameStateInput.PrepareState);
 
         OnGameStart();
 
