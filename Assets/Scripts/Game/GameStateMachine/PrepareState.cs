@@ -6,7 +6,7 @@ using System;
 
 namespace GameState
 {
-    public class GamePrepareState : MonoStateBase
+    public class PrepareState : MonoStateBase
     {
         public override void Enter()
         {

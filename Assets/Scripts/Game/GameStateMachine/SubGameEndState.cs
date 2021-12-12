@@ -35,8 +35,8 @@ namespace GameState
                 case GameStateInput.SubGameSelectionState:
                     return gameObject.GetOrAddComponent<SubGameSelectionState>();
 
-                case GameStateInput.GameEndState:
-                    return gameObject.GetOrAddComponent<GameEndState>();
+                case GameStateInput.EndState:
+                    return gameObject.GetOrAddComponent<EndState>();
             }
 
             throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");

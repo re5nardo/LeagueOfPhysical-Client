@@ -41,8 +41,8 @@ namespace GameState
             switch (gameStateInput)
             {
                 case GameStateInput.StateDone:
-                case GameStateInput.GameEndState:
-                    return gameObject.GetOrAddComponent<GameEndState>();
+                case GameStateInput.EndState:
+                    return gameObject.GetOrAddComponent<EndState>();
             }
 
             throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");

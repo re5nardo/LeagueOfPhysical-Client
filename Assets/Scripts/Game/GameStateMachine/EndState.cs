@@ -6,7 +6,7 @@ using System;
 
 namespace GameState
 {
-    public class GameEndState : MonoStateBase
+    public class EndState : MonoStateBase
     {
         public override IState GetNext<I>(I input)
         {
