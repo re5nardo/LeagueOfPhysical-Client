@@ -10,12 +10,16 @@ namespace GameState
     {
         public override void Enter()
         {
+            base.Enter();
+
             StopCoroutine("Procedure");
             StartCoroutine("Procedure");
         }
 
         public override void Exit()
         {
+            base.Exit();
+
             StopCoroutine("Procedure");
         }
 
@@ -40,10 +44,7 @@ namespace GameState
             switch (gameStateInput)
             {
                 case GameStateInput.StateDone:
-                    return gameObject.GetOrAddComponent<SubGamePrepareState>();
-
-                case GameStateInput.SubGameProgressState:
-                    return gameObject.GetOrAddComponent<SubGameProgressState>();
+                    return gameObject.GetOrAddComponent<GameState.SubGamePrepareState>();
             }
 
             throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");

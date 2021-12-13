@@ -8,11 +8,6 @@ namespace GameState
 {
     public class SubGameProgressState : MonoStateBase
     {
-        public override void Enter()
-        {
-            SubGameBase.Current.StartGame();
-        }
-
         //public override void OnGameStateMessage(SC_GameState msg)
         //{
         //    switch (msg.gameState)
@@ -34,8 +29,7 @@ namespace GameState
             switch (gameStateInput)
             {
                 case GameStateInput.StateDone:
-                case GameStateInput.SubGameEndState:
-                    return gameObject.GetOrAddComponent<SubGameEndState>();
+                    return gameObject.GetOrAddComponent<GameState.SubGameClearState>();
             }
 
             throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");

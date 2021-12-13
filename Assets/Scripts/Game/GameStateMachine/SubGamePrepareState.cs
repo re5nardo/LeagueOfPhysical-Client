@@ -11,12 +11,16 @@ namespace GameState
     {
         public override void Enter()
         {
+            base.Enter();
+
             StopCoroutine("Procedure");
             StartCoroutine("Procedure");
         }
 
         public override void Exit()
         {
+            base.Exit();
+
             StopCoroutine("Procedure");
         }
 
@@ -41,8 +45,7 @@ namespace GameState
             switch (gameStateInput)
             {
                 case GameStateInput.StateDone:
-                case GameStateInput.SubGameProgressState:
-                    return gameObject.GetOrAddComponent<SubGameProgressState>();
+                    return gameObject.GetOrAddComponent<GameState.SubGameProgressState>();
             }
 
             throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");
@@ -58,8 +61,6 @@ namespace GameState
             //LOP.Game.Current.GameManager.mapName = "Falling";
 
             yield return SceneManager.LoadSceneAsync(LOP.Game.Current.GameManager.SubGameData.sceneName, LoadSceneMode.Additive);
-
-            yield return SubGameBase.Current.Initialize();
 
             //  Send packet
             //  ...

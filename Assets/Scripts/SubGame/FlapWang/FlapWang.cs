@@ -4,37 +4,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Entity;
 
-public class FlapWang : SubGameBase
+public partial class FlapWang : SubGameBase
 {
-    [SerializeField] private FlapWangUI flapWangUI = null;
-
-    private void Start()
-    {
-        SceneMessageBroker.AddSubscriber<GameMessage.EntityRegister>(OnEntityRegister);
-    }
-
-    private void OnDestroy()
-    {
-        SceneMessageBroker.RemoveSubscriber<GameMessage.EntityRegister>(OnEntityRegister);
-    }
-
-    private void OnEntityRegister(GameMessage.EntityRegister message)
-    {
-        var entity = Entities.Get<LOPMonoEntityBase>(message.entityId);
-
-        entity.Rigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
-
-        if (entity.EntityRole == EntityRole.Player)
-        {
-            var behaviorController = entity.GetComponent<BehaviorController>();
-            behaviorController.StartBehavior(new ContinuousMoveBehaviorParam(Define.MasterData.BehaviorID.CONTINUOUS_MOVE, Vector3.right));
-        }
-    }
-
     protected override IEnumerator OnInitialize()
     {
-        yield return SceneManager.LoadSceneAsync(LOP.Game.Current.GameManager.MapData.sceneName, LoadSceneMode.Additive);
-
         foreach (var entity in Entities.GetAll<LOPMonoEntityBase>())
         {
             entity.Rigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
@@ -42,7 +15,9 @@ public class FlapWang : SubGameBase
             if (entity.EntityRole == EntityRole.Player)
             {
                 var behaviorController = entity.GetComponent<BehaviorController>();
-                behaviorController.StartBehavior(new ContinuousMoveBehaviorParam(Define.MasterData.BehaviorID.CONTINUOUS_MOVE, Vector3.right));
+                behaviorController.StartBehavior(new ContinuousMoveBehaviorParam(Define.MasterData.BehaviorId.ContinuousMove, Vector3.right));
+
+                entity.Rotation = new Vector3(0, 90, 0);
             }
         }
 
@@ -51,11 +26,17 @@ public class FlapWang : SubGameBase
         LOP.Game.Current.GameUI.CameraController.Camera.orthographic = true;
         LOP.Game.Current.GameUI.CameraController.Camera.orthographicSize = 15;
         LOP.Game.Current.GameUI.CameraController.Camera.transform.localPosition = new Vector3(8, 0, -20);
+
+        Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Character"), LayerMask.NameToLayer("Character"), true);
+
+        yield break;
     }
 
     protected override IEnumerator OnFinalize()
     {
-        yield return SceneManager.UnloadSceneAsync(LOP.Game.Current.GameManager.MapData.sceneName, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
+        Physics.gravity /= LOP.Game.Current.GameManager.MapData.mapEnvironment.GravityFactor;
+
+        yield break;
     }
 
     protected override void OnGameStart()

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameFramework.FSM;
 using System;
+using UnityEngine.SceneManagement;
 
 namespace SubGameState
 {
-    public class EntryState : MonoStateBase
+    public class ClearState : MonoStateBase
     {
         public override void Enter()
         {
@@ -34,7 +35,7 @@ namespace SubGameState
             switch (subGameStateInput)
             {
                 case SubGameStateInput.StateDone:
-                    return gameObject.GetOrAddComponent<SubGameState.PrepareState>();
+                    return gameObject.GetOrAddComponent<SubGameState.EndState>();
             }
 
             throw new Exception($"Invalid transition: {GetType().Name} with {subGameStateInput}");
@@ -42,7 +43,9 @@ namespace SubGameState
 
         private IEnumerator Procedure()
         {
-            yield return SubGameBase.Current.Initialize();
+            yield return SceneManager.UnloadSceneAsync(LOP.Game.Current.GameManager.MapData.sceneName, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
+
+            yield return SubGameBase.Current.Finalize();
 
             FSM.MoveNext(GameStateInput.StateDone);
         }

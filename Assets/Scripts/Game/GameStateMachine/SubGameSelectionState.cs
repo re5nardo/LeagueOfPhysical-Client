@@ -30,7 +30,7 @@ namespace GameState
             {
                 case GameStateInput.StateDone:
                 case GameStateInput.SubGamePrepareState:
-                    return gameObject.GetOrAddComponent<SubGamePrepareState>();
+                    return gameObject.GetOrAddComponent<GameState.SubGamePrepareState>();
             }
 
             throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");
