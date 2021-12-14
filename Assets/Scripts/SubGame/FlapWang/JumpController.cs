@@ -43,8 +43,7 @@ namespace FlapWangController
             {
                 var entity = Entities.Get<LOPMonoEntityBase>(Entities.MyEntityID);
 
-                var behaviorController = entity.GetEntityComponent<BehaviorController>();
-                behaviorController.Jump(jumpInput.Value.normalizedPower, jumpInput.Value.direction, Behavior.Jump.JumpType.FlapJump);
+                entity.BehaviorController.Jump(jumpInput.Value.normalizedPower, jumpInput.Value.direction, Behavior.Jump.JumpType.FlapJump);
             }
 
             jumpInput = null;
@@ -52,7 +51,7 @@ namespace FlapWangController
 
         private bool CanJump()
         {
-            return true;
+            return Entities.MyCharacter.IsAlive && !Entities.MyCharacter.HasStatusEffect(StatusEffect.Stun);
         }
     }
 }
