@@ -37,7 +37,7 @@ namespace Entity
 
         #region Interface For Convenience
         public override float MovementSpeed => GameItemBasicData.MovementSpeed;
-        public override float FactoredMovementSpeed => MovementSpeed * LOP.Game.Current.GameManager.MapData.mapEnvironment.MoveSpeedFactor;
+        public override float FactoredMovementSpeed => MovementSpeed * LOP.Game.Current.MapData.mapEnvironment.MoveSpeedFactor;
 
 		public int HP
         {

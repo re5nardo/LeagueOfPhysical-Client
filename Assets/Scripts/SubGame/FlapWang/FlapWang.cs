@@ -21,7 +21,7 @@ public partial class FlapWang : SubGameBase
             }
         }
 
-        Physics.gravity *= LOP.Game.Current.GameManager.MapData.mapEnvironment.GravityFactor;
+        Physics.gravity *= LOP.Game.Current.MapData.mapEnvironment.GravityFactor;
 
         LOP.Game.Current.GameUI.CameraController.Camera.orthographic = true;
         LOP.Game.Current.GameUI.CameraController.Camera.orthographicSize = 15;
@@ -34,7 +34,7 @@ public partial class FlapWang : SubGameBase
 
     protected override IEnumerator OnFinalize()
     {
-        Physics.gravity /= LOP.Game.Current.GameManager.MapData.mapEnvironment.GravityFactor;
+        Physics.gravity /= LOP.Game.Current.MapData.mapEnvironment.GravityFactor;
 
         yield break;
     }

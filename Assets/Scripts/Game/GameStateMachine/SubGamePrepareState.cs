@@ -44,8 +44,7 @@ namespace GameState
 
             switch (gameStateInput)
             {
-                case GameStateInput.StateDone:
-                    return gameObject.GetOrAddComponent<GameState.SubGameProgressState>();
+                case GameStateInput.StateDone: return gameObject.GetOrAddComponent<GameState.SubGameProgressState>();
             }
 
             throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");
@@ -54,13 +53,13 @@ namespace GameState
         private IEnumerator Procedure()
         {
             //  서버로 부터 받아야 됨..
-            LOP.Game.Current.GameManager.subGameId = "FlapWang";
-            LOP.Game.Current.GameManager.mapId = "FlapWangMap";
+            AppDataContainer.Get<MatchSettingData>().matchSetting.subGameId = "FlapWang";
+            AppDataContainer.Get<MatchSettingData>().matchSetting.mapId = "FlapWangMap";
 
             //LOP.Game.Current.GameManager.subGameId = "FallingGame";
             //LOP.Game.Current.GameManager.mapName = "Falling";
 
-            yield return SceneManager.LoadSceneAsync(LOP.Game.Current.GameManager.SubGameData.sceneName, LoadSceneMode.Additive);
+            yield return SceneManager.LoadSceneAsync(LOP.Game.Current.SubGameData.sceneName, LoadSceneMode.Additive);
 
             //  Send packet
             //  ...

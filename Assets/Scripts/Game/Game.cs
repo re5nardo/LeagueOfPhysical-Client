@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Entity;
 using NetworkModel.Mirror;
+using GameFramework;
 
 namespace LOP
 {
@@ -13,19 +14,19 @@ namespace LOP
         public new static Game Current => GameFramework.Game.Current as Game;
 
         public GameUI GameUI => gameUI;
-        public GameEventManager GameEventManager => gameEventManager;
-        public GameManager GameManager => gameManager;
+        public GameEventManager GameEventManager { get; private set; }
+        public GameStateMachine GameStateMachine { get; private set; }
 
-        private GameEventManager gameEventManager = null;
-        private GameManager gameManager = null;
+        public SubGameData SubGameData => SubGameData.Get(AppDataContainer.Get<MatchSettingData>().matchSetting.subGameId);
+        public MapData MapData => MapData.Get(AppDataContainer.Get<MatchSettingData>().matchSetting.mapId);
 
         public override IEnumerator Initialize()
         {
             Physics.autoSimulation = false;
 
             tickUpdater = gameObject.AddComponent<LOPTickUpdater>();
-            gameEventManager = gameObject.AddComponent<GameEventManager>();
-            gameManager = gameObject.AddComponent<GameManager>();
+            GameEventManager = gameObject.AddComponent<GameEventManager>();
+            GameStateMachine = new GameObject("GameStateMachine").AddComponent<GameStateMachine>();
 
             SceneMessageBroker.AddSubscriber<SC_EnterRoom>(OnEnterRoom);
             SceneMessageBroker.AddSubscriber<SC_SyncTick>(SC_SyncTickHandler.Handle);
@@ -53,6 +54,11 @@ namespace LOP
 
             Physics.autoSimulation = true;
 
+            if (GameStateMachine != null)
+            {
+                Destroy(GameStateMachine.gameObject);
+            }
+
             SceneMessageBroker.RemoveSubscriber<SC_EnterRoom>(OnEnterRoom);
             SceneMessageBroker.RemoveSubscriber<SC_SyncTick>(SC_SyncTickHandler.Handle);
             SceneMessageBroker.RemoveSubscriber<SC_EmotionExpression>(SC_EmotionExpressionHandler.Handle);
@@ -68,7 +74,7 @@ namespace LOP
         {
             //InvokeRepeating("NotifyPlayerLookAtPosition", 0f, 0.1f);
 
-            GameManager.StartGame();
+            GameStateMachine.MoveNext(GameStateInput.PrepareState);
         }
 
         private void OnTick(int tick)
@@ -122,6 +128,8 @@ namespace LOP
             GameUI.EmotionExpressionSelector.SetData(0, 1, 2, 3);   //  Dummy
 
             Run(enterRoom.tick);
+
+            //GameStateMachine.MoveNext(enterRoom.gameState.TryEnumParse(GameStateInput.EntryState));
         }
     }
 }
