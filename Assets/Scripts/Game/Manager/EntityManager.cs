@@ -93,7 +93,7 @@ public class EntityManager : GameFramework.EntityManager
             entity.AttachEntityComponent<TransformSyncController>();
             if (entity.ModelAnimator != null)
             {
-                entity.AttachEntityComponent<EntityAnimatorController>();
+                entity.AttachEntityComponent<AnimatorSyncController>();
             }
         }
 	}

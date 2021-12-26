@@ -207,9 +207,6 @@ namespace NetworkModel.Mirror
     public class SC_Synchronization : IMirrorMessage
     {
         public SyncDataEntry syncDataEntry;
-        public List<ISnap> listSnap = new List<ISnap>();
-
-        public SC_Synchronization() { }
 
         public byte GetMessageId()
         {
@@ -219,7 +216,6 @@ namespace NetworkModel.Mirror
         public void Clear()
         {
             syncDataEntry = default;
-            listSnap.Clear();
         }
     }
 
@@ -439,7 +435,6 @@ namespace NetworkModel.Mirror
     public class CS_Synchronization : IMirrorMessage
     {
         public SyncDataEntry syncDataEntry;
-        public List<ISnap> listSnap = new List<ISnap>();
 
         public byte GetMessageId()
         {
@@ -449,7 +444,6 @@ namespace NetworkModel.Mirror
         public void Clear()
         {
             syncDataEntry = default;
-            listSnap.Clear();
         }
     }
 
