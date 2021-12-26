@@ -90,7 +90,7 @@ public class EntityManager : GameFramework.EntityManager
 
 			var entity = CreateEntity(entitySnap);
 
-            entity.AttachEntityComponent<EntityTransformController>();
+            entity.AttachEntityComponent<TransformSyncController>();
             if (entity.ModelAnimator != null)
             {
                 entity.AttachEntityComponent<EntityAnimatorController>();

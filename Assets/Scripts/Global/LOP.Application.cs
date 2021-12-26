@@ -12,7 +12,7 @@ namespace LOP
         public static bool IsInitialized { get; private set; }
 
         public static string IP { get; private set; }
-        public static string UserId { get; private set; } = SystemInfo.deviceUniqueIdentifier;
+        public static string UserId => SystemInfo.deviceUniqueIdentifier;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void OnBeforeSceneLoadRuntimeMethod()
