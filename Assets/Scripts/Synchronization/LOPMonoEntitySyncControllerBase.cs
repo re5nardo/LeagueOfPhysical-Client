@@ -4,7 +4,7 @@ using UnityEngine;
 using GameFramework;
 using NetworkModel.Mirror;
 
-public abstract class LOPMonoSyncControllerBase<T> : MonoBehaviour, ISyncController<T> where T : ISyncData
+public abstract class LOPMonoEntitySyncControllerBase<T> : LOPMonoEntityComponentBase, ISyncController<T> where T : ISyncData
 {
     public string ControllerId { get; private set; }
     public string OwnerId { get; private set; }
@@ -12,20 +12,24 @@ public abstract class LOPMonoSyncControllerBase<T> : MonoBehaviour, ISyncControl
     public bool IsDirty { get; private set; }
     public virtual SyncScope SyncScope { get; protected set; } = SyncScope.Local;
 
-    private void Awake()
+    protected override void OnAttached(IEntity entity)
     {
+        base.OnAttached(entity);
+
         OnInitialize();
     }
 
-    private void OnDestroy()
+    protected override void OnDetached()
     {
+        base.OnDetached();
+
         OnFinalize();
     }
 
     public virtual void OnInitialize()
     {
-        ControllerId = $"{GetType().Name}";
-        OwnerId = "server";
+        ControllerId = $"{Entity.EntityID}_{GetType().Name}";
+        OwnerId = Entity.OwnerId;
 
         SceneMessageBroker.AddSubscriber<SC_SyncController>(OnSyncController).Where(syncController => syncController.syncControllerData.controllerId == ControllerId);
         SceneMessageBroker.AddSubscriber<SC_Synchronization>(OnSynchronization).Where(synchronization => synchronization.syncDataEntry.meta.controllerId == ControllerId);
@@ -96,15 +100,15 @@ public abstract class LOPMonoSyncControllerBase<T> : MonoBehaviour, ISyncControl
 
         //  request syncData to server
         var synchronization = ObjectPool.Instance.GetObject<CS_Synchronization>();
-        synchronization.syncDataEntry = new SyncDataEntry()
+        synchronization.syncDataEntry = new SyncDataEntry
         {
             meta = new SyncDataMeta(Game.Current.CurrentTick, LOP.Application.UserId, ControllerId, value.ObjectToHash()),
             data = value,
         };
-       
+
         RoomNetwork.Instance.Send(synchronization, 0, instant: true);
     }
-
+    
     public virtual void OnSync(T value) { }
     public virtual void OnSync(SyncDataEntry value) { }
 }
