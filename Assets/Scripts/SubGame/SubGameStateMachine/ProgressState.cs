@@ -8,21 +8,16 @@ namespace SubGameState
 {
     public class ProgressState : MonoStateBase
     {
-        public override void Enter()
+        public override void OnEnter()
         {
-            base.Enter();
-
             SubGameBase.Current.StartGame();
         }
 
-        public override void Execute()
+        public override IEnumerator OnExecute()
         {
-            base.Execute();
+            yield return new WaitUntil(() => SubGameBase.Current.IsGameEnd);
 
-            if (SubGameBase.Current.IsGameEnd)
-            {
-                FSM.MoveNext(GameStateInput.StateDone);
-            }
+            FSM.MoveNext(SubGameStateInput.StateDone);
         }
 
         public override IState GetNext<I>(I input)
@@ -35,8 +30,14 @@ namespace SubGameState
 
             switch (subGameStateInput)
             {
-                case SubGameStateInput.StateDone:
-                    return gameObject.GetOrAddComponent<SubGameState.ClearState>();
+                case SubGameStateInput.None: return FSM.CurrentState;
+                case SubGameStateInput.StateDone: return gameObject.GetOrAddComponent<SubGameState.ClearState>();
+
+                case SubGameStateInput.EntryState: return gameObject.GetOrAddComponent<SubGameState.EntryState>();
+                case SubGameStateInput.PrepareState: return gameObject.GetOrAddComponent<SubGameState.PrepareState>();
+                case SubGameStateInput.ProgressState: return gameObject.GetOrAddComponent<SubGameState.ProgressState>();
+                case SubGameStateInput.ClearState: return gameObject.GetOrAddComponent<SubGameState.ClearState>();
+                case SubGameStateInput.EndState: return gameObject.GetOrAddComponent<SubGameState.EndState>();
             }
 
             throw new Exception($"Invalid transition: {GetType().Name} with {subGameStateInput}");

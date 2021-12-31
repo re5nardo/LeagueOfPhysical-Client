@@ -9,31 +9,24 @@ namespace Match
     public class InGameRoom : MonoStateBase
     {
         private const int CHECK_INTERVAL = 2;   //  sec
-        private DateTime lastCheckTime;
 
-        public override void Enter()
+        public override void OnEnter()
         {
-            base.Enter();
-
             GameLoadingView.Show();
         }
 
-        public override void Execute()
+        public override IEnumerator OnExecute()
         {
-            base.Execute();
-
-            if ((DateTime.UtcNow - lastCheckTime).TotalSeconds > CHECK_INTERVAL)
+            while (true)
             {
                 CheckMatchState();
 
-                lastCheckTime = DateTime.UtcNow;
+                yield return new WaitForSeconds(CHECK_INTERVAL);
             }
         }
 
-        public override void Exit()
+        public override void OnExit()
         {
-            base.Exit();
-
             GameLoadingView.Hide();
         }
 

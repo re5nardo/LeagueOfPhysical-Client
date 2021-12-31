@@ -8,10 +8,8 @@ namespace Match
 {
     public class CancelMatchmaking : MonoStateBase
     {
-        public override void Enter()
+        public override void OnEnter()
         {
-            base.Enter();
-
             LOPWebAPI.CancelMatchmakingTicket(LOP.Application.UserId,
                 result =>
                 {

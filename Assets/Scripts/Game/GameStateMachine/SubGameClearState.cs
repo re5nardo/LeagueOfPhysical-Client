@@ -9,19 +9,11 @@ namespace GameState
 {
     public class SubGameClearState : MonoStateBase
     {
-        public override void Enter()
+        public override IEnumerator OnExecute()
         {
-            base.Enter();
+            yield return SceneManager.UnloadSceneAsync(LOP.Game.Current.SubGameData.sceneName, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
 
-            StopCoroutine("Procedure");
-            StartCoroutine("Procedure");
-        }
-
-        public override void Exit()
-        {
-            base.Exit();
-
-            StopCoroutine("Procedure");
+            FSM.MoveNext(GameStateInput.StateDone);
         }
 
         //public override void OnGameStateMessage(SC_GameState msg)
@@ -44,18 +36,20 @@ namespace GameState
 
             switch (gameStateInput)
             {
-                case GameStateInput.StateDone:
-                    return gameObject.GetOrAddComponent<GameState.EndState>();
+                case GameStateInput.None: return FSM.CurrentState;
+                case GameStateInput.StateDone: return gameObject.GetOrAddComponent<GameState.SubGameEndState>();
+
+                case GameStateInput.EntryState: return gameObject.GetOrAddComponent<GameState.EntryState>();
+                case GameStateInput.PrepareState: return gameObject.GetOrAddComponent<GameState.PrepareState>();
+                case GameStateInput.SubGameSelectionState: return gameObject.GetOrAddComponent<GameState.SubGameSelectionState>();
+                case GameStateInput.SubGamePrepareState: return gameObject.GetOrAddComponent<GameState.SubGamePrepareState>();
+                case GameStateInput.SubGameProgressState: return gameObject.GetOrAddComponent<GameState.SubGameProgressState>();
+                case GameStateInput.SubGameClearState: return gameObject.GetOrAddComponent<GameState.SubGameClearState>();
+                case GameStateInput.SubGameEndState: return gameObject.GetOrAddComponent<GameState.SubGameEndState>();
+                case GameStateInput.EndState: return gameObject.GetOrAddComponent<GameState.EndState>();
             }
 
             throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");
-        }
-
-        private IEnumerator Procedure()
-        {
-            yield return SceneManager.UnloadSceneAsync(LOP.Game.Current.SubGameData.sceneName, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
-
-            FSM.MoveNext(GameStateInput.StateDone);
         }
     }
 }

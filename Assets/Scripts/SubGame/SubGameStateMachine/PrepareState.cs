@@ -9,19 +9,11 @@ namespace SubGameState
 {
     public class PrepareState : MonoStateBase
     {
-        public override void Enter()
+        public override IEnumerator OnExecute()
         {
-            base.Enter();
+            yield return SceneManager.LoadSceneAsync(LOP.Game.Current.MapData.sceneName, LoadSceneMode.Additive);
 
-            StopCoroutine("Procedure");
-            StartCoroutine("Procedure");
-        }
-
-        public override void Exit()
-        {
-            base.Exit();
-
-            StopCoroutine("Procedure");
+            FSM.MoveNext(SubGameStateInput.StateDone);
         }
 
         public override IState GetNext<I>(I input)
@@ -34,18 +26,17 @@ namespace SubGameState
 
             switch (subGameStateInput)
             {
-                case SubGameStateInput.StateDone:
-                    return gameObject.GetOrAddComponent<SubGameState.ProgressState>();
+                case SubGameStateInput.None: return FSM.CurrentState;
+                case SubGameStateInput.StateDone: return gameObject.GetOrAddComponent<SubGameState.ProgressState>();
+
+                case SubGameStateInput.EntryState: return gameObject.GetOrAddComponent<SubGameState.EntryState>();
+                case SubGameStateInput.PrepareState: return gameObject.GetOrAddComponent<SubGameState.PrepareState>();
+                case SubGameStateInput.ProgressState: return gameObject.GetOrAddComponent<SubGameState.ProgressState>();
+                case SubGameStateInput.ClearState: return gameObject.GetOrAddComponent<SubGameState.ClearState>();
+                case SubGameStateInput.EndState: return gameObject.GetOrAddComponent<SubGameState.EndState>();
             }
 
             throw new Exception($"Invalid transition: {GetType().Name} with {subGameStateInput}");
-        }
-
-        private IEnumerator Procedure()
-        {
-            yield return SceneManager.LoadSceneAsync(LOP.Game.Current.MapData.sceneName, LoadSceneMode.Additive);
-
-            FSM.MoveNext(GameStateInput.StateDone);
         }
     }
 }

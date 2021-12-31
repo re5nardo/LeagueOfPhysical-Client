@@ -9,19 +9,13 @@ namespace SubGameState
 {
     public class ClearState : MonoStateBase
     {
-        public override void Enter()
+        public override IEnumerator OnExecute()
         {
-            base.Enter();
+            yield return SceneManager.UnloadSceneAsync(LOP.Game.Current.MapData.sceneName, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
 
-            StopCoroutine("Procedure");
-            StartCoroutine("Procedure");
-        }
+            yield return SubGameBase.Current.Finalize();
 
-        public override void Exit()
-        {
-            base.Exit();
-
-            StopCoroutine("Procedure");
+            FSM.MoveNext(SubGameStateInput.StateDone);
         }
 
         public override IState GetNext<I>(I input)
@@ -34,20 +28,17 @@ namespace SubGameState
 
             switch (subGameStateInput)
             {
-                case SubGameStateInput.StateDone:
-                    return gameObject.GetOrAddComponent<SubGameState.EndState>();
+                case SubGameStateInput.None: return FSM.CurrentState;
+                case SubGameStateInput.StateDone: return gameObject.GetOrAddComponent<SubGameState.EndState>();
+
+                case SubGameStateInput.EntryState: return gameObject.GetOrAddComponent<SubGameState.EntryState>();
+                case SubGameStateInput.PrepareState: return gameObject.GetOrAddComponent<SubGameState.PrepareState>();
+                case SubGameStateInput.ProgressState: return gameObject.GetOrAddComponent<SubGameState.ProgressState>();
+                case SubGameStateInput.ClearState: return gameObject.GetOrAddComponent<SubGameState.ClearState>();
+                case SubGameStateInput.EndState: return gameObject.GetOrAddComponent<SubGameState.EndState>();
             }
 
             throw new Exception($"Invalid transition: {GetType().Name} with {subGameStateInput}");
-        }
-
-        private IEnumerator Procedure()
-        {
-            yield return SceneManager.UnloadSceneAsync(LOP.Game.Current.MapData.sceneName, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
-
-            yield return SubGameBase.Current.Finalize();
-
-            FSM.MoveNext(GameStateInput.StateDone);
         }
     }
 }

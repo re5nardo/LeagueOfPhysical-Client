@@ -8,19 +8,29 @@ namespace GameState
 {
     public class PrepareState : MonoStateBase
     {
-        public override void Enter()
+        public override void OnEnter()
         {
-            base.Enter();
+            //  게임에 기본 필요한 준비 (리소스 등등)
 
-            StopCoroutine("Procedure");
-            StartCoroutine("Procedure");
+            //  Send packet
+            //  ...
+
+            FSM.MoveNext(GameStateInput.StateDone);
         }
 
-        public override void Exit()
-        {
-            base.Exit();
+        //public override IEnumerator OnExecute()
+        //{
+        //    //  scenedata container
+        //    var gameStateSyncController = gameObject.GetComponent<GameStateSyncController>();
 
-            StopCoroutine("Procedure");
+        //    //gameStateSyncController.lastSyncData.state
+        //}
+
+        public override void OnExit()
+        {
+            //  hide global loading display?
+
+            //  Clear
         }
 
         //public override void OnGameStateMessage(SC_GameState msg)
@@ -43,23 +53,20 @@ namespace GameState
 
             switch (gameStateInput)
             {
-                case GameStateInput.StateDone:
-                    return gameObject.GetOrAddComponent<GameState.SubGamePrepareState>();
+                case GameStateInput.None: return FSM.CurrentState;
+                case GameStateInput.StateDone: return gameObject.GetOrAddComponent<GameState.SubGameSelectionState>();
+
+                case GameStateInput.EntryState: return gameObject.GetOrAddComponent<GameState.EntryState>();
+                case GameStateInput.PrepareState: return gameObject.GetOrAddComponent<GameState.PrepareState>();
+                case GameStateInput.SubGameSelectionState: return gameObject.GetOrAddComponent<GameState.SubGameSelectionState>();
+                case GameStateInput.SubGamePrepareState: return gameObject.GetOrAddComponent<GameState.SubGamePrepareState>();
+                case GameStateInput.SubGameProgressState: return gameObject.GetOrAddComponent<GameState.SubGameProgressState>();
+                case GameStateInput.SubGameClearState: return gameObject.GetOrAddComponent<GameState.SubGameClearState>();
+                case GameStateInput.SubGameEndState: return gameObject.GetOrAddComponent<GameState.SubGameEndState>();
+                case GameStateInput.EndState: return gameObject.GetOrAddComponent<GameState.EndState>();
             }
 
             throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");
-        }
-
-        private IEnumerator Procedure()
-        {
-            //  게임에 기본 필요한 준비 (리소스 등등)
-
-            //  Send packet
-            //  ...
-
-            FSM.MoveNext(GameStateInput.StateDone);
-
-            yield break;
         }
     }
 }

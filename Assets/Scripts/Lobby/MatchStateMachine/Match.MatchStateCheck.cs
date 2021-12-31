@@ -8,10 +8,8 @@ namespace Match
 {
     public class MatchStateCheck : MonoStateBase
     {
-        public override void Enter()
+        public override void OnEnter()
         {
-            base.Enter();
-
             CheckMatchState();
         }
 

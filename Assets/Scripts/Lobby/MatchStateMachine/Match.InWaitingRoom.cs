@@ -10,36 +10,29 @@ namespace Match
     public class InWaitingRoom : MonoStateBase
     {
         private const int CHECK_INTERVAL = 2;   //  sec
-        private DateTime lastCheckTime;
 
         private void Awake()
         {
             Lobby.MessageBroker.Receive<string>().Where(msg => msg == "OnCancelMatchingButtonClicked" && IsCurrent).Subscribe(OnCancelMatchmakingButtonClicked).AddTo(this);
         }
 
-        public override void Enter()
+        public override void OnEnter()
         {
-            base.Enter();
-
             MatchingWaitingView.Show();
         }
 
-        public override void Execute()
+        public override IEnumerator OnExecute()
         {
-            base.Execute();
-
-            if ((DateTime.UtcNow - lastCheckTime).TotalSeconds > CHECK_INTERVAL)
+            while (true)
             {
                 CheckMatchState();
 
-                lastCheckTime = DateTime.UtcNow;
+                yield return new WaitForSeconds(CHECK_INTERVAL);
             }
         }
 
-        public override void Exit()
+        public override void OnExit()
         {
-            base.Exit();
-
             MatchingWaitingView.Hide();
         }
 
