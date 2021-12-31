@@ -8,10 +8,8 @@ namespace Match
 {
     public class RequestMatchmaking : MonoStateBase
     {
-        public override void Enter()
+        public override void OnEnter()
         {
-            base.Enter();
-
             var matchSelectData = SceneDataContainer.Get<MatchSelectData>();
 
             LOPWebAPI.CreateMatchmakingTicket(new CreateMatchmakingTicketRequest
