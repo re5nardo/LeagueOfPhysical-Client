@@ -129,6 +129,16 @@ namespace LOP
 
             Run(enterRoom.tick);
 
+            enterRoom.syncControllerDataList.ForEach(item =>
+            {
+                SceneMessageBroker.Publish(item);
+            });
+
+            enterRoom.syncDataEntries.ForEach(item =>
+            {
+                SceneMessageBroker.Publish(item);
+            });
+
             //GameStateMachine.MoveNext(enterRoom.gameState.TryEnumParse(GameStateInput.EntryState));
         }
     }
