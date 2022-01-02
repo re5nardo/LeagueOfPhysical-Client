@@ -22,9 +22,9 @@ namespace GameState
 
             RoomNetwork.Instance.Send(gamePreparation, 0);
 
-            yield return new WaitWhile(() => nameof(PrepareState) == SceneDataContainer.Get<GameData>().GameState);
+            yield return new WaitWhile(() => nameof(PrepareState) == SceneDataContainer.Get<GameData>().gameState);
 
-            FSM.MoveNext(SceneDataContainer.Get<GameData>().GameState.TryEnumParse(GameStateInput.None));
+            FSM.MoveNext(SceneDataContainer.Get<GameData>().gameState.TryEnumParse(GameStateInput.None));
         }
 
         public override IState GetNext<I>(I input)

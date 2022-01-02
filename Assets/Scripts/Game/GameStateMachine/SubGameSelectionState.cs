@@ -18,9 +18,9 @@ namespace GameState
             //LOP.Game.Current.GameManager.subGameId = "FallingGame";
             //LOP.Game.Current.GameManager.mapName = "Falling";
 
-            yield return new WaitWhile(() => nameof(SubGameSelectionState) == SceneDataContainer.Get<GameData>().GameState);
+            yield return new WaitWhile(() => nameof(SubGameSelectionState) == SceneDataContainer.Get<GameData>().gameState);
 
-            FSM.MoveNext(SceneDataContainer.Get<GameData>().GameState.TryEnumParse(GameStateInput.None));
+            FSM.MoveNext(SceneDataContainer.Get<GameData>().gameState.TryEnumParse(GameStateInput.None));
         }
 
         public override IState GetNext<I>(I input)

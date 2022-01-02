@@ -19,9 +19,9 @@ namespace GameState
 
             yield return new WaitUntil(() => subGameUnloader.isDone && mapUnloader.isDone);
 
-            yield return new WaitWhile(() => nameof(SubGameClearState) == SceneDataContainer.Get<GameData>().GameState);
+            yield return new WaitWhile(() => nameof(SubGameClearState) == SceneDataContainer.Get<GameData>().gameState);
 
-            FSM.MoveNext(SceneDataContainer.Get<GameData>().GameState.TryEnumParse(GameStateInput.None));
+            FSM.MoveNext(SceneDataContainer.Get<GameData>().gameState.TryEnumParse(GameStateInput.None));
         }
 
         public override IState GetNext<I>(I input)

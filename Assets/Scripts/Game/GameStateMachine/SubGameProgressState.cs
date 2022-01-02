@@ -16,9 +16,9 @@ namespace GameState
 
         public override IEnumerator OnExecute()
         {
-            yield return new WaitWhile(() => nameof(SubGameProgressState) == SceneDataContainer.Get<GameData>().GameState);
+            yield return new WaitWhile(() => nameof(SubGameProgressState) == SceneDataContainer.Get<GameData>().gameState);
 
-            FSM.MoveNext(SceneDataContainer.Get<GameData>().GameState.TryEnumParse(GameStateInput.None));
+            FSM.MoveNext(SceneDataContainer.Get<GameData>().gameState.TryEnumParse(GameStateInput.None));
         }
 
         public override void OnExit()
