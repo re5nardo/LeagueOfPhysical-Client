@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Text.RegularExpressions;
+using GameFramework;
 
 namespace LOP
 {
@@ -26,6 +27,8 @@ namespace LOP
 #if UNITY_EDITOR
             UnityEngine.Application.targetFrameRate = 60;
 #endif
+            MonoSingletonBase.condition = () => !IsApplicationQuitting;
+
             MasterDataManager.Instantiate();
 
             //  Debug Console
