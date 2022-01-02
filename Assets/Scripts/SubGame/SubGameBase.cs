@@ -14,14 +14,9 @@ public abstract class SubGameBase : MonoBehaviour
 
     protected int startTick = -1;
 
-    public SubGameStateMachine SubGameStateMachine { get; private set; }
-
     private void Awake()
     {
         Current = this;
-
-        SubGameStateMachine = new GameObject("SubGameStateMachine").AddComponent<SubGameStateMachine>();
-        SubGameStateMachine.StartStateMachine();
     }
 
     private void OnDestroy()
@@ -29,11 +24,6 @@ public abstract class SubGameBase : MonoBehaviour
         if (Current == this)
         {
             Current = null;
-        }
-
-        if (SubGameStateMachine != null)
-        {
-            Destroy(SubGameStateMachine.gameObject);
         }
     }
 
