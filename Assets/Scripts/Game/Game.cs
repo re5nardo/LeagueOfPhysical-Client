@@ -27,6 +27,7 @@ namespace LOP
             tickUpdater = gameObject.AddComponent<LOPTickUpdater>();
             GameEventManager = gameObject.AddComponent<GameEventManager>();
             GameStateMachine = new GameObject("GameStateMachine").AddComponent<GameStateMachine>();
+            GameStateMachine.StartStateMachine();
 
             SceneMessageBroker.AddSubscriber<SC_EnterRoom>(OnEnterRoom);
             SceneMessageBroker.AddSubscriber<SC_SyncTick>(SC_SyncTickHandler.Handle);

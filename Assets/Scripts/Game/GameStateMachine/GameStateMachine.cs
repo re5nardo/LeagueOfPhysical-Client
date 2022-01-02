@@ -11,7 +11,5 @@ public class GameStateMachine : MonoStateMachineBase
     {
         gameObject.AddComponent<GameStateMachineViewer>();
         gameObject.AddComponent<GameStateSyncController>();
-
-        StartStateMachine();
     }
 }

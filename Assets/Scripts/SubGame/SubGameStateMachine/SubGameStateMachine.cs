@@ -11,7 +11,5 @@ public class SubGameStateMachine : MonoStateMachineBase
     {
         gameObject.AddComponent<SubGameStateMachineViewer>();
         gameObject.AddComponent<SubGameStateSyncController>();
-
-        StartStateMachine();
     }
 }
