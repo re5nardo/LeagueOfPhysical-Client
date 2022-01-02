@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using GameFramework.FSM;
 using System;
+using NetworkModel.Mirror;
+using GameFramework;
 
 namespace GameState
 {
@@ -11,30 +13,31 @@ namespace GameState
     {
         public override IEnumerator OnExecute()
         {
-            //  서버로 부터 받아야 됨..
-            AppDataContainer.Get<MatchSettingData>().matchSetting.subGameId = "FlapWang";
-            AppDataContainer.Get<MatchSettingData>().matchSetting.mapId = "FlapWangMap";
+            var subGameLoader = SceneManager.LoadSceneAsync(LOP.Game.Current.SubGameData.sceneName, LoadSceneMode.Additive);
+            var mapLoader = SceneManager.LoadSceneAsync(LOP.Game.Current.MapData.sceneName, LoadSceneMode.Additive);
 
-            //LOP.Game.Current.GameManager.subGameId = "FallingGame";
-            //LOP.Game.Current.GameManager.mapName = "Falling";
+            yield return new WaitUntil(() => subGameLoader.isDone && mapLoader.isDone);
 
-            yield return SceneManager.LoadSceneAsync(LOP.Game.Current.SubGameData.sceneName, LoadSceneMode.Additive);
+            yield return SubGameBase.Current.Initialize();
 
-            //  Send packet
-            //  ...
+            //  Send GamePreparation
+            var subGamePreparation = new CS_SubGamePreparation();
+            subGamePreparation.entityId = Entities.MyEntityID;
+            subGamePreparation.preparation = 1;
 
-            FSM.MoveNext(GameStateInput.StateDone);
+            RoomNetwork.Instance.Send(subGamePreparation, 0);
+
+            yield return new WaitWhile(() => nameof(SubGamePrepareState) == SceneDataContainer.Get<GameData>().GameState);
+
+            FSM.MoveNext(SceneDataContainer.Get<GameData>().GameState.TryEnumParse(GameStateInput.None));
         }
 
-        //public override void OnGameStateMessage(SC_GameState msg)
-        //{
-        //    switch (msg.gameState)
-        //    {
-        //        case "SubGameProgressState":
-        //            FSM.MoveNext(GameStateInput.SubGameProgressState);
-        //            break;
-        //    }
-        //}
+        public override void OnExit()
+        {
+            //  hide global loading display?
+
+            //  Clear
+        }
 
         public override IState GetNext<I>(I input)
         {
@@ -46,17 +49,14 @@ namespace GameState
 
             switch (gameStateInput)
             {
-                case GameStateInput.None: return FSM.CurrentState;
-                case GameStateInput.StateDone: return gameObject.GetOrAddComponent<GameState.SubGameProgressState>();
+                case GameStateInput.StateDone:
+                case GameStateInput.SubGameProgressState:
+                    return gameObject.GetOrAddComponent<GameState.SubGameProgressState>();
 
-                case GameStateInput.EntryState: return gameObject.GetOrAddComponent<GameState.EntryState>();
-                case GameStateInput.PrepareState: return gameObject.GetOrAddComponent<GameState.PrepareState>();
-                case GameStateInput.SubGameSelectionState: return gameObject.GetOrAddComponent<GameState.SubGameSelectionState>();
-                case GameStateInput.SubGamePrepareState: return gameObject.GetOrAddComponent<GameState.SubGamePrepareState>();
-                case GameStateInput.SubGameProgressState: return gameObject.GetOrAddComponent<GameState.SubGameProgressState>();
-                case GameStateInput.SubGameClearState: return gameObject.GetOrAddComponent<GameState.SubGameClearState>();
-                case GameStateInput.SubGameEndState: return gameObject.GetOrAddComponent<GameState.SubGameEndState>();
-                case GameStateInput.EndState: return gameObject.GetOrAddComponent<GameState.EndState>();
+                case GameStateInput.SubGameClearState:
+                case GameStateInput.SubGameEndState:
+                case GameStateInput.EndState:
+                    return gameObject.GetOrAddComponent<GameState.SubGameClearState>();
             }
 
             throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");

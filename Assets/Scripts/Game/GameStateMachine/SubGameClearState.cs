@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using GameFramework.FSM;
 using System;
+using GameFramework;
 
 namespace GameState
 {
@@ -11,20 +12,17 @@ namespace GameState
     {
         public override IEnumerator OnExecute()
         {
-            yield return SceneManager.UnloadSceneAsync(LOP.Game.Current.SubGameData.sceneName, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
+            yield return SubGameBase.Current.Finalize();
 
-            FSM.MoveNext(GameStateInput.StateDone);
+            var subGameUnloader = SceneManager.UnloadSceneAsync(LOP.Game.Current.SubGameData.sceneName, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
+            var mapUnloader = SceneManager.UnloadSceneAsync(LOP.Game.Current.MapData.sceneName, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
+
+            yield return new WaitUntil(() => subGameUnloader.isDone && mapUnloader.isDone);
+
+            yield return new WaitWhile(() => nameof(SubGameClearState) == SceneDataContainer.Get<GameData>().GameState);
+
+            FSM.MoveNext(SceneDataContainer.Get<GameData>().GameState.TryEnumParse(GameStateInput.None));
         }
-
-        //public override void OnGameStateMessage(SC_GameState msg)
-        //{
-        //    switch (msg.gameState)
-        //    {
-        //        case "GameEndState":
-        //            FSM.MoveNext(GameStateInput.MatchEndState);
-        //            break;
-        //    }
-        //}
 
         public override IState GetNext<I>(I input)
         {
@@ -36,17 +34,10 @@ namespace GameState
 
             switch (gameStateInput)
             {
-                case GameStateInput.None: return FSM.CurrentState;
-                case GameStateInput.StateDone: return gameObject.GetOrAddComponent<GameState.SubGameEndState>();
-
-                case GameStateInput.EntryState: return gameObject.GetOrAddComponent<GameState.EntryState>();
-                case GameStateInput.PrepareState: return gameObject.GetOrAddComponent<GameState.PrepareState>();
-                case GameStateInput.SubGameSelectionState: return gameObject.GetOrAddComponent<GameState.SubGameSelectionState>();
-                case GameStateInput.SubGamePrepareState: return gameObject.GetOrAddComponent<GameState.SubGamePrepareState>();
-                case GameStateInput.SubGameProgressState: return gameObject.GetOrAddComponent<GameState.SubGameProgressState>();
-                case GameStateInput.SubGameClearState: return gameObject.GetOrAddComponent<GameState.SubGameClearState>();
-                case GameStateInput.SubGameEndState: return gameObject.GetOrAddComponent<GameState.SubGameEndState>();
-                case GameStateInput.EndState: return gameObject.GetOrAddComponent<GameState.EndState>();
+                case GameStateInput.StateDone:
+                case GameStateInput.SubGameEndState:
+                case GameStateInput.EndState:
+                    return gameObject.GetOrAddComponent<GameState.SubGameEndState>();
             }
 
             throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");

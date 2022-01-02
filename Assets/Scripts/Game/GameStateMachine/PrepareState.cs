@@ -3,45 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameFramework.FSM;
 using System;
+using NetworkModel.Mirror;
+using GameFramework;
 
 namespace GameState
 {
     public class PrepareState : MonoStateBase
     {
-        public override void OnEnter()
+        public override IEnumerator OnExecute()
         {
-            //  게임에 기본 필요한 준비 (리소스 등등)
-
-            //  Send packet
+            //  Load game resource
             //  ...
 
-            FSM.MoveNext(GameStateInput.StateDone);
+            //  Send GamePreparation
+            var gamePreparation = new CS_GamePreparation();
+            gamePreparation.entityId = Entities.MyEntityID;
+            gamePreparation.preparation = 1;
+
+            RoomNetwork.Instance.Send(gamePreparation, 0);
+
+            yield return new WaitWhile(() => nameof(PrepareState) == SceneDataContainer.Get<GameData>().GameState);
+
+            FSM.MoveNext(SceneDataContainer.Get<GameData>().GameState.TryEnumParse(GameStateInput.None));
         }
-
-        //public override IEnumerator OnExecute()
-        //{
-        //    //  scenedata container
-        //    var gameStateSyncController = gameObject.GetComponent<GameStateSyncController>();
-
-        //    //gameStateSyncController.lastSyncData.state
-        //}
-
-        public override void OnExit()
-        {
-            //  hide global loading display?
-
-            //  Clear
-        }
-
-        //public override void OnGameStateMessage(SC_GameState msg)
-        //{
-        //    switch (msg.gameState)
-        //    {
-        //        case "SubGameProgressState":
-        //            FSM.MoveNext(GameStateInput.SubGameProgressState);
-        //            break;
-        //    }
-        //}
 
         public override IState GetNext<I>(I input)
         {
@@ -53,17 +37,16 @@ namespace GameState
 
             switch (gameStateInput)
             {
-                case GameStateInput.None: return FSM.CurrentState;
-                case GameStateInput.StateDone: return gameObject.GetOrAddComponent<GameState.SubGameSelectionState>();
+                case GameStateInput.StateDone:
+                case GameStateInput.SubGameSelectionState:
+                case GameStateInput.SubGamePrepareState:
+                case GameStateInput.SubGameProgressState:
+                    return gameObject.GetOrAddComponent<GameState.SubGameSelectionState>();
 
-                case GameStateInput.EntryState: return gameObject.GetOrAddComponent<GameState.EntryState>();
-                case GameStateInput.PrepareState: return gameObject.GetOrAddComponent<GameState.PrepareState>();
-                case GameStateInput.SubGameSelectionState: return gameObject.GetOrAddComponent<GameState.SubGameSelectionState>();
-                case GameStateInput.SubGamePrepareState: return gameObject.GetOrAddComponent<GameState.SubGamePrepareState>();
-                case GameStateInput.SubGameProgressState: return gameObject.GetOrAddComponent<GameState.SubGameProgressState>();
-                case GameStateInput.SubGameClearState: return gameObject.GetOrAddComponent<GameState.SubGameClearState>();
-                case GameStateInput.SubGameEndState: return gameObject.GetOrAddComponent<GameState.SubGameEndState>();
-                case GameStateInput.EndState: return gameObject.GetOrAddComponent<GameState.EndState>();
+                case GameStateInput.SubGameClearState: 
+                case GameStateInput.SubGameEndState:
+                case GameStateInput.EndState:
+                    return gameObject.GetOrAddComponent<GameState.SubGameClearState>();
             }
 
             throw new Exception($"Invalid transition: {GetType().Name} with {gameStateInput}");
