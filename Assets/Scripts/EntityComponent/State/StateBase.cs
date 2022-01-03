@@ -104,13 +104,5 @@ namespace State
 
             EndState();
         }
-
-		private void OnDisable()
-		{
-			if (IsPlaying)
-			{
-				StopState();
-			}
-		}
 	}
 }

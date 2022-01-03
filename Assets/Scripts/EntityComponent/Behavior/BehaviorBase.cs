@@ -114,13 +114,5 @@ namespace Behavior
 
             EndBehavior();
         }
-
-        private void OnDisable()
-        {
-            if(IsPlaying)
-            {
-                StopBehavior();
-            }
-        }
     }
 }
