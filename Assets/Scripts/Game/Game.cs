@@ -29,8 +29,9 @@ namespace LOP
             GameStateMachine = new GameObject("GameStateMachine").AddComponent<GameStateMachine>();
             GameStateMachine.StartStateMachine();
 
+            gameObject.AddComponent<TickSyncController>();
+
             SceneMessageBroker.AddSubscriber<SC_EnterRoom>(OnEnterRoom);
-            SceneMessageBroker.AddSubscriber<SC_SyncTick>(SC_SyncTickHandler.Handle);
             SceneMessageBroker.AddSubscriber<SC_EmotionExpression>(SC_EmotionExpressionHandler.Handle);
             SceneMessageBroker.AddSubscriber<SC_Synchronization>(SC_SynchronizationHandler.Handle);
             SceneMessageBroker.AddSubscriber<SC_GameEnd>(SC_GameEndHandler.Handle);
@@ -61,7 +62,6 @@ namespace LOP
             }
 
             SceneMessageBroker.RemoveSubscriber<SC_EnterRoom>(OnEnterRoom);
-            SceneMessageBroker.RemoveSubscriber<SC_SyncTick>(SC_SyncTickHandler.Handle);
             SceneMessageBroker.RemoveSubscriber<SC_EmotionExpression>(SC_EmotionExpressionHandler.Handle);
             SceneMessageBroker.RemoveSubscriber<SC_Synchronization>(SC_SynchronizationHandler.Handle);
             SceneMessageBroker.RemoveSubscriber<SC_GameEnd>(SC_GameEndHandler.Handle);
@@ -140,7 +140,7 @@ namespace LOP
                 SceneMessageBroker.Publish(item);
             });
 
-            //GameStateMachine.MoveNext(enterRoom.gameState.TryEnumParse(GameStateInput.EntryState));
+            //  최초에 동기화 어떻게 맞추지?? controllerId도 그렇고, 최초에 author한테 정보 받아야 할듯한데
         }
     }
 }
