@@ -33,8 +33,11 @@ public abstract class LOPMonoSyncControllerBase<T> : MonoBehaviour, ISyncControl
 
     public virtual void OnFinalize()
     {
-        SceneMessageBroker.RemoveSubscriber<SC_SyncController>(OnSyncController);
-        SceneMessageBroker.RemoveSubscriber<SC_Synchronization>(OnSynchronization);
+        if (SceneMessageBroker.HasInstance())
+        {
+            SceneMessageBroker.RemoveSubscriber<SC_SyncController>(OnSyncController);
+            SceneMessageBroker.RemoveSubscriber<SC_Synchronization>(OnSynchronization);
+        }
     }
 
     private void OnSyncController(SC_SyncController syncController)
