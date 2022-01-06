@@ -10,8 +10,5 @@ public class SC_GameEndHandler
 {
     public static void Handle(SC_GameEnd gameEnd)
     {
-        NetworkManager.singleton.StopClient();
-
-        SceneManager.LoadScene("Lobby");
     }
 }

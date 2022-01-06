@@ -21,6 +21,12 @@ public class RoomNetworkImpl_Mirror : MonoBehaviour, INetworkImpl
 
     public void Send(IMessage msg, int targetId, bool reliable = true, bool instant = false)
     {
+        if (!NetworkClient.isConnected)
+        {
+            Debug.Log($"NetworkClient.isConnected is false.");
+            return;
+        }
+
         if (!NetworkClient.connection.isAuthenticated)
         {
             Debug.Log($"Not yet authenticated.");
