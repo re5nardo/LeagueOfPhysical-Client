@@ -12,8 +12,8 @@ namespace GameState
         public override IEnumerator OnExecute()
         {
             //  서버로 부터 받아야 됨..
-            AppDataContainer.Get<MatchSettingData>().matchSetting.subGameId = "FlapWang";
-            AppDataContainer.Get<MatchSettingData>().matchSetting.mapId = "FlapWangMap";
+            SceneDataContainer.Get<MatchData>().matchSetting.subGameId = "FlapWang";
+            SceneDataContainer.Get<MatchData>().matchSetting.mapId = "FlapWangMap";
 
             //LOP.Game.Current.GameManager.subGameId = "FallingGame";
             //LOP.Game.Current.GameManager.mapName = "Falling";

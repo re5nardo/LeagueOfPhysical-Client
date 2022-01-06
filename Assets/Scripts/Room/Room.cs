@@ -8,7 +8,6 @@ namespace LOP
     public class Room : MonoSingleton<Room>
     {
         public string RoomId { get; private set; }
-        public MatchSetting MatchSetting { get; private set; } = new MatchSetting();
 
         [SerializeField] private Game game = null;
 
@@ -39,7 +38,9 @@ namespace LOP
             roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
 
             RoomId = RoomConnector.Instance.Room.roomId;
-            MatchSetting = RoomConnector.Instance.Room.matchSetting;
+
+            SceneDataContainer.Get<MatchData>().matchId = RoomConnector.Instance.Room.matchId;
+            SceneDataContainer.Get<MatchData>().matchSetting = RoomConnector.Instance.Room.matchSetting;
 
             yield return game.Initialize();
         }
