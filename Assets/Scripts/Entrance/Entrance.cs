@@ -9,7 +9,7 @@ public class Entrance : MonoSingleton<Entrance>
     [Header("[Entrance Components]")]
     [SerializeField] private IntroComponent introComponent;
     [SerializeField] private InitAppComponent initAppComponent;
-    [SerializeField] private LoginComponent loginComponent;
+    [SerializeField] private PlayFabLoginComponent loginComponent;
     [SerializeField] private CheckLocationComponent checkLocationComponent;
 
     [Header("[UI Components]")]

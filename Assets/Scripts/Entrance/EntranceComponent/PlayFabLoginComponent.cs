@@ -5,7 +5,7 @@ using PlayFab;
 using PlayFab.ClientModels;
 
 //  https://api.playfab.com/docs/tutorials/landing-tournaments/photon-unity
-public class LoginComponent : MonoEnumerator
+public class PlayFabLoginComponent : MonoEnumerator
 {
     public string customId = "";
   
