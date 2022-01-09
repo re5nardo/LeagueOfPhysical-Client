@@ -18,11 +18,6 @@ public class PopupBase : MonoBehaviour
         OnHided();
     }
 
-    protected virtual void OnShown()
-    {
-    }
-
-    protected virtual void OnHided()
-    {
-    }
+    protected virtual void OnShown() { }
+    protected virtual void OnHided() { }
 }

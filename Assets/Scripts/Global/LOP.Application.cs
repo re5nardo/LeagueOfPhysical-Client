@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Text.RegularExpressions;
 using GameFramework;
+using System.Threading.Tasks;
 
 namespace LOP
 {
@@ -18,20 +19,16 @@ namespace LOP
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void OnBeforeSceneLoadRuntimeMethod()
         {
-            GlobalMonoBehavior.StartCoroutine(Initialize());
+            Initialize();
         }
 
-        private static IEnumerator Initialize()
+        private static async void Initialize()
         {
-            //  Target FrameRate
 #if UNITY_EDITOR
             UnityEngine.Application.targetFrameRate = 60;
 #endif
-            MonoSingletonBase.condition = () => !IsApplicationQuitting;
-
             MasterDataManager.Instantiate();
 
-            //  Debug Console
             if (Debug.isDebugBuild)
             {
                 UnityEngine.Object.Instantiate(Resources.Load("IngameDebugConsole/IngameDebugConsole"));
@@ -40,7 +37,7 @@ namespace LOP
 
             UnityEngine.Application.quitting += OnQuitting;
 
-            yield return GlobalMonoBehavior.StartCoroutine(GetPublicIP());
+            await GetPublicIP();
 
             IsInitialized = true;
         }
@@ -50,11 +47,11 @@ namespace LOP
             LOPWebAPI.LeaveLobby(new LeaveLobbyRequest { userId = LOP.Application.UserId });
         }
 
-        private static IEnumerator GetPublicIP()
+        private static async Task GetPublicIP()
         {
             using (var www = UnityWebRequest.Get("http://ipinfo.io/ip"))
             {
-                yield return www.SendWebRequest();
+                await www.SendWebRequest();
 
                 IP = Regex.Replace(www.downloadHandler.text, @"[^0-9.]", "");
             }
