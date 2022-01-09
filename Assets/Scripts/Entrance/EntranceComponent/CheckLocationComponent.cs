@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class CheckLocationComponent : EntranceComponent
+public class CheckLocationComponent : MonoEnumerator
 {
-    public override void OnStart()
+    public override void OnBeforeExecute()
     {
         Entrance.Instance.stateText.text = "매치 상태를 확인중입니다.";
 
@@ -18,7 +18,7 @@ public class CheckLocationComponent : EntranceComponent
                     return;
                 }
 
-                switch(result.userMatchState.state)
+                switch (result.userMatchState.state)
                 {
                     case "inGameRoom":
                         RoomConnector.Instance.TryToEnterRoomById(result.userMatchState.stateValue);

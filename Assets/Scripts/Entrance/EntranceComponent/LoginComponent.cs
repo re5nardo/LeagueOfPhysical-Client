@@ -5,13 +5,13 @@ using PlayFab;
 using PlayFab.ClientModels;
 
 //  https://api.playfab.com/docs/tutorials/landing-tournaments/photon-unity
-public class LoginComponent : EntranceComponent
+public class LoginComponent : MonoEnumerator
 {
     public string customId = "";
   
     private string _playFabPlayerIdCache;
 
-    public override void OnStart()
+    public override void OnBeforeExecute()
     {
         Entrance.Instance.stateText.text = "Login중입니다.";
 

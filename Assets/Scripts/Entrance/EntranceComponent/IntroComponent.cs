@@ -2,17 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IntroComponent : EntranceComponent
+public class IntroComponent : MonoEnumerator
 {
     [SerializeField] private GameObject goCI;
     [SerializeField] private GameObject goIntro;
-
-    public override void OnStart()
-    {
-        StartCoroutine(Body());
-    }
-
-    private IEnumerator Body()
+ 
+    public override IEnumerator OnExecute()
     {
         goCI.SetActive(true);
         goIntro.SetActive(false);

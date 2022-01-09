@@ -10,13 +10,14 @@ public class Entrance : MonoSingleton<Entrance>
     [SerializeField] private IntroComponent introComponent;
     [SerializeField] private InitAppComponent initAppComponent;
     [SerializeField] private LoginComponent loginComponent;
-    [SerializeField] private PunConnectComponent punConnectComponent;
     [SerializeField] private CheckLocationComponent checkLocationComponent;
 
     [Header("[UI Components]")]
     public TextMeshProUGUI stateText;
     public Slider loadingBar;
     public TextMeshProUGUI loadingBarText;
+
+    private MonoEnumerator[] entranceComponents;
 
     protected override void Awake()
     {
@@ -26,20 +27,27 @@ public class Entrance : MonoSingleton<Entrance>
         stateText.text = "";
         loadingBar.gameObject.SetActive(false);
         loadingBarText.text = "";
+
+        entranceComponents = new MonoEnumerator[]
+        {
+            //introComponent,
+            initAppComponent,
+            //loginComponent,
+            checkLocationComponent,
+        };
     }
 
-    #region MonoBehaviour
     private IEnumerator Start()
     {
-        //yield return introComponent.Do();
+        foreach (var entranceComponent in entranceComponents)
+        {
+            yield return entranceComponent.Execute();
 
-        yield return initAppComponent.Do();
-
-        //yield return loginComponent.Do();
-
-        //yield return punConnectComponent.Do();
-
-        yield return checkLocationComponent.Do();
+            if (!entranceComponent.IsSuccess)
+            {
+                Debug.LogError($"entranceComponent is failure. entranceComponent: {entranceComponent}");
+                yield break;
+            }
+        }
     }
-    #endregion
 }

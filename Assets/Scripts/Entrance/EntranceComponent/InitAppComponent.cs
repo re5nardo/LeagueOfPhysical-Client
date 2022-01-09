@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InitAppComponent : EntranceComponent
+public class InitAppComponent : MonoEnumerator
 {
-    protected override void OnUpdate()
-    {
-        base.OnUpdate();
-
-        IsSuccess = LOP.Application.IsInitialized;
-    }
-
-    public override void OnStart()
+    public override void OnBeforeExecute()
     {
         Entrance.Instance.stateText.text = "Application 초기화중입니다.";
+    }
+
+    public override IEnumerator OnExecute()
+    {
+        yield return new WaitUntil(() => LOP.Application.IsInitialized);
+
+        IsSuccess = true;
     }
 }
