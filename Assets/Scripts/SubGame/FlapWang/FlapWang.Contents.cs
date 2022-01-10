@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Entity;
 using System;
+using GameFramework;
 
 public partial class FlapWang
 {

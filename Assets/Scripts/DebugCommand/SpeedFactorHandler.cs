@@ -1,4 +1,5 @@
-﻿
+﻿using GameFramework;
+
 namespace DebugCommandHandler
 {
     public class SpeedFactorHandler

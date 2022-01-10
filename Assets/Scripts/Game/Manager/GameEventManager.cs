@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using NetworkModel.Mirror;
+using GameFramework;
 
 public class GameEventManager : MonoBehaviour
 {
