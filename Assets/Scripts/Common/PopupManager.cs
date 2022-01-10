@@ -3,57 +3,51 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
 
-public class PopupInfo
-{
-    public PopupInfo(string strPopupName, PopupBase popupBase)
-    {
-        m_strPopupName = strPopupName;
-        m_PopupBase = popupBase;
-    }
-
-    public string m_strPopupName = "";
-    public PopupBase m_PopupBase = null;
-}
-
 public class PopupManager : MonoSingleton<PopupManager>
 {
-    private List<PopupInfo> m_listPopupInfo = new List<PopupInfo>();
+    private List<PopupInfo> popupInfoList = new List<PopupInfo>();
 
-    protected override void Awake()
+    private void Start()
     {
-        base.Awake();
-
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(this);
     }
 
-    public T Show<T>(string strPopupName) where T : PopupBase
+    public static T Show<T>(string popupName = null) where T : PopupBase
     {
-        T popup = GetPopup<T>(strPopupName);
+        return Instance.ShowInternal<T>(popupName);
+    }
+
+    private T ShowInternal<T>(string popupName = null) where T : PopupBase
+    {
+        T popup = GetPopup<T>(popupName);
         if (popup == null)
         {
-            popup = CreatePopup<T>(strPopupName);
+            popup = CreatePopup<T>(popupName);
         }
 
-        popup.Show();
-
-        return popup;
+        return popup.Show() as T;
     }
 
-    public T GetPopup<T>(string strPopupName) where T : PopupBase
+    public static T GetPopup<T>(string popupName = null) where T : PopupBase
     {
-        var found = m_listPopupInfo.FindLast((x) => x.m_strPopupName == strPopupName);
+        return Instance.GetPopupInternal<T>(popupName);
+    }
+
+    private T GetPopupInternal<T>(string popupName = null) where T : PopupBase
+    {
+        var found = popupInfoList.FindLast(x => x.popupName == (popupName ?? typeof(T).Name));
 
         if (found == null)
         {
             return null;
         }
 
-        return found.m_PopupBase as T;
+        return found.popupBase as T;
     }
 
-    private T CreatePopup<T>(string strPopupName) where T : PopupBase
+    private T CreatePopup<T>(string popupName = null) where T : PopupBase
     {
-        GameObject goPopup = Instantiate<GameObject>(Resources.Load<GameObject>("Popup/" + strPopupName));
+        GameObject goPopup = Instantiate(Resources.Load<GameObject>($"Popup/{popupName ?? typeof(T).Name}"));
 
         //goPopup.transform.SetParent(UIRoot.list[0].transform);
         //goPopup.transform.localPosition = Vector3.zero;
@@ -62,8 +56,20 @@ public class PopupManager : MonoSingleton<PopupManager>
 
         T popup = goPopup.GetComponent<T>();
 
-        m_listPopupInfo.Add(new PopupInfo(strPopupName, popup));
+        popupInfoList.Add(new PopupInfo(popupName ?? typeof(T).Name, popup));
 
         return popup;
+    }
+}
+
+public class PopupInfo
+{
+    public string popupName = "";
+    public PopupBase popupBase = null;
+
+    public PopupInfo(string popupName, PopupBase popupBase)
+    {
+        this.popupName = popupName;
+        this.popupBase = popupBase;
     }
 }
