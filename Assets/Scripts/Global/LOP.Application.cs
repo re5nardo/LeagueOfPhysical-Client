@@ -14,7 +14,7 @@ namespace LOP
         public static bool IsInitialized { get; private set; }
 
         public static string IP { get; private set; }
-        public static string UserId => SystemInfo.deviceUniqueIdentifier;
+        public static string UserId { get; set; }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void OnBeforeSceneLoadRuntimeMethod()
@@ -28,6 +28,7 @@ namespace LOP
             UnityEngine.Application.targetFrameRate = 60;
 #endif
             MasterDataManager.Instantiate();
+            LoginController.Instantiate();
 
             if (Debug.isDebugBuild)
             {

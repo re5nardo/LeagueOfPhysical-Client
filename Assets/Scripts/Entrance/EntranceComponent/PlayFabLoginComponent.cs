@@ -95,7 +95,7 @@ public class PlayFabLoginComponent : MonoEnumerator
     * We pass in AuthenticateWithPhoton as a callback to be our next step, if 
     * we have acquired token succesfully
     */
-    private void RequestPhotonToken(LoginResult obj)
+    private void RequestPhotonToken(PlayFab.ClientModels.LoginResult obj)
     {
         Debug.Log("PlayFab authenticated. Requesting photon token...");
 

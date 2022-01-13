@@ -1822,7 +1822,6 @@ GameObject:
   - component: {fileID: 2115536458}
   - component: {fileID: 2115536461}
   - component: {fileID: 2115536460}
-  - component: {fileID: 2115536462}
   - component: {fileID: 2115536464}
   - component: {fileID: 2115536463}
   m_Layer: 0
@@ -1847,8 +1846,7 @@ MonoBehaviour:
   overriding: 1
   introComponent: {fileID: 2115536461}
   initAppComponent: {fileID: 2115536463}
-  loginComponent: {fileID: 2115536458}
-  punConnectComponent: {fileID: 2115536460}
+  loginComponent: {fileID: 2115536460}
   checkLocationComponent: {fileID: 2115536464}
   stateText: {fileID: 432517441}
   loadingBar: {fileID: 1233384723}
@@ -1889,10 +1887,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2115536456}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b178b58edcdb76e4ea02bd9497cfbece, type: 3}
+  m_Script: {fileID: 11500000, guid: 78af6f65a9dd79548819c87d7dde3149, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  punConnectBehaviour: {fileID: 2115536462}
 --- !u!114 &2115536461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1907,18 +1904,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   goCI: {fileID: 0}
   goIntro: {fileID: 0}
---- !u!114 &2115536462
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2115536456}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a338d547114ad24096b8a2f7f83adff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2115536463
 MonoBehaviour:
   m_ObjectHideFlags: 0
