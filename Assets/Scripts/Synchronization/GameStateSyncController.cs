@@ -12,10 +12,8 @@ public class GameStateSyncController : LOPMonoSyncControllerBase<GameStateSyncDa
         return new GameStateSyncData(LOP.Game.Current.GameStateMachine.CurrentState.GetType().Name);
     }
 
-    public override void OnSync(SyncDataEntry value)
+    public override void OnSync(GameStateSyncData value)
     {
-        var gameStateSyncData = value.data as GameStateSyncData;
-
-        SceneDataContainer.Get<GameData>().gameState = gameStateSyncData.state;
+        SceneDataContainer.Get<GameData>().gameState = value.state;
     }
 }

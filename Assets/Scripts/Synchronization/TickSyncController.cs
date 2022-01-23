@@ -12,10 +12,8 @@ public class TickSyncController : LOPMonoSyncControllerBase<TickSyncData>
         return new TickSyncData(Game.Current.CurrentTick);
     }
 
-    public override void OnSync(SyncDataEntry value)
+    public override void OnSync(TickSyncData value)
     {
-        var tickSyncData = value.data as TickSyncData;
-
-        SceneDataContainer.Get<GameData>().tick = tickSyncData.tick;
+        SceneDataContainer.Get<GameData>().tick = value.tick;
     }
 }
