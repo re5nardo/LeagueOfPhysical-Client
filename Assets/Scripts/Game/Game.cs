@@ -130,17 +130,24 @@ namespace LOP
 
             Run(enterRoom.tick);
 
+            //  SyncScope.Global
             enterRoom.syncControllerDataList.ForEach(item =>
             {
-                SceneMessageBroker.Publish(item);
+                using var disposer = PoolObjectDisposer<SC_SyncController>.Get();
+                var message = disposer.PoolObject;
+                message.syncControllerData = item;
+
+                SceneMessageBroker.Publish(message);
             });
 
             enterRoom.syncDataEntries.ForEach(item =>
             {
-                SceneMessageBroker.Publish(item);
-            });
+                using var disposer = PoolObjectDisposer<SC_Synchronization>.Get();
+                var message = disposer.PoolObject;
+                message.syncDataEntry = item;
 
-            //  최초에 동기화 어떻게 맞추지?? controllerId도 그렇고, 최초에 author한테 정보 받아야 할듯한데
+                SceneMessageBroker.Publish(message);
+            });
         }
     }
 }
