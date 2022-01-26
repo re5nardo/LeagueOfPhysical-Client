@@ -16,7 +16,8 @@ namespace GameState
             //  ...
 
             //  Send GamePreparation
-            var gamePreparation = new CS_GamePreparation();
+            var disposer = PoolObjectDisposer<CS_GamePreparation>.Get();
+            var gamePreparation = disposer.PoolObject;
             gamePreparation.entityId = Entities.MyEntityID;
             gamePreparation.preparation = 1;
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using NetworkModel.Mirror;
+using GameFramework;
 
 public class EmotionExpressionSelector : MonoBehaviour
 {
@@ -31,7 +32,12 @@ public class EmotionExpressionSelector : MonoBehaviour
 
     private void ButtonClickHandler(int emotionExpressionID)
     {
-        RoomNetwork.Instance.Send(new CS_RequestEmotionExpression(Entities.MyEntityID, emotionExpressionID), 0);
+        var disposer = PoolObjectDisposer<CS_RequestEmotionExpression>.Get();
+        var requestEmotionExpression = disposer.PoolObject;
+        requestEmotionExpression.entityId = Entities.MyEntityID;
+        requestEmotionExpression.emotionExpressionId = emotionExpressionID;
+
+        RoomNetwork.Instance.Send(requestEmotionExpression, 0);
 
         Hide();
     }

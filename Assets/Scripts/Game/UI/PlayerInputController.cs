@@ -27,7 +27,8 @@ public class PlayerInputController : MonoBehaviour
         //  Skill
         if (skillInputData != null)
         {
-            CS_NotifySkillInputData notifySkillInputData = new CS_NotifySkillInputData();
+			var disposer = PoolObjectDisposer<CS_NotifySkillInputData>.Get();
+			var notifySkillInputData = disposer.PoolObject;
             notifySkillInputData.skillInputData = skillInputData;
 
             RoomNetwork.Instance.Send(notifySkillInputData, 0/*의미x*/, instant: true);
@@ -230,7 +231,8 @@ public class PlayerInputController : MonoBehaviour
 
 	private void OnSkillBtnClicked(int skillID)
 	{
-		CS_NotifySkillInputData notifySkillInputData = new CS_NotifySkillInputData();
+		var disposer = PoolObjectDisposer<CS_NotifySkillInputData>.Get();
+		var notifySkillInputData = disposer.PoolObject;
 		notifySkillInputData.skillInputData = new SkillInputData(Game.Current.CurrentTick, Entities.MyEntityID, skillID, default);
 
 		RoomNetwork.Instance.Send(notifySkillInputData, 0, instant: true);

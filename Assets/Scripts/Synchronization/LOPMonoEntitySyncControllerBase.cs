@@ -102,7 +102,8 @@ public abstract class LOPMonoEntitySyncControllerBase<T> : LOPMonoEntityComponen
         }
 
         //  request syncData to server
-        var synchronization = ObjectPool.Instance.GetObject<CS_Synchronization>();
+        var disposer = PoolObjectDisposer<CS_Synchronization>.Get();
+        var synchronization = disposer.PoolObject;
         synchronization.syncDataEntry = new SyncDataEntry
         {
             meta = new SyncDataMeta(Game.Current.CurrentTick, LOP.Application.UserId, ControllerId, value.ObjectToHash()),

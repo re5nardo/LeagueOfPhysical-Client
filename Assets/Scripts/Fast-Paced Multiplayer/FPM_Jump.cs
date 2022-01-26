@@ -46,7 +46,8 @@ public class FPM_Jump : MonoBehaviour
             jumpInputData.sequence = sequence++;
             jumpInputData.entityId = Entities.MyEntityID;
 
-            CS_NotifyJumpInputData notifyJumpInputData = new CS_NotifyJumpInputData();
+            var disposer = PoolObjectDisposer<CS_NotifyJumpInputData>.Get();
+            var notifyJumpInputData = disposer.PoolObject;
             notifyJumpInputData.jumpInputData = jumpInputData;
 
             RoomNetwork.Instance.Send(notifyJumpInputData, 0, instant: true);

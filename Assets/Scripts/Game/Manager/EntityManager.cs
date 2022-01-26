@@ -76,10 +76,8 @@ public class EntityManager : GameFramework.EntityManager
     }
 
     #region Message Handler
-    private void OnSC_EntityAppear(IMessage msg)
+    private void OnSC_EntityAppear(SC_EntityAppear entityAppear)
 	{
-		SC_EntityAppear entityAppear = msg as SC_EntityAppear;
-
 		foreach (EntitySnap entitySnap in entityAppear.listEntitySnap)
 		{
 			if(dicEntity.ContainsKey(entitySnap.entityId))
@@ -98,10 +96,8 @@ public class EntityManager : GameFramework.EntityManager
         }
 	}
 
-	private void OnSC_EntityDisAppear(IMessage msg)
+	private void OnSC_EntityDisAppear(SC_EntityDisAppear entityDisAppear)
 	{
-		SC_EntityDisAppear entityDisAppear = msg as SC_EntityDisAppear;
-
 		foreach (int nEntityID in entityDisAppear.listEntityId)
 		{
 			if (!dicEntity.ContainsKey(nEntityID))
