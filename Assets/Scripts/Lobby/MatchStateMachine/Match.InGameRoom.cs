@@ -32,7 +32,7 @@ namespace Match
 
         private void CheckMatchState()
         {
-            LOPWebAPI.GetUserMatchState(LOP.Application.UserId,
+            LOPWebAPI.GetUser(LOP.Application.UserId,
             result =>
             {
                 if (!IsCurrent) return;
@@ -43,10 +43,11 @@ namespace Match
                     return;
                 }
 
-                switch (result.userMatchState.state)
+                switch (result.user.location)
                 {
-                    case "inGameRoom":
-                        RoomConnector.Instance.TryToEnterRoomById(result.userMatchState.stateValue);
+                    case Location.InGameRoom:
+                        var roomId = (result.user.locationDetail as GameRoomLocationDetail).gameRoomId;
+                        RoomConnector.Instance.TryToEnterRoomById(roomId);
                         break;
                 }
             },

@@ -10,6 +10,8 @@ public class Entrance : MonoSingleton<Entrance>
     [SerializeField] private IntroComponent introComponent;
     [SerializeField] private InitAppComponent initAppComponent;
     [SerializeField] private LoginComponent loginComponent;
+    [SerializeField] private CheckUserComponent checkUserComponent;
+    [SerializeField] private JoinLobbyComponent joinLobbyComponent;
     [SerializeField] private CheckLocationComponent checkLocationComponent;
 
     [Header("[UI Components]")]
@@ -33,6 +35,8 @@ public class Entrance : MonoSingleton<Entrance>
             //introComponent,
             initAppComponent,
             loginComponent,
+            checkUserComponent,
+            joinLobbyComponent,
             checkLocationComponent,
         };
     }

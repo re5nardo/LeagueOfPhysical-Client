@@ -45,7 +45,7 @@ namespace LOP
 
         private static void OnQuitting()
         {
-            LOPWebAPI.LeaveLobby(new LeaveLobbyRequest { userId = LOP.Application.UserId });
+            LOPWebAPI.LeaveLobby(LOP.Application.UserId);
         }
 
         private static async Task GetPublicIP()

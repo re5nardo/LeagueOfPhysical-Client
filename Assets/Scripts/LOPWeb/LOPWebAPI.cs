@@ -6,33 +6,46 @@ using GameFramework;
 
 public class LOPWebAPI
 {
-    public static HttpRequestContainer<JoinLobbyResult> JoinLobby(JoinLobbyRequest request, Action<JoinLobbyResult> onResult = null, Action<string> onError = null)
+    #region Lobby
+    public static HttpRequestContainer<JoinLobbyResult> JoinLobby(string userId, Action<JoinLobbyResult> onResult = null, Action<string> onError = null)
     {
-        return Http.Put("joinLobby", JsonUtility.ToJson(request), onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
+        return Http.Put($"lobby/join/{userId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
     }
 
-    public static HttpRequestContainer<LeaveLobbyResult> LeaveLobby(LeaveLobbyRequest request, Action<LeaveLobbyResult> onResult = null, Action<string> onError = null)
+    public static HttpRequestContainer<LeaveLobbyResult> LeaveLobby(string userId, Action<LeaveLobbyResult> onResult = null, Action<string> onError = null)
     {
-        return Http.Put("leaveLobby", JsonUtility.ToJson(request), onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
+        return Http.Put($"lobby/leave/{userId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
     }
+    #endregion
 
+    #region MatchmakingTicket
     public static HttpRequestContainer<CreateMatchmakingTicketResult> CreateMatchmakingTicket(CreateMatchmakingTicketRequest request, Action<CreateMatchmakingTicketResult> onResult = null, Action<string> onError = null)
     {
-        return Http.Put("match/matchmakingTicket", JsonUtility.ToJson(request), onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Matchmaking"));
+        return Http.Post("matchmakingTicket", JsonUtility.ToJson(request), onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Matchmaking"));
     }
 
     public static HttpRequestContainer<CancelMatchmakingTicketResult> CancelMatchmakingTicket(string userId, Action<CancelMatchmakingTicketResult> onResult = null, Action<string> onError = null)
     {
-        return Http.Delete($"match/matchmakingTicket/{userId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Matchmaking"));
+        return Http.Delete($"matchmakingTicket/{userId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Matchmaking"));
     }
+    #endregion
 
-    public static HttpRequestContainer<GetUserMatchStateResult> GetUserMatchState(string userId, Action<GetUserMatchStateResult> onResult = null, Action<string> onError = null)
+    #region User
+    public static HttpRequestContainer<GetUserResult> GetUser(string userId, Action<GetUserResult> onResult = null, Action<string> onError = null)
     {
-        return Http.Get($"users/matchState/{userId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
+        return Http.Get($"user/{userId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
     }
 
+    public static HttpRequestContainer<CreateUserResult> CreateUser(CreateUserRequest request, Action<CreateUserResult> onResult = null, Action<string> onError = null)
+    {
+        return Http.Post("user", JsonUtility.ToJson(request), onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
+    }
+    #endregion
+
+    #region Room
     public static HttpRequestContainer<GetRoomResult> GetRoom(string roomId, Action<GetRoomResult> onResult = null, Action<string> onError = null)
     {
         return Http.Get($"room/{roomId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
     }
+    #endregion
 }

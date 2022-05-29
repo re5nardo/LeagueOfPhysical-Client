@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
 
-public class LeaveLobbyRequest
+public class CreateUserRequest
 {
-    public string userId;
+    public string id;
+    public string nickname;
 }

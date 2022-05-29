@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
 
-public class JoinLobbyRequest
+public class CreateUserResult : HttpResultBase
 {
-    public string userId;
+    public User data;
 }
