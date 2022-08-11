@@ -18,6 +18,11 @@ public class ResponseCode
 
     #region WaitingRoom
     public const int WAITING_ROOM_NOT_EXIST = 40000;
+    public const int FAIL_TO_LEAVE_WAITING_ROOM = 40001;
+    #endregion
+
+    #region Room
+    public const int ROOM_NOT_EXIST = 50000;
     #endregion
 
     public const int UNKNOWN_ERROR = 5000000;
