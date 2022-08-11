@@ -11,7 +11,7 @@ public class PingChecker : MonoBehaviour
 
     private void Update()
     {
-        if (!NetworkClient.active) return;
+        if (!NetworkClient.ready) return;
 
         ping.text = $"{Math.Round(NetworkTime.rtt * 1000)}";
 
