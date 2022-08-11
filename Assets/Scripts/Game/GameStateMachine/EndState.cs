@@ -12,11 +12,6 @@ namespace GameState
     {
         public override void OnEnter()
         {
-            if (NetworkClient.isConnected)
-            {
-                NetworkManager.singleton.StopClient();
-            }
-
             SceneManager.LoadScene("Lobby");
         }
 
