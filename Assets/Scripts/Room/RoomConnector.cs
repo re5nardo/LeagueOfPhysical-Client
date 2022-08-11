@@ -10,6 +10,10 @@ public class RoomConnector : MonoSingleton<RoomConnector>
 
     public GetRoomResult Room { get; private set; }
 
+    public string RoomId => Room.room.id;
+    public string MatchId => Room.room.matchId;
+    public MatchSetting MatchSetting => new MatchSetting(Room.room.matchType, Room.room.subGameId, Room.room.mapId);
+
     private void Start()
     {
         DontDestroyOnLoad(this);
