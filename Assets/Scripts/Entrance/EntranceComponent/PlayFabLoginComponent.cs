@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using PlayFab;
 using PlayFab.ClientModels;
+using GameFramework;
 
 //  https://api.playfab.com/docs/tutorials/landing-tournaments/photon-unity
 public class PlayFabLoginComponent : MonoEnumerator
