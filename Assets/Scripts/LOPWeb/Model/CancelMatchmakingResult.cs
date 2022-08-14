@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
 
-public class CreateMatchmakingTicketResult : HttpResultBase
+public class CancelMatchmakingResult : HttpResultBase
 {
-    public string ticketId;
 }

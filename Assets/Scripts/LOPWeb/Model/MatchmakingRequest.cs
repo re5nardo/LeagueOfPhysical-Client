@@ -1,12 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GameFramework;
 
-public class CreateMatchmakingTicketRequest
+public class MatchmakingRequest
 {
     public string userId;
-    public string matchType;
+    public MatchType matchType;
     public string subGameId;
     public string mapId;
 }

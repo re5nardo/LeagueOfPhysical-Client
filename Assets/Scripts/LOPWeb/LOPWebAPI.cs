@@ -19,14 +19,14 @@ public class LOPWebAPI
     #endregion
 
     #region MatchmakingTicket
-    public static HttpRequestContainer<CreateMatchmakingTicketResult> CreateMatchmakingTicket(CreateMatchmakingTicketRequest request, Action<CreateMatchmakingTicketResult> onResult = null, Action<string> onError = null)
+    public static HttpRequestContainer<MatchmakingResult> RequestMatchmaking(MatchmakingRequest request, Action<MatchmakingResult> onResult = null, Action<string> onError = null)
     {
-        return Http.Post("matchmakingTicket", JsonUtility.ToJson(request), onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Matchmaking"));
+        return Http.Post("matchmaking", JsonUtility.ToJson(request), onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Matchmaking"));
     }
 
-    public static HttpRequestContainer<CancelMatchmakingTicketResult> CancelMatchmakingTicket(string userId, Action<CancelMatchmakingTicketResult> onResult = null, Action<string> onError = null)
+    public static HttpRequestContainer<CancelMatchmakingResult> CancelMatchmaking(string ticketId, Action<CancelMatchmakingResult> onResult = null, Action<string> onError = null)
     {
-        return Http.Delete($"matchmakingTicket/{userId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Matchmaking"));
+        return Http.Delete($"matchmaking/{ticketId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Matchmaking"));
     }
     #endregion
 
@@ -40,12 +40,17 @@ public class LOPWebAPI
     {
         return Http.Post("user", JsonUtility.ToJson(request), onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
     }
+
+    public static HttpRequestContainer<VerifyUserLocationResult> VerifyUserLocation(string userId, Action<VerifyUserLocationResult> onResult = null, Action<string> onError = null)
+    {
+        return Http.Put($"user/verify-location/{userId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
+    }
     #endregion
 
     #region Room
     public static HttpRequestContainer<GetRoomResult> GetRoom(string roomId, Action<GetRoomResult> onResult = null, Action<string> onError = null)
     {
-        return Http.Get($"room/{roomId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
+        return Http.Get($"room/{roomId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Room"));
     }
     #endregion
 }
