@@ -18,13 +18,18 @@ namespace Match
             LOPWebAPI.GetUser(LOP.Application.UserId,
                 result =>
                 {
-                    if (!IsCurrent) return;
+                    if (!IsCurrent)
+                    {
+                        return;
+                    }
 
                     if (result.code != ResponseCode.SUCCESS)
                     {
                         Debug.LogError("Match 상태를 받아오는데 실패하였습니다. 타이틀로 돌아갑니다.");
                         return;
                     }
+
+                    AppDataContainer.Get<UserData>().user = result.user;
 
                     switch (result.user.location)
                     {

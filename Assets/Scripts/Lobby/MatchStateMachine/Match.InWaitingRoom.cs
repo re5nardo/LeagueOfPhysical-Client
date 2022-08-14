@@ -25,7 +25,7 @@ namespace Match
         {
             while (true)
             {
-                CheckMatchState();
+                yield return CheckMatchState();
 
                 yield return new WaitForSeconds(CHECK_INTERVAL);
             }
@@ -36,34 +36,39 @@ namespace Match
             MatchingWaitingView.Hide();
         }
 
-        private void CheckMatchState()
+        private IEnumerator CheckMatchState()
         {
-            LOPWebAPI.GetUser(LOP.Application.UserId,
-            result =>
+            var getUser = LOPWebAPI.GetUser(LOP.Application.UserId);
+            yield return getUser;
+
+            if (!IsCurrent)
             {
-                if (!IsCurrent) return;
+                yield break;
+            }
 
-                if (result.code != ResponseCode.SUCCESS)
-                {
-                    Debug.LogError("Match 상태를 받아오는데 실패하였습니다. 타이틀로 돌아갑니다.");
-                    return;
-                }
-
-                switch (result.user.location)
-                {
-                    case Location.InGameRoom:
-                        FSM.MoveNext(MatchStateInput.MatchInGameRoomState);
-                        break;
-
-                    default:
-                        FSM.MoveNext(MatchStateInput.MatchIdleState);
-                        break;
-                }
-            },
-            error =>
+            if (getUser.isError || getUser.response.code != ResponseCode.SUCCESS)
             {
-                Debug.LogError("Match 상태를 받아오는데 실패하였습니다. 타이틀로 돌아갑니다.");
-            });
+                Debug.LogError("User 상태를 받아오는데 실패하였습니다.");
+                yield break;
+            }
+
+            AppDataContainer.Get<UserData>().user = getUser.response.user;
+
+            switch (getUser.response.user.location)
+            {
+                case Location.InGameRoom:
+                    FSM.MoveNext(MatchStateInput.MatchInGameRoomState);
+                    break;
+
+                case Location.InWaitingRoom:
+                    var verifyUserLocation = LOPWebAPI.VerifyUserLocation(getUser.response.user.id);
+                    yield return verifyUserLocation;
+                    break;
+
+                default:
+                    FSM.MoveNext(MatchStateInput.MatchIdleState);
+                    break;
+            }
         }
 
         public override IState GetNext<I>(I input)
@@ -81,6 +86,9 @@ namespace Match
 
                 case MatchStateInput.MatchInGameRoomState:
                     return gameObject.GetOrAddComponent<InGameRoom>();
+
+                case MatchStateInput.MatchIdleState:
+                    return gameObject.GetOrAddComponent<Idle>();
             }
 
             throw new Exception($"Invalid transition: {GetType().Name} with {matchStateInput}");

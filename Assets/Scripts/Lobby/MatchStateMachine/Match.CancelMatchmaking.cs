@@ -10,7 +10,7 @@ namespace Match
     {
         public override void OnEnter()
         {
-            LOPWebAPI.CancelMatchmakingTicket(LOP.Application.UserId,
+            LOPWebAPI.CancelMatchmaking(((WaitingRoomLocationDetail)AppDataContainer.Get<UserData>().user.locationDetail).matchmakingTicketId,
                 result =>
                 {
                     if (!IsCurrent) return;
@@ -18,6 +18,18 @@ namespace Match
                     if (result.code == ResponseCode.ALREADY_IN_GAME)
                     {
                         FSM.MoveNext(MatchStateInput.MatchInGameRoomState);
+                        return;
+                    }
+                    else if (result.code == ResponseCode.MATCH_MAKING_TICKET_NOT_EXIST)
+                    {
+                        Debug.LogError("매치메이킹 티켓이 존재하지 않습니다.");
+                        FSM.MoveNext(MatchStateInput.MatchIdleState);
+                        return;
+                    }
+                    else if (result.code == ResponseCode.NOT_MATCH_MAKING_STATE)
+                    {
+                        Debug.LogError("매치메이킹 상태가 아니었습니다.");
+                        FSM.MoveNext(MatchStateInput.MatchIdleState);
                         return;
                     }
                     else if (result.code != ResponseCode.SUCCESS)

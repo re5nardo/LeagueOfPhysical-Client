@@ -43,11 +43,25 @@ namespace Match
                     return;
                 }
 
+                AppDataContainer.Get<UserData>().user = result.user;
+
                 switch (result.user.location)
                 {
                     case Location.InGameRoom:
                         var roomId = (result.user.locationDetail as GameRoomLocationDetail).gameRoomId;
-                        RoomConnector.Instance.TryToEnterRoomById(roomId);
+                        LOPWebAPI.GetRoom(roomId,
+                            result =>
+                            {
+                                if (result.room.status == RoomStatus.Ready || result.room.status == RoomStatus.Playing)
+                                {
+                                    RoomConnector.Instance.TryToEnterRoomById(roomId);
+                                }
+                            },
+                            error =>
+                            {
+                                Debug.LogError("Room 정보를 받아오는데 실패하였습니다. 타이틀로 돌아갑니다.");
+                            });
+
                         break;
                 }
             },

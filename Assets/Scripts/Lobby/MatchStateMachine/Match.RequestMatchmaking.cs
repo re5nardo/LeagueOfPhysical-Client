@@ -12,16 +12,19 @@ namespace Match
         {
             var matchSelectData = SceneDataContainer.Get<MatchSelectData>();
 
-            LOPWebAPI.CreateMatchmakingTicket(new CreateMatchmakingTicketRequest
+            LOPWebAPI.RequestMatchmaking(new MatchmakingRequest
             {
                 userId = LOP.Application.UserId,
-                matchType = matchSelectData.currentMatchSetting.Value.matchType.ToString(),
+                matchType = matchSelectData.currentMatchSetting.Value.matchType,
                 subGameId = matchSelectData.currentMatchSetting.Value.subGameId,
                 mapId = matchSelectData.currentMatchSetting.Value.mapId,
             },
             result =>
             {
-                if (!IsCurrent) return;
+                if (!IsCurrent)
+                {
+                    return;
+                }
 
                 if (result.code != ResponseCode.SUCCESS)
                 {
