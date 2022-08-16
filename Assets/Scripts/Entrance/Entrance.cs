@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using GameFramework;
 using UnityEngine.UI;
+using System;
 
 public class Entrance : MonoSingleton<Entrance>
 {
@@ -19,7 +20,7 @@ public class Entrance : MonoSingleton<Entrance>
     public Slider loadingBar;
     public TextMeshProUGUI loadingBarText;
 
-    private MonoEnumerator[] entranceComponents;
+    private EntranceComponentBase[] entranceComponents;
 
     protected override void Awake()
     {
@@ -30,7 +31,7 @@ public class Entrance : MonoSingleton<Entrance>
         loadingBar.gameObject.SetActive(false);
         loadingBarText.text = "";
 
-        entranceComponents = new MonoEnumerator[]
+        entranceComponents = new EntranceComponentBase[]
         {
             //introComponent,
             initAppComponent,
@@ -41,17 +42,19 @@ public class Entrance : MonoSingleton<Entrance>
         };
     }
 
-    private IEnumerator Start()
+    private async void Start()
     {
-        foreach (var entranceComponent in entranceComponents)
+        try
         {
-            yield return entranceComponent.Execute();
-
-            if (!entranceComponent.IsSuccess)
+            foreach (var entranceComponent in entranceComponents)
             {
-                Debug.LogError($"entranceComponent is failure. entranceComponent: {entranceComponent}");
-                yield break;
+                await entranceComponent.Execute();
             }
+        }
+        catch (Exception e)
+        {
+            Entrance.Instance.stateText.text = $"{e.Message}";
+            Debug.LogError(e.Message);
         }
     }
 }

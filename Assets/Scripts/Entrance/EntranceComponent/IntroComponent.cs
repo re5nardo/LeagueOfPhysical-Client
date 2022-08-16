@@ -1,27 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GameFramework;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using System;
 
-public class IntroComponent : MonoEnumerator
+public class IntroComponent : EntranceComponentBase
 {
     [SerializeField] private GameObject goCI;
     [SerializeField] private GameObject goIntro;
- 
-    public override IEnumerator OnExecute()
+
+    public override async Task OnExecute()
     {
         goCI.SetActive(true);
         goIntro.SetActive(false);
 
-        yield return new WaitForSeconds(2f);
+        await UniTask.Delay(TimeSpan.FromSeconds(2), ignoreTimeScale: false);
 
         goCI.SetActive(false);
         goIntro.SetActive(true);
 
-        yield return new WaitForSeconds(2f);
+        await UniTask.Delay(TimeSpan.FromSeconds(2), ignoreTimeScale: false);
 
         goIntro.SetActive(false);
-
-        IsSuccess = true;
     }
 }

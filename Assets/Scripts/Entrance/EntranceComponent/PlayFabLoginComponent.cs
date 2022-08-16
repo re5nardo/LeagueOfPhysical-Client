@@ -3,20 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using PlayFab;
 using PlayFab.ClientModels;
-using GameFramework;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using System;
 
 //  https://api.playfab.com/docs/tutorials/landing-tournaments/photon-unity
-public class PlayFabLoginComponent : MonoEnumerator
+public class PlayFabLoginComponent : EntranceComponentBase
 {
     public string customId = "";
   
     private string _playFabPlayerIdCache;
 
-    public override void OnBeforeExecute()
+    private bool? loginResult;
+
+    public override async Task OnBeforeExecute()
     {
         Entrance.Instance.stateText.text = "Login중입니다.";
 
         Login();
+    }
+
+    public override async Task OnExecute()
+    {
+        await UniTask.WaitUntil(() => loginResult.HasValue);
+
+        if (!loginResult.Value)
+        {
+            throw new Exception("PlayFabLogin에 실패하였습니다.");
+        }
     }
 
     /*
@@ -138,6 +152,6 @@ public class PlayFabLoginComponent : MonoEnumerator
 
         Debug.Log("Congratulations, you made your first successful API call!");
 
-        IsSuccess = true;
+        loginResult = true;
     }
 }

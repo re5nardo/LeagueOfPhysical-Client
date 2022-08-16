@@ -1,19 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GameFramework;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
-public class InitAppComponent : MonoEnumerator
+public class InitAppComponent : EntranceComponentBase
 {
-    public override void OnBeforeExecute()
+    public override async Task OnBeforeExecute()
     {
         Entrance.Instance.stateText.text = "Application 초기화중입니다.";
     }
 
-    public override IEnumerator OnExecute()
+    public override async Task OnExecute()
     {
-        yield return new WaitUntil(() => LOP.Application.IsInitialized);
-
-        IsSuccess = true;
+        await UniTask.WaitUntil(() => LOP.Application.IsInitialized);
     }
 }

@@ -1,28 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GameFramework;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using System;
 
-public class JoinLobbyComponent : MonoEnumerator
+public class JoinLobbyComponent : EntranceComponentBase
 {
-    public override void OnBeforeExecute()
+    public override async Task OnBeforeExecute()
     {
         Entrance.Instance.stateText.text = "로비에 입장중입니다.";
     }
 
-    public override IEnumerator OnExecute()
+    public override async Task OnExecute()
     {
         var joinLobby = LOPWebAPI.JoinLobby(LOP.Application.UserId);
-        yield return joinLobby;
+
+        await joinLobby;
 
         if (joinLobby.isError || joinLobby.response.code != ResponseCode.SUCCESS)
         {
-            Entrance.Instance.stateText.text = "로비 접속에 실패하였습니다.";
-            IsSuccess = false;
-        }
-        else
-        {
-            IsSuccess = true;
+            throw new Exception($"로비 접속에 실패하였습니다.");
         }
     }
 }
