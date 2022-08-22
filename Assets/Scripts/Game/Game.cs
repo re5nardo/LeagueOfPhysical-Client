@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Entity;
 using NetworkModel.Mirror;
 using GameFramework;
+using System.Threading.Tasks;
 
 namespace LOP
 {
@@ -20,7 +20,7 @@ namespace LOP
         public SubGameData SubGameData => SubGameData.Get(SceneDataContainer.Get<MatchData>().matchSetting.subGameId);
         public MapData MapData => MapData.Get(SceneDataContainer.Get<MatchData>().matchSetting.mapId);
 
-        public override IEnumerator Initialize()
+        public override async Task Initialize()
         {
             Physics.autoSimulation = false;
 
@@ -31,12 +31,10 @@ namespace LOP
 
             gameObject.AddComponent<TickSyncController>();
 
-            SceneMessageBroker.AddSubscriber<SC_EnterRoom>(OnEnterRoom);
             SceneMessageBroker.AddSubscriber<SC_EmotionExpression>(SC_EmotionExpressionHandler.Handle);
             SceneMessageBroker.AddSubscriber<SC_Synchronization>(SC_SynchronizationHandler.Handle);
             SceneMessageBroker.AddSubscriber<SC_GameEnd>(SC_GameEndHandler.Handle);
             SceneMessageBroker.AddSubscriber<SC_OwnerChanged>(SC_OwnerChangedHandler.Handle);
-            SceneMessageBroker.AddSubscriber<GameMessage.EntityRegister>(OnEntityRegister);
 
             tickUpdater.Initialize(1 / 30f, true, Room.Instance.Latency, OnTick, OnTickEnd, OnUpdateElapsedTime);
             GameUI.Initialize();
@@ -46,8 +44,6 @@ namespace LOP
             FPM_Manager.Instantiate();
 
             Initialized = true;
-
-            yield break;
         }
 
         protected override void Clear()
@@ -61,12 +57,10 @@ namespace LOP
                 Destroy(GameStateMachine.gameObject);
             }
 
-            SceneMessageBroker.RemoveSubscriber<SC_EnterRoom>(OnEnterRoom);
             SceneMessageBroker.RemoveSubscriber<SC_EmotionExpression>(SC_EmotionExpressionHandler.Handle);
             SceneMessageBroker.RemoveSubscriber<SC_Synchronization>(SC_SynchronizationHandler.Handle);
             SceneMessageBroker.RemoveSubscriber<SC_GameEnd>(SC_GameEndHandler.Handle);
             SceneMessageBroker.RemoveSubscriber<SC_OwnerChanged>(SC_OwnerChangedHandler.Handle);
-            SceneMessageBroker.RemoveSubscriber<GameMessage.EntityRegister>(OnEntityRegister);
 
             GameUI.Clear();
         }
@@ -109,45 +103,16 @@ namespace LOP
             //RoomNetwork.Instance.Send(notifyPlayerLookAtPosition, PhotonNetwork.masterClient.ID);
         }
 
-        private void OnEntityRegister(GameMessage.EntityRegister entityRegister)
+        public void StartGame(int tick)
         {
-            if (entityRegister.entityId == Entities.MyEntityID)
-            {
-                var character = Entities.Get<Character>(entityRegister.entityId);
-
-                GameUI.CameraController.Target = character.Transform;
-                GameUI.CameraController.FollowTarget = true;
-
-                GameUI.PlayerInputController.SetCharacterID(character.EntityID);
-            }
-        }
-
-        private void OnEnterRoom(SC_EnterRoom enterRoom)
-        {
-            SceneDataContainer.Get<MyInfo>().EntityId = enterRoom.entityId;
-
             GameUI.EmotionExpressionSelector.SetData(0, 1, 2, 3);   //  Dummy
 
-            Run(enterRoom.tick);
+            GameUI.CameraController.Target = Entities.MyCharacter.Transform;
+            GameUI.CameraController.FollowTarget = true;
 
-            //  SyncScope.Global
-            enterRoom.syncControllerDataList.ForEach(item =>
-            {
-                using var disposer = PoolObjectDisposer<SC_SyncController>.Get();
-                var message = disposer.PoolObject;
-                message.syncControllerData = item;
+            GameUI.PlayerInputController.SetCharacterID(Entities.MyEntityID);
 
-                SceneMessageBroker.Publish(message);
-            });
-
-            enterRoom.syncDataEntries.ForEach(item =>
-            {
-                using var disposer = PoolObjectDisposer<SC_Synchronization>.Get();
-                var message = disposer.PoolObject;
-                message.syncDataEntry = item;
-
-                SceneMessageBroker.Publish(message);
-            });
+            Run(tick);
         }
     }
 }

@@ -2,6 +2,11 @@
 using UnityEngine;
 using GameFramework;
 using Mirror;
+using NetworkModel.Mirror;
+using System;
+using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 namespace LOP
 {
@@ -15,14 +20,23 @@ namespace LOP
 
         private RoomProtocolDispatcher roomProtocolDispatcher;
 
-        #region MonoBehaviour
-        private IEnumerator Start()
-        {
-            yield return Initialize();
-            yield return ConnectRoomServer();
+        private SC_EnterRoom enterRoom;
 
-            //  룸 서버 세션 맺고, 세션이 정상적으로 맺어져야 해당 룸 존재 및 정상 입장 한 것으로 간주 JoinRoom(string userId) -> JoinRoomResponse(snapshot)
-            //  Request RoomInfo -> Run Game
+        #region MonoBehaviour
+        private async void Start()
+        {
+            try
+            {
+                await Initialize();
+                await ConnectRoomServer();
+                await JoinRoomServer();
+                await StartGame();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message);
+                SceneManager.LoadScene("Lobby");
+            }
         }
 
         protected override void OnDestroy()
@@ -33,7 +47,7 @@ namespace LOP
         }
         #endregion
 
-        private IEnumerator Initialize()
+        private async Task Initialize()
         {
             roomProtocolDispatcher = gameObject.AddComponent<RoomProtocolDispatcher>();
 
@@ -42,24 +56,57 @@ namespace LOP
             SceneDataContainer.Get<MatchData>().matchId = RoomConnector.Instance.MatchId;
             SceneDataContainer.Get<MatchData>().matchSetting = RoomConnector.Instance.MatchSetting;
 
-            yield return game.Initialize();
+            SceneMessageBroker.AddSubscriber<SC_EnterRoom>(OnSC_EnterRoom);
+
+            await game.Initialize();
         }
 
-        private IEnumerator ConnectRoomServer()
+        private async Task ConnectRoomServer()
         {
             if (NetworkClient.ready)
             {
                 NetworkManager.singleton.StopClient();
-            }
 
-            yield return new WaitUntil(() => !NetworkClient.ready);
+                await UniTask.WaitUntil(() => !NetworkClient.ready);
+            }
 
             NetworkManager.singleton.networkAddress = LOP.Application.IP == RoomConnector.Instance.Room.room.ip ? "localhost" : RoomConnector.Instance.Room.room.ip;
             (Transport.activeTransport as kcp2k.KcpTransport).Port = (ushort)RoomConnector.Instance.Room.room.port;
 
             NetworkManager.singleton.StartClient();
 
-            yield return new WaitUntil(() => NetworkClient.ready);
+            await UniTask.WaitUntil(() => NetworkClient.ready);
+        }
+
+        private async Task JoinRoomServer()
+        {
+            await UniTask.WaitUntil(() => enterRoom != null);
+        }
+
+        private async Task StartGame()
+        {
+            SceneDataContainer.Get<MyInfo>().EntityId = enterRoom.entityId;
+
+            //  SyncScope.Global
+            enterRoom.syncControllerDataList.ForEach(item =>
+            {
+                using var disposer = PoolObjectDisposer<SC_SyncController>.Get();
+                var message = disposer.PoolObject;
+                message.syncControllerData = item;
+
+                SceneMessageBroker.Publish(message);
+            });
+
+            enterRoom.syncDataEntries.ForEach(item =>
+            {
+                using var disposer = PoolObjectDisposer<SC_Synchronization>.Get();
+                var message = disposer.PoolObject;
+                message.syncDataEntry = item;
+
+                SceneMessageBroker.Publish(message);
+            });
+
+            game.StartGame(enterRoom.tick);
         }
 
         private void Clear()
@@ -68,6 +115,15 @@ namespace LOP
             {
                 NetworkManager.singleton.StopClient();
             }
+
+            SceneMessageBroker.RemoveSubscriber<SC_EnterRoom>(OnSC_EnterRoom);
+
+            enterRoom = null;
+        }
+
+        private void OnSC_EnterRoom(SC_EnterRoom enterRoom)
+        {
+            this.enterRoom = enterRoom;
         }
     }
 }
