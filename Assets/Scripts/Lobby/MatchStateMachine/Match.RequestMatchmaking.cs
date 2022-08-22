@@ -12,6 +12,12 @@ namespace Match
         {
             var matchSelectData = SceneDataContainer.Get<MatchSelectData>();
 
+            if (LOPSettings.Get().connectLocalServer)
+            {
+                RoomConnector.Instance.TryToEnterRoomById("EditorTestRoom");
+                return;
+            }
+
             LOPWebAPI.RequestMatchmaking(new MatchmakingRequest
             {
                 userId = LOP.Application.UserId,

@@ -70,8 +70,16 @@ namespace LOP
                 await UniTask.WaitUntil(() => !NetworkClient.ready);
             }
 
-            NetworkManager.singleton.networkAddress = LOP.Application.IP == RoomConnector.Instance.Room.room.ip ? "localhost" : RoomConnector.Instance.Room.room.ip;
-            (Transport.activeTransport as kcp2k.KcpTransport).Port = (ushort)RoomConnector.Instance.Room.room.port;
+            if (LOPSettings.Get().connectLocalServer)
+            {
+                NetworkManager.singleton.networkAddress = "localhost";
+                (Transport.activeTransport as kcp2k.KcpTransport).Port = 7777;
+            }
+            else
+            {
+                NetworkManager.singleton.networkAddress = LOP.Application.IP == RoomConnector.Instance.Room.room.ip ? "localhost" : RoomConnector.Instance.Room.room.ip;
+                (Transport.activeTransport as kcp2k.KcpTransport).Port = (ushort)RoomConnector.Instance.Room.room.port;
+            }
 
             NetworkManager.singleton.StartClient();
 
