@@ -10,8 +10,6 @@ using System;
 //  https://api.playfab.com/docs/tutorials/landing-tournaments/photon-unity
 public class PlayFabLoginComponent : EntranceComponentBase
 {
-    public string customId = "";
-  
     private string _playFabPlayerIdCache;
 
     private bool? loginResult;
@@ -56,7 +54,7 @@ public class PlayFabLoginComponent : EntranceComponentBase
     private void Login_Editor()
     {
 #if UNITY_EDITOR
-        var request = new LoginWithCustomIDRequest { CustomId = customId == "" ? PlayFabSettings.DeviceUniqueIdentifier : customId, CreateAccount = true };
+        var request = new LoginWithCustomIDRequest { CustomId = string.IsNullOrEmpty(LOPSettings.Get().customId) ? PlayFabSettings.DeviceUniqueIdentifier : LOPSettings.Get().customId, CreateAccount = true };
         PlayFabClientAPI.LoginWithCustomID(request, RequestPhotonToken, error =>
         {
             Debug.LogWarning("Something went wrong with your first API call.  :(");

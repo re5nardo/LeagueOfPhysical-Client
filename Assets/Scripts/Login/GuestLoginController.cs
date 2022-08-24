@@ -8,7 +8,7 @@ public class GuestLoginController : MonoSingleton<GuestLoginController>
 {
     public static void Login(Action<bool, string, string> onResult)
     {
-        onResult?.Invoke(true, "always success", SystemInfo.deviceUniqueIdentifier);
+        onResult?.Invoke(true, "always success", string.IsNullOrEmpty(LOPSettings.Get().customId) ? SystemInfo.deviceUniqueIdentifier : LOPSettings.Get().customId);
     }
 
     public static void Logout()
