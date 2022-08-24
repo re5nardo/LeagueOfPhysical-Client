@@ -11,20 +11,26 @@ public class GetUserResult : HttpResultBase, IPostDeserialize
 
     public void OnPostDeserialize(string value)
     {
-        var jObject = JObject.Parse(value);
-        var locationDetail = jObject["user"]["locationDetail"];
-
-        switch (user.location)
+        try
         {
-            case Location.InWaitingRoom:
-                user.locationDetail = locationDetail.ToObject<WaitingRoomLocationDetail>();
-                break;
+            var jObject = JObject.Parse(value);
+            var locationDetail = jObject["user"]["locationDetail"];
 
-            case Location.InGameRoom:
-                user.locationDetail = locationDetail.ToObject<GameRoomLocationDetail>();
-                break;
+            switch (user.location)
+            {
+                case Location.InWaitingRoom:
+                    user.locationDetail = locationDetail.ToObject<WaitingRoomLocationDetail>();
+                    break;
+
+                case Location.InGameRoom:
+                    user.locationDetail = locationDetail.ToObject<GameRoomLocationDetail>();
+                    break;
+            }
         }
-
+        catch (Exception e)
+        {
+            Debug.LogWarning(e.Message);
+        }
     }
 }
 
