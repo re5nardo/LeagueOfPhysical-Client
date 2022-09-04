@@ -27,7 +27,7 @@ public class PlayerInputController : MonoBehaviour
         //  Skill
         if (skillInputData != null)
         {
-			var disposer = PoolObjectDisposer<CS_NotifySkillInputData>.Get();
+			using var disposer = PoolObjectDisposer<CS_NotifySkillInputData>.Get();
 			var notifySkillInputData = disposer.PoolObject;
             notifySkillInputData.skillInputData = skillInputData;
 
@@ -231,7 +231,7 @@ public class PlayerInputController : MonoBehaviour
 
 	private void OnSkillBtnClicked(int skillID)
 	{
-		var disposer = PoolObjectDisposer<CS_NotifySkillInputData>.Get();
+		using var disposer = PoolObjectDisposer<CS_NotifySkillInputData>.Get();
 		var notifySkillInputData = disposer.PoolObject;
 		notifySkillInputData.skillInputData = new SkillInputData(Game.Current.CurrentTick, Entities.MyEntityID, skillID, default);
 

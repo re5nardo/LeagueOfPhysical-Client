@@ -98,7 +98,7 @@ public abstract class LOPMonoSyncControllerBase<T> : MonoBehaviour, ISyncControl
         }
 
         //  request syncData to server
-        var disposer = PoolObjectDisposer<CS_Synchronization>.Get();
+        using var disposer = PoolObjectDisposer<CS_Synchronization>.Get();
         var synchronization = disposer.PoolObject;
         synchronization.syncDataEntry = new SyncDataEntry()
         {

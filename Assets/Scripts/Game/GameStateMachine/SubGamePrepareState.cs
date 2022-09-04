@@ -21,7 +21,7 @@ namespace GameState
             yield return SubGameBase.Current.Initialize();
 
             //  Send GamePreparation
-            var disposer = PoolObjectDisposer<CS_SubGamePreparation>.Get();
+            using var disposer = PoolObjectDisposer<CS_SubGamePreparation>.Get();
             var subGamePreparation = disposer.PoolObject;
             subGamePreparation.entityId = Entities.MyEntityID;
             subGamePreparation.preparation = 1;

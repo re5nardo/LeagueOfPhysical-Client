@@ -46,7 +46,7 @@ public class FPM_Jump : MonoBehaviour
             jumpInputData.sequence = sequence++;
             jumpInputData.entityId = Entities.MyEntityID;
 
-            var disposer = PoolObjectDisposer<CS_NotifyJumpInputData>.Get();
+            using var disposer = PoolObjectDisposer<CS_NotifyJumpInputData>.Get();
             var notifyJumpInputData = disposer.PoolObject;
             notifyJumpInputData.jumpInputData = jumpInputData;
 

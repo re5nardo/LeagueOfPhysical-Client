@@ -32,7 +32,7 @@ public class EmotionExpressionSelector : MonoBehaviour
 
     private void ButtonClickHandler(int emotionExpressionID)
     {
-        var disposer = PoolObjectDisposer<CS_RequestEmotionExpression>.Get();
+        using var disposer = PoolObjectDisposer<CS_RequestEmotionExpression>.Get();
         var requestEmotionExpression = disposer.PoolObject;
         requestEmotionExpression.entityId = Entities.MyEntityID;
         requestEmotionExpression.emotionExpressionId = emotionExpressionID;

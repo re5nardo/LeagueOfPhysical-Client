@@ -45,7 +45,7 @@ public class FPM_Move : MonoBehaviour
             playerMoveInput.sequence = sequence++;
             playerMoveInput.entityId = Entities.MyEntityID;
 
-            var disposer = PoolObjectDisposer<CS_NotifyMoveInputData>.Get();
+            using var disposer = PoolObjectDisposer<CS_NotifyMoveInputData>.Get();
             var notifyMoveInputData = disposer.PoolObject;
             notifyMoveInputData.playerMoveInput = playerMoveInput;
 
