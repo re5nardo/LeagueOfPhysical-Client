@@ -40,6 +40,8 @@ public class RoomNetworkImpl_Mirror : MonoBehaviour, INetworkImpl
         customMirrorMessage.payload = mirrorMessage;
 
         NetworkClient.Send(customMirrorMessage);
+
+        SceneMessageBroker.Publish(new CommonMessage.PacketSend(DateTime.Now, msg));
     }
 
     public void Send(IMessage msg, ulong targetId, bool reliable = true, bool instant = false)
@@ -59,6 +61,8 @@ public class RoomNetworkImpl_Mirror : MonoBehaviour, INetworkImpl
 
     private void InternalOnMessage(IMessage iMessage)
     {
+        SceneMessageBroker.Publish(new CommonMessage.PacketReceive(DateTime.Now, iMessage));
+
         OnMessage?.Invoke(iMessage);
     }
 
