@@ -46,7 +46,7 @@ public class EntityManager : GameFramework.EntityManager
     private void Awake()
     {
         positionGrid = new Grid();
-        positionGrid.SetGrid(10);
+        positionGrid.SetGrid(LOP.Game.GRID_SIZE);
 
         SceneMessageBroker.AddSubscriber<SC_EntityAppear>(OnSC_EntityAppear);
         SceneMessageBroker.AddSubscriber<SC_EntityDisAppear>(OnSC_EntityDisAppear);

@@ -11,6 +11,8 @@ namespace LOP
     {
         [SerializeField] private GameUI gameUI = null;
 
+        public const int GRID_SIZE = 100;
+
         public new static Game Current => GameFramework.Game.Current as Game;
 
         public GameUI GameUI => gameUI;
