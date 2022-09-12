@@ -4,12 +4,16 @@ public class ResponseCode
     //  Success
     public const int SUCCESS = 0;
 
-    #region Match
+    #region MatchMaking
     public const int INVALID_TO_MATCH_MAKING = 10000;
     public const int ALREADY_IN_GAME = 10001;
 
     public const int MATCH_MAKING_TICKET_NOT_EXIST = 10100;
     public const int NOT_MATCH_MAKING_STATE = 10101;
+    #endregion
+
+    #region Match
+    public const int MATCH_NOT_EXIST = 20000;
     #endregion
 
     #region User
