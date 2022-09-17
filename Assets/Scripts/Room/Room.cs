@@ -77,8 +77,8 @@ namespace LOP
             }
             else
             {
-                NetworkManager.singleton.networkAddress = LOP.Application.IP == RoomConnector.Instance.Room.room.ip ? "localhost" : RoomConnector.Instance.Room.room.ip;
-                (Transport.activeTransport as kcp2k.KcpTransport).Port = (ushort)RoomConnector.Instance.Room.room.port;
+                NetworkManager.singleton.networkAddress = LOP.Application.IP == RoomConnector.Instance.Room.ip ? "localhost" : RoomConnector.Instance.Room.ip;
+                (Transport.activeTransport as kcp2k.KcpTransport).Port = (ushort)RoomConnector.Instance.Room.port;
             }
 
             NetworkManager.singleton.StartClient();

@@ -8,11 +8,12 @@ public class RoomConnector : MonoSingleton<RoomConnector>
 {
     private bool tryingToEnterRoom = false;
 
-    public GetRoomResult Room { get; private set; }
+    public RoomResponse Room { get; private set; }
+    public MatchResponse Match { get; private set; }
 
-    public string RoomId => Room.room.id;
-    public string MatchId => Room.room.matchId;
-    public MatchSetting MatchSetting => new MatchSetting(Room.room.matchType, Room.room.subGameId, Room.room.mapId);
+    public string RoomId => Room.id;
+    public string MatchId => Room.matchId;
+    public MatchSetting MatchSetting => new MatchSetting(Match.matchType, Match.subGameId, Match.mapId);
 
     private void Start()
     {
@@ -36,6 +37,7 @@ public class RoomConnector : MonoSingleton<RoomConnector>
 
         tryingToEnterRoom = true;
 
+        //  Get Room
         var request = LOPWebAPI.GetRoom(roomId);
 
         yield return request;
@@ -46,9 +48,21 @@ public class RoomConnector : MonoSingleton<RoomConnector>
             yield break;
         }
 
+        Room = request.response.room;
+
+        //  Get Match
+        var getMatch = LOPWebAPI.GetMatch(Room.matchId);
+        yield return getMatch;
+
+        if (getMatch.isError)
+        {
+            Debug.LogError(getMatch.error);
+            yield break;
+        }
+
         tryingToEnterRoom = false;
 
-        Room = request.response;
+        Match = getMatch.response.match;
 
         SceneManager.LoadScene("Room");
     }

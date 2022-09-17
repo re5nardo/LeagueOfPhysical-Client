@@ -53,4 +53,11 @@ public class LOPWebAPI
         return Http.Get($"room/{roomId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Room"));
     }
     #endregion
+
+    #region Match
+    public static HttpRequestContainer<GetMatchResult> GetMatch(string matchId, Action<GetMatchResult> onResult = null, Action<string> onError = null)
+    {
+        return Http.Get($"match/{matchId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Room"));
+    }
+    #endregion
 }

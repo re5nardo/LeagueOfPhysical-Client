@@ -14,9 +14,6 @@ public class RoomResponse
 {
     public string id;
     public string matchId;
-    public MatchType matchType;
-    public string subGameId;
-    public string mapId;
     public RoomStatus status;
     public string ip;
     public int port;
@@ -31,4 +28,3 @@ public enum RoomStatus
     Playing = 4,
     Finished = 5,
 }
-
