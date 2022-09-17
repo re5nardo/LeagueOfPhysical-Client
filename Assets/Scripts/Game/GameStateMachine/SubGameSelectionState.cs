@@ -11,12 +11,8 @@ namespace GameState
     {
         public override IEnumerator OnExecute()
         {
-            //  서버로 부터 받아야 됨..
-            SceneDataContainer.Get<MatchData>().matchSetting.subGameId = "FlapWang";
-            SceneDataContainer.Get<MatchData>().matchSetting.mapId = "FlapWangMap";
-
-            //LOP.Game.Current.GameManager.subGameId = "FallingGame";
-            //LOP.Game.Current.GameManager.mapName = "Falling";
+            //SceneDataContainer.Get<MatchData>().matchSetting.subGameId = "FlapWang";
+            //SceneDataContainer.Get<MatchData>().matchSetting.mapId = "FlapWangMap";
 
             yield return new WaitWhile(() => nameof(SubGameSelectionState) == SceneDataContainer.Get<GameData>().gameState);
 
