@@ -63,7 +63,7 @@ namespace LOP
 
         private async Task ConnectRoomServer()
         {
-            if (NetworkClient.ready)
+            if (NetworkClient.isConnected)
             {
                 NetworkManager.singleton.StopClient();
 
@@ -119,7 +119,7 @@ namespace LOP
 
         private void Clear()
         {
-            if (NetworkClient.ready)
+            if (NetworkClient.isConnected)
             {
                 NetworkManager.singleton.StopClient();
             }

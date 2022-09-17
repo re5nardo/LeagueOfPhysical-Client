@@ -17,7 +17,10 @@ public class GameLoadingView : MonoSingleton<GameLoadingView>
 
     public static void Hide()
     {
-        Instance.gameObject.SetActive(false);
+        if (HasInstance())
+        {
+            Instance.gameObject.SetActive(false);
+        }
     }
 
     private void Refresh()
