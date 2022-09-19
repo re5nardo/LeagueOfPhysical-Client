@@ -39,10 +39,8 @@ namespace LOP
             }
         }
 
-        protected override void OnDestroy()
+        private void OnDisable()
         {
-            base.OnDestroy();
-
             Clear();
         }
         #endregion
