@@ -29,4 +29,15 @@ public class LOPNetworkManager : NetworkManager
         Debug.Log("[OnStopClient]");
     }
     #endregion
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        if (NetworkClient.isConnected)
+        {
+            StopClient();
+        }
+        ResetStatics();
+    }
 }

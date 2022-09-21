@@ -63,13 +63,6 @@ namespace LOP
 
         private async Task ConnectRoomServer()
         {
-            if (NetworkClient.isConnected)
-            {
-                NetworkManager.singleton.StopClient();
-
-                await UniTask.WaitUntil(() => !NetworkClient.ready);
-            }
-
             if (LOPSettings.Get().connectLocalServer)
             {
                 NetworkManager.singleton.networkAddress = "localhost";
@@ -119,11 +112,6 @@ namespace LOP
 
         private void Clear()
         {
-            if (NetworkClient.isConnected)
-            {
-                NetworkManager.singleton.StopClient();
-            }
-
             SceneMessageBroker.RemoveSubscriber<SC_EnterRoom>(OnSC_EnterRoom);
 
             enterRoom = null;
