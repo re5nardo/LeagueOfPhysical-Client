@@ -15,7 +15,8 @@ public class MatchSelectData : MonoBehaviour
 
     protected void Initialize()
     {
-        var initValue = MatchSettingPreset.Get(x => x.matchSetting.matchType == MatchType.Friendly);
+        //var initValue = MatchSettingPreset.Get(x => x.matchSetting.matchType == MatchType.Friendly);
+        var initValue = MatchSettingPreset.Get("FlapWang");
 
         currentMatchSetting.Value = initValue.matchSetting;
     }
