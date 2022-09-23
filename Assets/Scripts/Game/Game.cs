@@ -88,11 +88,11 @@ namespace LOP
             SceneMessageBroker.Publish(new TickMessage.LateTickEnd(tick));
         }
 
-        private void OnUpdateElapsedTime(float time)
+        private void OnUpdateElapsedTime(double time)
         {
             SceneMessageBroker.Publish(new TickMessage.BeforePhysicsSimulation(CurrentTick));
 
-            Physics.Simulate(time);
+            Physics.Simulate((float)time);
 
             SceneMessageBroker.Publish(new TickMessage.AfterPhysicsSimulation(CurrentTick));
         }

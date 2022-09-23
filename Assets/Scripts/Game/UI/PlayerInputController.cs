@@ -123,7 +123,7 @@ public class PlayerInputController : MonoBehaviour
 	#region Message Handler
 	private void OnSC_EntitySkillInfo(SC_EntitySkillInfo entitySkillInfo)
 	{
-		foreach (KeyValuePair<int, float> kv in entitySkillInfo.dicSkillInfo)
+		foreach (KeyValuePair<int, double> kv in entitySkillInfo.dicSkillInfo)
 		{
 			MasterData.Skill masterSkill = MasterDataManager.Instance.GetMasterData<MasterData.Skill>(kv.Key);
 

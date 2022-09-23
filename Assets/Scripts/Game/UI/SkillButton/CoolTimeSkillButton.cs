@@ -9,8 +9,8 @@ public class CoolTimeSkillButton : SkillButtonBase
 	[SerializeField] private Image blackCover = null;
 	[SerializeField] private Text textTime = null;
 
-	private float coolTime = float.PositiveInfinity;
-	private float remainTime = float.PositiveInfinity;
+	private double coolTime = double.PositiveInfinity;
+	private double remainTime = double.PositiveInfinity;
 
     private int lastUpdateTick = -1;
 
@@ -21,7 +21,7 @@ public class CoolTimeSkillButton : SkillButtonBase
 
 	private void Update()
 	{
-		if (skillID == -1 || float.IsInfinity(coolTime))
+		if (skillID == -1 || double.IsInfinity(coolTime))
 			return;
 
         if (Game.Current != null && Game.Current.CurrentTick != lastUpdateTick)
@@ -34,19 +34,19 @@ public class CoolTimeSkillButton : SkillButtonBase
         }
 	}
 
-	public void SetCoolTime(float coolTime)
+	public void SetCoolTime(double coolTime)
 	{
         this.coolTime = coolTime;
 	}
 
-	public void SetRemainTime(float remainTime)
+	public void SetRemainTime(double remainTime)
 	{
         this.remainTime = remainTime;
 	}
 
 	public void Refresh()
 	{
-		if (skillID == -1 || float.IsInfinity(coolTime))
+		if (skillID == -1 || double.IsInfinity(coolTime))
 		{
             blackCover.gameObject.SetActive(true);
             blackCover.fillAmount = 1;
@@ -58,7 +58,7 @@ public class CoolTimeSkillButton : SkillButtonBase
 			if (remainTime > 0)
 			{
                 blackCover.gameObject.SetActive(true);
-                blackCover.fillAmount = (remainTime / coolTime);
+                blackCover.fillAmount = (float)(remainTime / coolTime);
 
                 textTime.text = string.Format("{0:#0.00}", remainTime);
 			}

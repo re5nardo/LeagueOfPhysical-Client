@@ -37,7 +37,7 @@ namespace Behavior
                 }
                 else
                 {
-                    Vector3 moved = (Destination - startPosition).normalized * Entity.FactoredMovementSpeed * DeltaTime;
+                    Vector3 moved = (Destination - startPosition).normalized * Entity.FactoredMovementSpeed * (float)DeltaTime;
                     Entity.Position += moved;
                     return true;
                 }
