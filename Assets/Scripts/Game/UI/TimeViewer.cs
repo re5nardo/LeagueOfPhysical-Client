@@ -11,6 +11,6 @@ public class TimeViewer : MonoBehaviour
 	private void Update()
 	{
 		networkTime.text = $"{Mirror.NetworkTime.time:N1} (NetworkTime)";
-		gameTime.text = $"{LOP.Game.Current.GameTime:N1} (GameTime)";
+		gameTime.text = $"{SceneDataContainer.Get<GameData>().subGameTime:N1} (SubGameTime)";
 	}
 }

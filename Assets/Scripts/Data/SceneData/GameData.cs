@@ -6,4 +6,5 @@ public class GameData : MonoBehaviour
 {
     public int tick;
     public string gameState;
+    public double subGameTime;
 }
