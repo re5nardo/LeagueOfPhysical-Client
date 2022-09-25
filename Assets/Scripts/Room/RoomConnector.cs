@@ -37,32 +37,67 @@ public class RoomConnector : MonoSingleton<RoomConnector>
 
         tryingToEnterRoom = true;
 
-        //  Get Room
-        var request = LOPWebAPI.GetRoom(roomId);
-
-        yield return request;
-
-        if (request.isError)
+        if (LOPSettings.Get().connectLocalServer)
         {
-            Debug.LogError(request.error);
-            yield break;
+            Room = new RoomResponse
+            {
+                id = "EditorTestRoom",
+                matchId = "EditorTestMatch",
+                status = RoomStatus.Ready,
+                ip = "localhost",
+                port = 7777,
+            };
+
+            Match = new MatchResponse
+            {
+                id = "EditorTestMatch",
+                matchType = MatchType.Friendly,
+                subGameId = "FlapWang",
+                mapId = "FlapWangMap",
+                status = MatchStatus.MatchStart,
+                playerList = null,
+            };
         }
-
-        Room = request.response.room;
-
-        //  Get Match
-        var getMatch = LOPWebAPI.GetMatch(Room.matchId);
-        yield return getMatch;
-
-        if (getMatch.isError)
+        else
         {
-            Debug.LogError(getMatch.error);
-            yield break;
+            //  Get Room
+            var getRoom = LOPWebAPI.GetRoom(roomId);
+            yield return getRoom;
+
+            if (getRoom.isError)
+            {
+                Debug.LogError(getRoom.error);
+                yield break;
+            }
+
+            if (getRoom.response.code != ResponseCode.SUCCESS)
+            {
+                Debug.LogError($"getRoom.response.code: {getRoom.response.code}");
+                yield break;
+            }
+
+            Room = getRoom.response.room;
+
+            //  Get Match
+            var getMatch = LOPWebAPI.GetMatch(Room.matchId);
+            yield return getMatch;
+
+            if (getMatch.isError)
+            {
+                Debug.LogError(getMatch.error);
+                yield break;
+            }
+
+            if (getMatch.response.code != ResponseCode.SUCCESS)
+            {
+                Debug.LogError($"getMatch.response.code: {getMatch.response.code}");
+                yield break;
+            }
+
+            Match = getMatch.response.match;
         }
 
         tryingToEnterRoom = false;
-
-        Match = getMatch.response.match;
 
         SceneManager.LoadScene("Room");
     }

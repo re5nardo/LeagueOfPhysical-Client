@@ -63,16 +63,8 @@ namespace LOP
 
         private async Task ConnectRoomServer()
         {
-            if (LOPSettings.Get().connectLocalServer)
-            {
-                NetworkManager.singleton.networkAddress = "localhost";
-                (Transport.activeTransport as kcp2k.KcpTransport).Port = 7777;
-            }
-            else
-            {
-                NetworkManager.singleton.networkAddress = LOP.Application.IP == RoomConnector.Instance.Room.ip ? "localhost" : RoomConnector.Instance.Room.ip;
-                (Transport.activeTransport as kcp2k.KcpTransport).Port = (ushort)RoomConnector.Instance.Room.port;
-            }
+            NetworkManager.singleton.networkAddress = LOP.Application.IP == RoomConnector.Instance.Room.ip ? "localhost" : RoomConnector.Instance.Room.ip;
+            (Transport.activeTransport as kcp2k.KcpTransport).Port = (ushort)RoomConnector.Instance.Room.port;
 
             NetworkManager.singleton.StartClient();
 
