@@ -27,6 +27,8 @@ namespace LOP
         {
             try
             {
+                GameLoadingView.Show();
+
                 await Initialize();
                 await ConnectRoomServer();
                 await JoinRoomServer();
