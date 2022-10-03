@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
 using NetworkModel.Mirror;
+using System;
 
 public abstract class LOPMonoEntitySyncControllerBase<T> : LOPMonoEntityComponentBase, ISyncController<T> where T : ISyncData
 {
     public string ControllerId { get; private set; }
-    public string OwnerId { get; private set; }
-    public bool HasAuthority => OwnerId == LOP.Application.UserId || OwnerId == "local";
+    public string OwnerId => Entity.OwnerId;
+    public bool HasAuthority => Entity.HasAuthority;
     public bool IsDirty { get; private set; }
     public virtual SyncScope SyncScope { get; protected set; } = SyncScope.Local;
 
@@ -29,7 +30,6 @@ public abstract class LOPMonoEntitySyncControllerBase<T> : LOPMonoEntityComponen
     public virtual void OnInitialize()
     {
         ControllerId = $"{Entity.EntityID}_{GetType().Name}";
-        OwnerId = Entity.OwnerId;
 
         SceneMessageBroker.AddSubscriber<SC_SyncController>(OnSyncController).Where(syncController => syncController.syncControllerData.controllerId == ControllerId);
         SceneMessageBroker.AddSubscriber<SC_Synchronization>(OnSynchronization).Where(synchronization => synchronization.syncDataEntry.meta.controllerId == ControllerId);
@@ -46,7 +46,7 @@ public abstract class LOPMonoEntitySyncControllerBase<T> : LOPMonoEntityComponen
 
     private void OnSyncController(SC_SyncController syncController)
     {
-        OwnerId = syncController.syncControllerData.ownerId;
+        throw new NotSupportedException($"[OnSyncController] controllerId: {syncController.syncControllerData.controllerId}, ownerId: {syncController.syncControllerData.ownerId}");
     }
 
     private void OnSynchronization(SC_Synchronization synchronization)
