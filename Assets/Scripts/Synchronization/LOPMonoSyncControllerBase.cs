@@ -25,7 +25,7 @@ public abstract class LOPMonoSyncControllerBase<T> : MonoBehaviour, ISyncControl
     public virtual void OnInitialize()
     {
         ControllerId = $"{GetType().Name}";
-        OwnerId = "server";
+        OwnerId = LOP.Room.Instance.ServerId;
 
         SceneMessageBroker.AddSubscriber<SC_SyncController>(OnSyncController).Where(syncController => syncController.syncControllerData.controllerId == ControllerId);
         SceneMessageBroker.AddSubscriber<SC_Synchronization>(OnSynchronization).Where(synchronization => synchronization.syncDataEntry.meta.controllerId == ControllerId);

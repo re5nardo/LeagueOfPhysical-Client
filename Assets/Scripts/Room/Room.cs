@@ -13,6 +13,7 @@ namespace LOP
     public class Room : MonoSingleton<Room>
     {
         public string RoomId { get; private set; }
+        public string ServerId { get; private set; }
 
         [SerializeField] private Game game = null;
 
@@ -81,6 +82,7 @@ namespace LOP
         private async Task StartGame()
         {
             SceneDataContainer.Get<MyInfo>().EntityId = enterRoom.entityId;
+            ServerId = enterRoom.serverId;
 
             //  SyncScope.Global
             enterRoom.syncControllerDataList.ForEach(item =>
