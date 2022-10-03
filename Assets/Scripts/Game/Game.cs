@@ -39,6 +39,7 @@ namespace LOP
             SceneMessageBroker.AddSubscriber<SC_GameEnd>(SC_GameEndHandler.Handle);
             SceneMessageBroker.AddSubscriber<SC_OwnerChanged>(SC_OwnerChangedHandler.Handle);
             SceneMessageBroker.AddSubscriber<SC_SubGameReadyNotice>(SC_SubGameReadyNoticeHandler.Handle);
+            SceneMessageBroker.AddSubscriber<SC_PlayerEntity>(SC_PlayerEntityHandler.Handle);
 
             tickUpdater.Initialize(1 / 30f, true, Room.Instance.Latency, OnTick, OnTickEnd, OnUpdateElapsedTime);
             GameUI.Initialize();
@@ -109,13 +110,8 @@ namespace LOP
 
         public void StartGame(int tick)
         {
-            GameUI.EmotionExpressionSelector.SetData(0, 1, 2, 3);   //  Dummy
-
-            GameUI.CameraController.Target = Entities.MyCharacter.Transform;
-            GameUI.CameraController.FollowTarget = true;
-
-            GameUI.PlayerInputController.SetCharacterID(Entities.MyEntityID);
-
+            //GameUI.EmotionExpressionSelector.SetData(0, 1, 2, 3);   //  Dummy
+          
             Run(tick);
         }
     }

@@ -81,7 +81,6 @@ namespace LOP
 
         private async Task StartGame()
         {
-            SceneDataContainer.Get<MyInfo>().EntityId = enterRoom.entityId;
             ServerId = enterRoom.serverId;
 
             //  SyncScope.Global
