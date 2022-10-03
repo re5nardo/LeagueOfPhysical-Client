@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class MyInfo : MonoBehaviour
 {
-    public int EntityId { get; set; } = -1;
+    public int EntityId { get; set; } = GameFramework.EntityManager.EMPTY_ENTITY_ID;
 }
