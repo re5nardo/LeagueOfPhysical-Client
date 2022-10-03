@@ -55,11 +55,14 @@ public class EntityManager : GameFramework.EntityManager
 
     private void OnDestroy()
     {
+        positionGrid.Clear();
+        positionGrid = null;
+
         SceneMessageBroker.RemoveSubscriber<SC_EntityAppear>(OnSC_EntityAppear);
         SceneMessageBroker.RemoveSubscriber<SC_EntityDisAppear>(OnSC_EntityDisAppear);
         SceneMessageBroker.RemoveSubscriber<TickMessage.Tick>(OnTick);
     }
-#endregion
+    #endregion
 
     public override void RegisterEntity(IEntity entity)
     {
