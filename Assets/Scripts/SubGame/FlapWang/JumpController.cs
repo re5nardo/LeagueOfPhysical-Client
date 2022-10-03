@@ -52,6 +52,11 @@ namespace FlapWangController
 
         private bool CanJump()
         {
+            if (Entities.MyCharacter == null)
+            {
+                return false;
+            }
+
             return Entities.MyCharacter.IsAlive && !Entities.MyCharacter.HasStatusEffect(StatusEffect.Stun);
         }
     }
