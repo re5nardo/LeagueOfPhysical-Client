@@ -9,29 +9,12 @@ public partial class FlapWang
 {
     private void Start()
     {
-        SceneMessageBroker.AddSubscriber<GameMessage.EntityRegister>(OnEntityRegister);
         SceneMessageBroker.AddSubscriber<EntityMessage.ModelTriggerEnter>(OnModelTriggerEnter);
     }
 
     private void OnDestroy()
     {
-        SceneMessageBroker.RemoveSubscriber<GameMessage.EntityRegister>(OnEntityRegister);
         SceneMessageBroker.RemoveSubscriber<EntityMessage.ModelTriggerEnter>(OnModelTriggerEnter);
-    }
-
-    private void OnEntityRegister(GameMessage.EntityRegister message)
-    {
-        var entity = Entities.Get<LOPMonoEntityBase>(message.entityId);
-
-        entity.Rigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
-
-        if (entity.EntityRole == EntityRole.Player)
-        {
-            var behaviorController = entity.GetComponent<BehaviorController>();
-            behaviorController.StartBehavior(new ContinuousMoveBehaviorParam(Define.MasterData.BehaviorId.ContinuousMove, Vector3.right));
-
-            entity.Rotation = new Vector3(0, 90, 0);
-        }
     }
 
     private void OnModelTriggerEnter(EntityMessage.ModelTriggerEnter message)
