@@ -11,6 +11,8 @@ namespace GameState
     {
         public override void OnEnter()
         {
+            GameLoadingView.Hide();
+
             SubGameBase.Current.StartGame();    //  서버와 tick 동기화?
         }
 
