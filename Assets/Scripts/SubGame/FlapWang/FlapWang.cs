@@ -16,8 +16,6 @@ public partial class FlapWang : SubGameBase
             {
                 var behaviorController = entity.GetComponent<BehaviorController>();
                 behaviorController.StartBehavior(new ContinuousMoveBehaviorParam(Define.MasterData.BehaviorId.ContinuousMove, Vector3.right));
-
-                entity.Rotation = new Vector3(0, 90, 0);
             }
         }
 
