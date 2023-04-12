@@ -2,27 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-public class CreateUserResult : HttpResultBase, IPostDeserialize
+public class CreateUserResult : HttpResultBase
 {
     public User user;
 
-    public void OnPostDeserialize(string value)
+    public static CreateUserResult Deserialize(string json)
     {
-        var jObject = JObject.Parse(value);
+        var createUserResult = JsonConvert.DeserializeObject<CreateUserResult>(json);
+
+        var jObject = JObject.Parse(json);
         var locationDetail = jObject["user"]["locationDetail"];
 
-        switch (user.location)
+        switch (createUserResult.user.location)
         {
             case Location.InWaitingRoom:
-                user.locationDetail = locationDetail.ToObject<WaitingRoomLocationDetail>();
+                createUserResult.user.locationDetail = locationDetail.ToObject<WaitingRoomLocationDetail>();
                 break;
 
             case Location.InGameRoom:
-                user.locationDetail = locationDetail.ToObject<GameRoomLocationDetail>();
+                createUserResult.user.locationDetail = locationDetail.ToObject<GameRoomLocationDetail>();
                 break;
         }
 
+        return createUserResult;
     }
 }

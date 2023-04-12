@@ -18,9 +18,9 @@ public class JoinLobbyComponent : EntranceComponentBase
 
         await joinLobby;
 
-        if (joinLobby.isError || joinLobby.response.code != ResponseCode.SUCCESS)
+        if (joinLobby.isSuccess == false || joinLobby.response.code != ResponseCode.SUCCESS)
         {
-            throw new Exception($"로비 접속에 실패하였습니다.");
+            throw new Exception($"로비 접속에 실패하였습니다. error: {joinLobby.error}");
         }
     }
 }

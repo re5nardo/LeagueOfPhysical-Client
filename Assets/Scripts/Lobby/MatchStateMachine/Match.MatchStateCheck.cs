@@ -8,49 +8,39 @@ namespace Match
 {
     public class MatchStateCheck : MonoStateBase
     {
-        public override void OnEnter()
+        public override IEnumerator OnExecute()
         {
-            CheckMatchState();
-        }
+            var getUser = LOPWebAPI.GetUser(LOP.Application.UserId);
 
-        private void CheckMatchState()
-        {
-            LOPWebAPI.GetUser(LOP.Application.UserId,
-                result =>
-                {
-                    if (!IsCurrent)
-                    {
-                        return;
-                    }
+            yield return getUser;
 
-                    if (result.code != ResponseCode.SUCCESS)
-                    {
-                        Debug.LogError("Match 상태를 받아오는데 실패하였습니다. 타이틀로 돌아갑니다.");
-                        return;
-                    }
+            if (!IsCurrent)
+            {
+                yield break;
+            }
 
-                    AppDataContainer.Get<UserData>().user = result.user;
+            if (getUser.isSuccess == false || getUser.response.code != ResponseCode.SUCCESS)
+            {
+                Debug.LogError($"Match 상태를 받아오는데 실패하였습니다. 타이틀로 돌아갑니다. error: {getUser.error}");
+                yield break;
+            }
 
-                    switch (result.user.location)
-                    {
-                        case Location.InWaitingRoom:
-                            FSM.MoveNext(MatchStateInput.MatchInWaitingRoomState);
-                            break;
+            AppDataContainer.Get<UserData>().user = getUser.response.user;
 
-                        case Location.InGameRoom:
-                            FSM.MoveNext(MatchStateInput.MatchInGameRoomState);
-                            break;
+            switch (getUser.response.user.location)
+            {
+                case Location.InWaitingRoom:
+                    FSM.MoveNext(MatchStateInput.MatchInWaitingRoomState);
+                    break;
 
-                        default:
-                            FSM.MoveNext(MatchStateInput.MatchIdleState);
-                            break;
-                    }
-                },
-                error =>
-                {
-                    Debug.LogError("Match 상태를 받아오는데 실패하였습니다. 타이틀로 돌아갑니다.");
-                }
-            );
+                case Location.InGameRoom:
+                    FSM.MoveNext(MatchStateInput.MatchInGameRoomState);
+                    break;
+
+                default:
+                    FSM.MoveNext(MatchStateInput.MatchIdleState);
+                    break;
+            }
         }
 
         public override IState GetNext<I>(I input)

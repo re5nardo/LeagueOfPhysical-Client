@@ -64,7 +64,7 @@ public class RoomConnector : MonoSingleton<RoomConnector>
             var getRoom = LOPWebAPI.GetRoom(roomId);
             yield return getRoom;
 
-            if (getRoom.isError)
+            if (getRoom.isSuccess == false)
             {
                 Debug.LogError(getRoom.error);
                 yield break;
@@ -82,7 +82,7 @@ public class RoomConnector : MonoSingleton<RoomConnector>
             var getMatch = LOPWebAPI.GetMatch(Room.matchId);
             yield return getMatch;
 
-            if (getMatch.isError)
+            if (getMatch.isSuccess == false)
             {
                 Debug.LogError(getMatch.error);
                 yield break;

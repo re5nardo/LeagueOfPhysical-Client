@@ -18,7 +18,7 @@ public class CheckUserComponent : EntranceComponentBase
 
         await getUser;
 
-        if (getUser.isError)
+        if (getUser.isSuccess == false)
         {
             throw new Exception($"유저 상태를 가져오는데 실패하였습니다. error: {getUser.error}");
         }
@@ -30,7 +30,7 @@ public class CheckUserComponent : EntranceComponentBase
             var verifyUserLocation = LOPWebAPI.VerifyUserLocation(getUser.response.user.id);
             await verifyUserLocation;
 
-            if (verifyUserLocation.isError || verifyUserLocation.response.code != ResponseCode.SUCCESS)
+            if (verifyUserLocation.isSuccess == false || verifyUserLocation.response.code != ResponseCode.SUCCESS)
             {
                 throw new Exception($"유저 상태를 가져오는데 실패하였습니다. error: {getUser.error}");
             }
@@ -47,7 +47,7 @@ public class CheckUserComponent : EntranceComponentBase
 
             await createUser;
 
-            if (createUser.isError || createUser.response.code != ResponseCode.SUCCESS)
+            if (createUser.isSuccess == false || createUser.response.code != ResponseCode.SUCCESS)
             {
                 throw new Exception($"유저 생성에 실패하였습니다. error: {getUser.error}");
             }

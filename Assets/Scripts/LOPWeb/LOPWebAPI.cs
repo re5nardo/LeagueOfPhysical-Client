@@ -7,57 +7,88 @@ using GameFramework;
 public class LOPWebAPI
 {
     #region Lobby
-    public static HttpRequestContainer<JoinLobbyResult> JoinLobby(string userId, Action<JoinLobbyResult> onResult = null, Action<string> onError = null)
+    public static WebRequest<JoinLobbyResult> JoinLobby(string userId)
     {
-        return Http.Put($"lobby/join/{userId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
+        return new WebRequestBuilder<JoinLobbyResult>()
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetFullUri($"lobby/join/{userId}"))
+            .SetMethod(HttpMethod.PUT)
+            .Build();
     }
 
-    public static HttpRequestContainer<LeaveLobbyResult> LeaveLobby(string userId, Action<LeaveLobbyResult> onResult = null, Action<string> onError = null)
+    public static WebRequest<LeaveLobbyResult> LeaveLobby(string userId)
     {
-        return Http.Put($"lobby/leave/{userId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
+        return new WebRequestBuilder<LeaveLobbyResult>()
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetFullUri($"lobby/leave/{userId}"))
+            .SetMethod(HttpMethod.PUT)
+            .Build();
     }
     #endregion
 
     #region MatchmakingTicket
-    public static HttpRequestContainer<MatchmakingResult> RequestMatchmaking(MatchmakingRequest request, Action<MatchmakingResult> onResult = null, Action<string> onError = null)
+    public static WebRequest<MatchmakingResult> RequestMatchmaking(MatchmakingRequest request)
     {
-        return Http.Post("matchmaking", JsonUtility.ToJson(request), onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Matchmaking"));
+        return new WebRequestBuilder<MatchmakingResult>()
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Matchmaking").GetFullUri($"matchmaking"))
+            .SetMethod(HttpMethod.POST)
+            .SetRequestBody(request)
+            .Build();
     }
 
-    public static HttpRequestContainer<CancelMatchmakingResult> CancelMatchmaking(string ticketId, Action<CancelMatchmakingResult> onResult = null, Action<string> onError = null)
+    public static WebRequest<CancelMatchmakingResult> CancelMatchmaking(string ticketId)
     {
-        return Http.Delete($"matchmaking/{ticketId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Matchmaking"));
+        return new WebRequestBuilder<CancelMatchmakingResult>()
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Matchmaking").GetFullUri($"matchmaking/{ticketId}"))
+            .SetMethod(HttpMethod.DELETE)
+            .Build();
     }
     #endregion
 
     #region User
-    public static HttpRequestContainer<GetUserResult> GetUser(string userId, Action<GetUserResult> onResult = null, Action<string> onError = null)
+    public static WebRequest<GetUserResult> GetUser(string userId)
     {
-        return Http.Get($"user/{userId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
+        return new WebRequestBuilder<GetUserResult>()
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetFullUri($"user/{userId}"))
+            .SetMethod(HttpMethod.GET)
+            .SetDeserialize(GetUserResult.Deserialize)
+            .Build();
     }
 
-    public static HttpRequestContainer<CreateUserResult> CreateUser(CreateUserRequest request, Action<CreateUserResult> onResult = null, Action<string> onError = null)
+    public static WebRequest<CreateUserResult> CreateUser(CreateUserRequest request)
     {
-        return Http.Post("user", JsonUtility.ToJson(request), onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
+        return new WebRequestBuilder<CreateUserResult>()
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetFullUri($"user"))
+            .SetMethod(HttpMethod.POST)
+            .SetRequestBody(request)
+            .SetDeserialize(CreateUserResult.Deserialize)
+            .Build();
     }
 
-    public static HttpRequestContainer<VerifyUserLocationResult> VerifyUserLocation(string userId, Action<VerifyUserLocationResult> onResult = null, Action<string> onError = null)
+    public static WebRequest<VerifyUserLocationResult> VerifyUserLocation(string userId)
     {
-        return Http.Put($"user/verify-location/{userId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Lobby"));
+        return new WebRequestBuilder<VerifyUserLocationResult>()
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetFullUri($"user/verify-location/{userId}"))
+            .SetMethod(HttpMethod.PUT)
+            .Build();
     }
     #endregion
 
     #region Room
-    public static HttpRequestContainer<GetRoomResult> GetRoom(string roomId, Action<GetRoomResult> onResult = null, Action<string> onError = null)
+    public static WebRequest<GetRoomResult> GetRoom(string roomId)
     {
-        return Http.Get($"room/{roomId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Room"));
+        return new WebRequestBuilder<GetRoomResult>()
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Room").GetFullUri($"room/{roomId}"))
+            .SetMethod(HttpMethod.GET)
+            .Build();
     }
     #endregion
 
     #region Match
-    public static HttpRequestContainer<GetMatchResult> GetMatch(string matchId, Action<GetMatchResult> onResult = null, Action<string> onError = null)
+    public static WebRequest<GetMatchResult> GetMatch(string matchId)
     {
-        return Http.Get($"match/{matchId}", onResult, onError, apiSettings: GameFramework.ServerSettings.Get("ServerSettings_Room"));
+        return new WebRequestBuilder<GetMatchResult>()
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Room").GetFullUri($"match/{matchId}"))
+            .SetMethod(HttpMethod.GET)
+            .Build();
     }
     #endregion
 }

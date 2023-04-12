@@ -19,9 +19,9 @@ public class CheckLocationComponent : EntranceComponentBase
 
         await getUser;
 
-        if (getUser.isError || getUser.response.code != ResponseCode.SUCCESS)
+        if (getUser.isSuccess == false || getUser.response.code != ResponseCode.SUCCESS)
         {
-            throw new Exception("유저 정보를 받아오는데 실패하였습니다.");
+            throw new Exception($"유저 정보를 받아오는데 실패하였습니다. error: {getUser.error}");
         }
 
         AppDataContainer.Get<UserData>().user = getUser.response.user;
@@ -34,9 +34,9 @@ public class CheckLocationComponent : EntranceComponentBase
 
                 await getRoom;
 
-                if (getRoom.isError || getRoom.response.code != ResponseCode.SUCCESS)
+                if (getRoom.isSuccess == false || getRoom.response.code != ResponseCode.SUCCESS)
                 {
-                    throw new Exception("룸 정보를 받아오는데 실패하였습니다.");
+                    throw new Exception($"룸 정보를 받아오는데 실패하였습니다. error: {getRoom.error}");
                 }
 
                 if (getRoom.response.room.status == RoomStatus.Ready || getRoom.response.room.status == RoomStatus.Playing)

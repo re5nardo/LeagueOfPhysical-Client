@@ -25,7 +25,7 @@ namespace Match
         {
             while (true)
             {
-                yield return CheckMatchState();
+                yield return StartCoroutine(CheckMatchState());
 
                 yield return new WaitForSeconds(CHECK_INTERVAL);
             }
@@ -46,9 +46,9 @@ namespace Match
                 yield break;
             }
 
-            if (getUser.isError || getUser.response.code != ResponseCode.SUCCESS)
+            if (getUser.isSuccess == false || getUser.response.code != ResponseCode.SUCCESS)
             {
-                Debug.LogError("User 상태를 받아오는데 실패하였습니다.");
+                Debug.LogError($"User 상태를 받아오는데 실패하였습니다. error: {getUser.error}");
                 yield break;
             }
 

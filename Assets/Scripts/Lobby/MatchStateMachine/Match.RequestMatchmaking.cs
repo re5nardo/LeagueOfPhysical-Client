@@ -8,42 +8,38 @@ namespace Match
 {
     public class RequestMatchmaking : MonoStateBase
     {
-        public override void OnEnter()
+        public override IEnumerator OnExecute()
         {
             var matchSelectData = SceneDataContainer.Get<MatchSelectData>();
 
             if (LOPSettings.Get().connectLocalServer)
             {
                 RoomConnector.Instance.TryToEnterRoomById("EditorTestRoom");
-                return;
+                yield break;
             }
 
-            LOPWebAPI.RequestMatchmaking(new MatchmakingRequest
+            var requestMatchmaking = LOPWebAPI.RequestMatchmaking(new MatchmakingRequest
             {
                 userId = LOP.Application.UserId,
                 matchType = matchSelectData.currentMatchSetting.Value.matchType,
                 subGameId = matchSelectData.currentMatchSetting.Value.subGameId,
                 mapId = matchSelectData.currentMatchSetting.Value.mapId,
-            },
-            result =>
-            {
-                if (!IsCurrent)
-                {
-                    return;
-                }
-
-                if (result.code != ResponseCode.SUCCESS)
-                {
-                    Debug.LogError("Match 상태를 받아오는데 실패하였습니다. 타이틀로 돌아갑니다.");
-                    return;
-                }
-
-                FSM.MoveNext(MatchStateInput.MatchInWaitingRoomState);
-            },
-            error =>
-            {
-                Debug.LogError("Match 상태를 받아오는데 실패하였습니다. 타이틀로 돌아갑니다.");
             });
+
+            yield return requestMatchmaking;
+
+            if (!IsCurrent)
+            {
+                yield break;
+            }
+
+            if (requestMatchmaking.isSuccess == false || requestMatchmaking.response.code != ResponseCode.SUCCESS)
+            {
+                Debug.LogError($"Match 상태를 받아오는데 실패하였습니다. 타이틀로 돌아갑니다. error: {requestMatchmaking.error}");
+                yield break;
+            }
+
+            FSM.MoveNext(MatchStateInput.MatchInWaitingRoomState);
         }
 
         public override IState GetNext<I>(I input)
