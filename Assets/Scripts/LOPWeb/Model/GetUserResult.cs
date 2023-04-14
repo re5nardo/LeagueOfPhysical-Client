@@ -12,9 +12,10 @@ public class GetUserResult : HttpResultBase
 
     public static GetUserResult Deserialize(string json)
     {
+        var getUserResult = JsonConvert.DeserializeObject<GetUserResult>(json);
+
         try
         {
-            var getUserResult = JsonConvert.DeserializeObject<GetUserResult>(json);
             var jObject = JObject.Parse(json);
             var locationDetail = jObject["user"]["locationDetail"];
 
@@ -28,15 +29,13 @@ public class GetUserResult : HttpResultBase
                     getUserResult.user.locationDetail = locationDetail.ToObject<GameRoomLocationDetail>();
                     break;
             }
-
-            return getUserResult;
         }
         catch (Exception e)
         {
             Debug.LogWarning(e.Message);
         }
 
-        return null;
+        return getUserResult;
     }
 }
 
