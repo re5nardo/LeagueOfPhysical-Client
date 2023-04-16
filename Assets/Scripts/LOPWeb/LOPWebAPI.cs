@@ -10,7 +10,7 @@ public class LOPWebAPI
     public static WebRequest<JoinLobbyResult> JoinLobby(string userId)
     {
         return new WebRequestBuilder<JoinLobbyResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetFullUri($"lobby/join/{userId}"))
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetUri($"lobby/join/{userId}"))
             .SetMethod(HttpMethod.PUT)
             .Build();
     }
@@ -18,7 +18,7 @@ public class LOPWebAPI
     public static WebRequest<LeaveLobbyResult> LeaveLobby(string userId)
     {
         return new WebRequestBuilder<LeaveLobbyResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetFullUri($"lobby/leave/{userId}"))
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetUri($"lobby/leave/{userId}"))
             .SetMethod(HttpMethod.PUT)
             .Build();
     }
@@ -28,7 +28,7 @@ public class LOPWebAPI
     public static WebRequest<MatchmakingResult> RequestMatchmaking(MatchmakingRequest request)
     {
         return new WebRequestBuilder<MatchmakingResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Matchmaking").GetFullUri($"matchmaking"))
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Matchmaking").GetUri($"matchmaking"))
             .SetMethod(HttpMethod.POST)
             .SetRequestBody(request)
             .Build();
@@ -37,7 +37,7 @@ public class LOPWebAPI
     public static WebRequest<CancelMatchmakingResult> CancelMatchmaking(string ticketId)
     {
         return new WebRequestBuilder<CancelMatchmakingResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Matchmaking").GetFullUri($"matchmaking/{ticketId}"))
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Matchmaking").GetUri($"matchmaking/{ticketId}"))
             .SetMethod(HttpMethod.DELETE)
             .Build();
     }
@@ -47,7 +47,7 @@ public class LOPWebAPI
     public static WebRequest<GetUserResult> GetUser(string userId)
     {
         return new WebRequestBuilder<GetUserResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetFullUri($"user/{userId}"))
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetUri($"user/{userId}"))
             .SetMethod(HttpMethod.GET)
             .SetDeserialize(GetUserResult.Deserialize)
             .Build();
@@ -56,7 +56,7 @@ public class LOPWebAPI
     public static WebRequest<CreateUserResult> CreateUser(CreateUserRequest request)
     {
         return new WebRequestBuilder<CreateUserResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetFullUri($"user"))
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetUri($"user"))
             .SetMethod(HttpMethod.POST)
             .SetRequestBody(request)
             .SetDeserialize(CreateUserResult.Deserialize)
@@ -66,7 +66,7 @@ public class LOPWebAPI
     public static WebRequest<VerifyUserLocationResult> VerifyUserLocation(string userId)
     {
         return new WebRequestBuilder<VerifyUserLocationResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetFullUri($"user/verify-location/{userId}"))
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetUri($"user/verify-location/{userId}"))
             .SetMethod(HttpMethod.PUT)
             .Build();
     }
@@ -76,7 +76,7 @@ public class LOPWebAPI
     public static WebRequest<GetRoomResult> GetRoom(string roomId)
     {
         return new WebRequestBuilder<GetRoomResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Room").GetFullUri($"room/{roomId}"))
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Room").GetUri($"room/{roomId}"))
             .SetMethod(HttpMethod.GET)
             .Build();
     }
@@ -86,7 +86,7 @@ public class LOPWebAPI
     public static WebRequest<GetMatchResult> GetMatch(string matchId)
     {
         return new WebRequestBuilder<GetMatchResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Room").GetFullUri($"match/{matchId}"))
+            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Room").GetUri($"match/{matchId}"))
             .SetMethod(HttpMethod.GET)
             .Build();
     }
