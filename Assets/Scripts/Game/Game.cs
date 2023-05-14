@@ -25,6 +25,7 @@ namespace LOP
         public override async Task Initialize()
         {
             Physics.autoSimulation = false;
+            Physics.autoSyncTransforms = false;
 
             tickUpdater = gameObject.AddComponent<LOPTickUpdater>();
             GameEventManager = gameObject.AddComponent<GameEventManager>();
@@ -56,6 +57,7 @@ namespace LOP
             base.Clear();
 
             Physics.autoSimulation = true;
+            Physics.autoSyncTransforms = true;
 
             if (GameStateMachine != null)
             {
