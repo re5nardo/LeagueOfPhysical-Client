@@ -7,6 +7,8 @@ public class LOPTickUpdater : TickUpdater
 {
     protected override void OnUpdateElapsedTime()
     {
-        ElapsedTime = (float)Mirror.NetworkTime.time;
+        var expected = ElapsedTime + Time.deltaTime;
+
+        ElapsedTime = Mathf.Lerp((float)expected, (float)Mirror.NetworkTime.time, 0.25f);
     }
 }
