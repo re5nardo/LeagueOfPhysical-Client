@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MatchmakingResult : HttpResponseBase
+public class HttpResponseBase
 {
-    public string ticketId;
+    public int code;
 }

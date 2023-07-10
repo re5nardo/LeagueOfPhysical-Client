@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GameFramework;
 using System;
 
-public class GetRoomResult : HttpResultBase
+public class GetRoomResult : HttpResponseBase
 {
     public RoomResponse room;
 }

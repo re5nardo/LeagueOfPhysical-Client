@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GameFramework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 
-public class CreateUserResult : HttpResultBase
+public class CreateUserResult : HttpResponseBase
 {
     public User user;
 
