@@ -15,9 +15,9 @@ MonoBehaviour:
   lobbyServerSetting:
     scheme: http
     host: 3.35.229.193:1340
-  roomServerSetting:
-    scheme: http
-    host: 3.35.229.193:2000
   matchmakingServerSetting:
     scheme: http
     host: 3.35.229.193:1555
+  roomServerSetting:
+    scheme: http
+    host: 3.35.229.193:2000
