@@ -42,7 +42,7 @@ namespace LOP
             SceneMessageBroker.AddSubscriber<SC_SubGameReadyNotice>(SC_SubGameReadyNoticeHandler.Handle);
             SceneMessageBroker.AddSubscriber<SC_PlayerEntity>(SC_PlayerEntityHandler.Handle);
 
-            tickUpdater.Initialize(1 / 30f, true, Room.Instance.Latency, OnTick, OnTickEnd, OnUpdateElapsedTime);
+            tickUpdater.Initialize(1 / 30f, true, Room.Instance.Latency, OnTick, OnTickEnd, OnFrameUpdate);
             GameUI.Initialize();
 
             EntityManager.Instantiate();
@@ -93,11 +93,11 @@ namespace LOP
             SceneMessageBroker.Publish(new TickMessage.LateTickEnd(tick));
         }
 
-        private void OnUpdateElapsedTime(double time)
+        private void OnFrameUpdate()
         {
             SceneMessageBroker.Publish(new TickMessage.BeforePhysicsSimulation(CurrentTick));
 
-            Physics.Simulate((float)time);
+            Physics.Simulate((float)Game.Current.deltaTime);
 
             SceneMessageBroker.Publish(new TickMessage.AfterPhysicsSimulation(CurrentTick));
         }
