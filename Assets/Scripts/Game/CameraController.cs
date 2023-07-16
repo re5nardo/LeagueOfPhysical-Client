@@ -13,6 +13,9 @@ public class CameraController : MonoBehaviour
     [SerializeField] private DirectionKey directionKey;
     [SerializeField] private Toggle followToggle;
 
+    [Header("[Settgins]")]
+    [SerializeField] private float smoothSpeed = 0.125f;
+
     private Transform myTransform;
 
     public Camera Camera => targetCamera;
@@ -47,9 +50,10 @@ public class CameraController : MonoBehaviour
     {
         if (FollowTarget && Target != null)
         {
-            Vector3 destPosition = Target.position + Offset;
+            var desiredPosition = Target.position + Offset;
+            var smoothedPosition = Vector3.Lerp(myTransform.position, desiredPosition, smoothSpeed);
 
-            myTransform.position = Vector3.Slerp(myTransform.position, destPosition, Time.smoothDeltaTime);
+            myTransform.position = smoothedPosition;
         }
     }
     #endregion
