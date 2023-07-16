@@ -10,7 +10,7 @@ public class LOPWebAPI
     public static WebRequest<JoinLobbyResult> JoinLobby(string userId)
     {
         return new WebRequestBuilder<JoinLobbyResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetUri($"lobby/join/{userId}"))
+            .SetUri($"{LOP.Application.Env.lobbyBaseURL}/lobby/join/{userId}")
             .SetMethod(HttpMethod.PUT)
             .Build();
     }
@@ -18,7 +18,7 @@ public class LOPWebAPI
     public static WebRequest<LeaveLobbyResult> LeaveLobby(string userId)
     {
         return new WebRequestBuilder<LeaveLobbyResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetUri($"lobby/leave/{userId}"))
+            .SetUri($"{LOP.Application.Env.lobbyBaseURL}/lobby/leave/{userId}")
             .SetMethod(HttpMethod.PUT)
             .Build();
     }
@@ -28,7 +28,7 @@ public class LOPWebAPI
     public static WebRequest<MatchmakingResult> RequestMatchmaking(MatchmakingRequest request)
     {
         return new WebRequestBuilder<MatchmakingResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Matchmaking").GetUri($"matchmaking"))
+            .SetUri($"{LOP.Application.Env.matchmakingBaseURL}/matchmaking")
             .SetMethod(HttpMethod.POST)
             .SetRequestBody(request)
             .Build();
@@ -37,7 +37,7 @@ public class LOPWebAPI
     public static WebRequest<CancelMatchmakingResult> CancelMatchmaking(string ticketId)
     {
         return new WebRequestBuilder<CancelMatchmakingResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Matchmaking").GetUri($"matchmaking/{ticketId}"))
+            .SetUri($"{LOP.Application.Env.matchmakingBaseURL}/matchmaking/{ticketId}")
             .SetMethod(HttpMethod.DELETE)
             .Build();
     }
@@ -47,7 +47,7 @@ public class LOPWebAPI
     public static WebRequest<GetUserResult> GetUser(string userId)
     {
         return new WebRequestBuilder<GetUserResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetUri($"user/{userId}"))
+            .SetUri($"{LOP.Application.Env.lobbyBaseURL}/user/{userId}")
             .SetMethod(HttpMethod.GET)
             .SetDeserialize(GetUserResult.Deserialize)
             .Build();
@@ -56,7 +56,7 @@ public class LOPWebAPI
     public static WebRequest<CreateUserResult> CreateUser(CreateUserRequest request)
     {
         return new WebRequestBuilder<CreateUserResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetUri($"user"))
+            .SetUri($"{LOP.Application.Env.lobbyBaseURL}/user")
             .SetMethod(HttpMethod.POST)
             .SetRequestBody(request)
             .SetDeserialize(CreateUserResult.Deserialize)
@@ -66,7 +66,7 @@ public class LOPWebAPI
     public static WebRequest<VerifyUserLocationResult> VerifyUserLocation(string userId)
     {
         return new WebRequestBuilder<VerifyUserLocationResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Lobby").GetUri($"user/verify-location/{userId}"))
+            .SetUri($"{LOP.Application.Env.lobbyBaseURL}/user/verify-location/{userId}")
             .SetMethod(HttpMethod.PUT)
             .Build();
     }
@@ -76,7 +76,7 @@ public class LOPWebAPI
     public static WebRequest<GetRoomResult> GetRoom(string roomId)
     {
         return new WebRequestBuilder<GetRoomResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Room").GetUri($"room/{roomId}"))
+            .SetUri($"{LOP.Application.Env.roomBaseURL}/room/{roomId}")
             .SetMethod(HttpMethod.GET)
             .Build();
     }
@@ -86,7 +86,7 @@ public class LOPWebAPI
     public static WebRequest<GetMatchResult> GetMatch(string matchId)
     {
         return new WebRequestBuilder<GetMatchResult>()
-            .SetUri(GameFramework.ServerSettings.Get("ServerSettings_Room").GetUri($"match/{matchId}"))
+            .SetUri($"{LOP.Application.Env.roomBaseURL}/match/{matchId}")
             .SetMethod(HttpMethod.GET)
             .Build();
     }

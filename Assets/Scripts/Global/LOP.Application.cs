@@ -16,6 +16,8 @@ namespace LOP
         public static string IP { get; private set; }
         public static string UserId { get; set; }
 
+        public static EnvironmentSettings Env => EnvironmentSettings.active;
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void OnBeforeSceneLoadRuntimeMethod()
         {
