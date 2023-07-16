@@ -44,7 +44,7 @@ public class FPM_Jump : MonoBehaviour
             //  우선 서버에 전송
             jumpInputData.tick = Game.Current.CurrentTick;
             jumpInputData.sequence = sequence++;
-            jumpInputData.entityId = Entities.MyEntityID;
+            jumpInputData.entityId = Entities.MyEntityId;
 
             using var disposer = PoolObjectDisposer<CS_NotifyJumpInputData>.Get();
             var notifyJumpInputData = disposer.PoolObject;

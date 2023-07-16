@@ -23,7 +23,7 @@ namespace GameState
             //  Send GamePreparation
             using var disposer = PoolObjectDisposer<CS_SubGamePreparation>.Get();
             var subGamePreparation = disposer.PoolObject;
-            subGamePreparation.entityId = Entities.MyEntityID;
+            subGamePreparation.entityId = Entities.MyEntityId;
             subGamePreparation.preparation = 1;
 
             RoomNetwork.Instance.Send(subGamePreparation, 0);

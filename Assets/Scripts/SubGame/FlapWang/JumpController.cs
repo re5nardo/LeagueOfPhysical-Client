@@ -42,7 +42,7 @@ namespace FlapWangController
 
             if (CanJump())
             {
-                var entity = Entities.Get<LOPMonoEntityBase>(Entities.MyEntityID);
+                var entity = Entities.Get<LOPMonoEntityBase>(Entities.MyEntityId);
 
                 entity.BehaviorController.Jump(jumpInput.Value.normalizedPower, jumpInput.Value.direction, Behavior.Jump.JumpType.FlapJump);
             }

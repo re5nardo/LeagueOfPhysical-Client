@@ -44,13 +44,13 @@ public class Entities
         return EntityManager.Instance.GetAllEntities<T>();
     }
 
-    public static HashSet<int> AllIDs => EntityManager.Instance.GetAllEntityIDs();
+    public static HashSet<int> AllIDs => EntityManager.Instance.GetAllEntityIds();
     #endregion
 
     #region Mine
-    public static int MyEntityID => SceneDataContainer.Get<MyInfo>().EntityId;
+    public static int MyEntityId => SceneDataContainer.Get<MyInfo>().EntityId;
 
-    public static IEntity Mine => Get(MyEntityID);
+    public static IEntity Mine => Get(MyEntityId);
 
     public static Character MyCharacter => Mine as Character;
     #endregion

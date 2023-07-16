@@ -151,7 +151,7 @@ public class EntityBasicView : LOPMonoEntityComponentBase
 
     protected virtual void OnModelTriggerEnterHandler(Collider me, Collider other)
     {
-        SceneMessageBroker.Publish(new EntityMessage.ModelTriggerEnter(Entity.EntityID, me, other));
+        SceneMessageBroker.Publish(new EntityMessage.ModelTriggerEnter(Entity.EntityId, me, other));
     }
 
     protected virtual void OnModelTriggerStayHandler(Collider me, Collider other)

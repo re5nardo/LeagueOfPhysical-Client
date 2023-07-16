@@ -34,7 +34,7 @@ public class EmotionExpressionSelector : MonoBehaviour
     {
         using var disposer = PoolObjectDisposer<CS_RequestEmotionExpression>.Get();
         var requestEmotionExpression = disposer.PoolObject;
-        requestEmotionExpression.entityId = Entities.MyEntityID;
+        requestEmotionExpression.entityId = Entities.MyEntityId;
         requestEmotionExpression.emotionExpressionId = emotionExpressionID;
 
         RoomNetwork.Instance.Send(requestEmotionExpression, 0);

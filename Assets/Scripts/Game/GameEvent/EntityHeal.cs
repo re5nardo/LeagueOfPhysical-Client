@@ -11,8 +11,8 @@ namespace GameEvent
     {
         public int Seq { get; }
         public int Tick { get; set; }
-        public int healingEntityID;
-        public int healedEntityID;
+        public int healingEntityId;
+        public int healedEntityId;
         public int heal;
         public int afterHP;
     }

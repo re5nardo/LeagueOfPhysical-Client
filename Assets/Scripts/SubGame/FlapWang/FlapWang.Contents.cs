@@ -46,7 +46,7 @@ public partial class FlapWang
 
         character.BehaviorController.StartBehavior(new BehaviorParam(Define.MasterData.BehaviorId.Die), onDieEnd);
 
-        if (character.EntityID == Entities.MyEntityID)
+        if (character.EntityId == Entities.MyEntityId)
         {
             LOP.Game.Current.GameUI.CameraController.FollowTarget = false;
         }
@@ -68,7 +68,7 @@ public partial class FlapWang
         //  Invincible
         character.StateController.StartState(new BasicStateParam(Define.MasterData.StateId.Invincible, 2));
 
-        if (character.EntityID == Entities.MyEntityID)
+        if (character.EntityId == Entities.MyEntityId)
         {
             LOP.Game.Current.GameUI.CameraController.FollowTarget = true;
         }

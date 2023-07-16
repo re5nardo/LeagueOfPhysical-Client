@@ -42,7 +42,7 @@ namespace JumpWangController
 
             if (CanMove())
             {
-                var entity = Entities.Get<LOPMonoEntityBase>(Entities.MyEntityID);
+                var entity = Entities.Get<LOPMonoEntityBase>(Entities.MyEntityId);
 
                 entity.BehaviorController.Move(entity.Position + moveInput.Value.direction.normalized * (float)Game.Current.TickInterval * entity.FactoredMovementSpeed);
             }

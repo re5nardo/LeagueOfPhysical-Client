@@ -10,14 +10,14 @@ public class EntityBehaviorStartHandler
     {
         EntityBehaviorStart entityBehaviorStart = gameEvent as EntityBehaviorStart;
 
-        IEntity entity = Entities.Get(entityBehaviorStart.entityID);
+        IEntity entity = Entities.Get(entityBehaviorStart.entityId);
         if (entity == null)
         {
             return;
         }
 
         ////  로컬 유저의 move, rotation, jump은 로컬에서 (선처리) 플레이가 되기 때문에 서버의 내용은 무시한다.
-        //if (entity.EntityID == Entities.MyEntityID)
+        //if (entity.EntityId == Entities.MyEntityId)
         //{
         //    if (entityBehaviorStart.behaviorMasterID == Define.MasterData.BehaviorID.MOVE
         //        || entityBehaviorStart.behaviorMasterID == Define.MasterData.BehaviorID.ROTATION

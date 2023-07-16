@@ -11,7 +11,7 @@ namespace GameEvent
     {
         public int Seq { get; }
         public int Tick { get; set; }
-        public int entityID;
+        public int entityId;
         public int behaviorMasterID;
         public object[] param;
     }

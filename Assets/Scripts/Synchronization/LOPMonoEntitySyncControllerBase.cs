@@ -29,7 +29,7 @@ public abstract class LOPMonoEntitySyncControllerBase<T> : LOPMonoEntityComponen
 
     public virtual void OnInitialize()
     {
-        ControllerId = $"{Entity.EntityID}_{GetType().Name}";
+        ControllerId = $"{Entity.EntityId}_{GetType().Name}";
 
         SceneMessageBroker.AddSubscriber<SC_SyncController>(OnSyncController).Where(syncController => syncController.syncControllerData.controllerId == ControllerId);
         SceneMessageBroker.AddSubscriber<SC_Synchronization>(OnSynchronization).Where(synchronization => synchronization.syncDataEntry.meta.controllerId == ControllerId);

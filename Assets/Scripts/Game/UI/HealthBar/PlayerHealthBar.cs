@@ -60,7 +60,7 @@ public class PlayerHealthBar : HealthBarBase
     {
         yield return new WaitUntil(() => character.MasterData != null);
 
-        nickname.text = string.Format("{0}_{1}", character.MasterData.Name, character.EntityID);
+        nickname.text = string.Format("{0}_{1}", character.MasterData.Name, character.EntityId);
     }
 
 	public void Clear()

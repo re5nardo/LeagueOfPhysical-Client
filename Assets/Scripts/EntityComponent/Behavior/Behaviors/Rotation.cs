@@ -21,7 +21,7 @@ namespace Behavior
 
         protected override bool OnBehaviorUpdate()
         {
-            if (Entity.EntityID != Entities.MyEntityID)
+            if (Entity.EntityId != Entities.MyEntityId)
             {
                 return true;
             }

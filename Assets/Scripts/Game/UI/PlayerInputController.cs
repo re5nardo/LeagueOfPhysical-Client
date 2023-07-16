@@ -194,7 +194,7 @@ public class PlayerInputController : MonoBehaviour
 
         if (vec2FinalDir.magnitude < 40)
         {
-            skillInputData = new SkillInputData(Game.Current.CurrentTick, Entities.MyEntityID, Entity.BasicAttackSkillID, Vector3.zero);
+            skillInputData = new SkillInputData(Game.Current.CurrentTick, Entities.MyEntityId, Entity.BasicAttackSkillID, Vector3.zero);
         }
     }
 
@@ -216,7 +216,7 @@ public class PlayerInputController : MonoBehaviour
             dir = Vector3.zero;
         }
 		
-		skillInputData = new SkillInputData(Game.Current.CurrentTick, Entities.MyEntityID, Entity.BasicAttackSkillID, dir.normalized);
+		skillInputData = new SkillInputData(Game.Current.CurrentTick, Entities.MyEntityId, Entity.BasicAttackSkillID, dir.normalized);
 	}
 
 	private void OnItemSlot1BtnClicked()
@@ -233,7 +233,7 @@ public class PlayerInputController : MonoBehaviour
 	{
 		using var disposer = PoolObjectDisposer<CS_NotifySkillInputData>.Get();
 		var notifySkillInputData = disposer.PoolObject;
-		notifySkillInputData.skillInputData = new SkillInputData(Game.Current.CurrentTick, Entities.MyEntityID, skillID, default);
+		notifySkillInputData.skillInputData = new SkillInputData(Game.Current.CurrentTick, Entities.MyEntityId, skillID, default);
 
 		RoomNetwork.Instance.Send(notifySkillInputData, 0, instant: true);
 	}

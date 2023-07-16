@@ -68,14 +68,14 @@ public class EntityManager : GameFramework.EntityManager
     {
         base.RegisterEntity(entity);
 
-        SceneMessageBroker.Publish(new GameMessage.EntityRegister(entity.EntityID));
+        SceneMessageBroker.Publish(new GameMessage.EntityRegister(entity.EntityId));
     }
 
-    public override void UnregisterEntity(int nEntityID)
+    public override void UnregisterEntity(int entityId)
     {
-        base.UnregisterEntity(nEntityID);
+        base.UnregisterEntity(entityId);
 
-        SceneMessageBroker.Publish(new GameMessage.EntityUnregister(nEntityID));
+        SceneMessageBroker.Publish(new GameMessage.EntityUnregister(entityId));
     }
 
     #region Message Handler
@@ -101,26 +101,26 @@ public class EntityManager : GameFramework.EntityManager
 
 	private void OnSC_EntityDisAppear(SC_EntityDisAppear entityDisAppear)
 	{
-		foreach (int nEntityID in entityDisAppear.listEntityId)
+		foreach (int entityId in entityDisAppear.listEntityId)
 		{
-			if (!dicEntity.ContainsKey(nEntityID))
+			if (!dicEntity.ContainsKey(entityId))
 			{
-				Debug.LogError("[OnSC_EntityDisAppear] Entity doesn't exist! EntityID : " + nEntityID);
+				Debug.LogError("[OnSC_EntityDisAppear] Entity doesn't exist! EntityID : " + entityId);
                 continue;
 			}
 
-			DestroyEntity(nEntityID);
+			DestroyEntity(entityId);
 		}
 	}
 	#endregion
 
-    public void DestroyEntity(int nEntityID)
+    public void DestroyEntity(int entityId)
     {
-        var entity = GetEntity<LOPMonoEntityBase>(nEntityID);
+        var entity = GetEntity<LOPMonoEntityBase>(entityId);
 
         entity.MessageBroker.Publish(new Destroying());
 
-        UnregisterEntity(nEntityID);
+        UnregisterEntity(entityId);
 
         Destroy(entity.gameObject);
     }
